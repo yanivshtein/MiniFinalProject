@@ -26,7 +26,7 @@ public class mysqlConnection {
 
 		try {
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root",
-					"!vex123S");
+					"Aa123456");
 			System.out.println("SQL connection succeed");
 
 		} catch (SQLException ex) {/* handle any errors */
@@ -173,13 +173,34 @@ public class mysqlConnection {
 	    return borrowHistory;
 	}
 	
-	// אני פה
-	public static boolean ChangeReturnDate(String subscriberId , String BookName , String OldDate , String NewDate) {
-		String query = "SELECT * FROM ActivityHistory WHERE SubscriberID = ? AND BookName = ? AND ";
-		return false;
-		
-		
-		
-	}
+	public static boolean ChangeReturnDate(String subscriberId, String BookName, String OldDate, String NewDate) {
+	    String query = "UPDATE activityhistory SET ActionDate = ? WHERE SubscriberID = ? AND BookName = ? AND ActionDate = ? AND ActionType = 'Borrow'";
+	    
+	    try (PreparedStatement ps = conn.prepareStatement(query)) {
+	        
+	        // Set values 
+	        ps.setString(1, NewDate);
+	        ps.setString(2, subscriberId);
+	        ps.setString(3, BookName);
+	        ps.setString(4, OldDate);
 
+	        int rowsAffected = ps.executeUpdate();
+	        if (rowsAffected > 0) {
+	            return true;
+	        } else {
+	            return false;
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("SQL Error: " + e.getMessage());
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
 }
+
+
+		
+		
+
+
+

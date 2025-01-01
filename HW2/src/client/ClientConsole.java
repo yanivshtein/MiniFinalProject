@@ -117,7 +117,7 @@ public class ClientConsole implements ChatIF
 	  client.handleMessageFromClientUI(arr);		  
   }
   
-  public void book_accept(String str, String BookName, String id,String OldDate ,String NewDate) 
+  public void book_accept(String str, String id, String BookName ,String OldDate ,String NewDate) 
   {
     try
     {

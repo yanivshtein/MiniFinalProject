@@ -48,7 +48,6 @@ public class LibrarianWatchAndUpdateGUI {
 	private Button SaveChangesbtt = null;
 	
 	private ArrayList<String> borrowHistory;
-	private String datePart;
 	
 	
 	
@@ -99,14 +98,16 @@ public class LibrarianWatchAndUpdateGUI {
 
 	
 	public void SaveChangBtt(ActionEvent event) throws IOException {
-		LibrarianUI.chat.book_accept("set new return date", subID.getText(),BookName.getText(),OldRetDate.getText() , NewRetDate.getText()); 
-		
-		
+	    // Call the method to update the return date
+	    LibrarianUI.chat.book_accept("set new return date", subID.getText(), BookName.getText(), OldRetDate.getText(), NewRetDate.getText());
+
+	    // Check the result of the update
+	    if (ChatClient.bool) {
+	        ChangesSavedPop.setContentText("Updated successfully");
+	    } else {
+	        ChangesSavedPop.setContentText("The update failed");
+	    }
 	}
-	
-	
-
-
 
 
 

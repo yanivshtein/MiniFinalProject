@@ -189,6 +189,7 @@ public class EchoServer extends AbstractServer
 	        	    } catch (IOException e) {
 	        	        e.printStackTrace();
 	        	    }
+	          	    break;
 	            case 9:	            		          	  
 		          	String subscriberId = (String)arr.get(1); //subscriber ID is in the second position of the array
 	        	    
@@ -201,13 +202,25 @@ public class EchoServer extends AbstractServer
 	        	    } catch (IOException e) {
 	        	        e.printStackTrace();
 	        	    }
+	        	    break;
 	            case 10:
-	            	String subscriberid = (String)arr.get(1); //subscriber ID is in the second position of the array
-	          	  String BookName = (String)arr.get(2);
-	          	  String OldDate = (String)arr.get(3);
-	          	  String NewDate = (String)arr.get(4);
+	                // Extract parameters from the array
+	                String subscriberid = (String) arr.get(1);
+	                String BookName = (String) arr.get(2);
+	                String OldDate = (String) arr.get(3);
+	                String NewDate = (String) arr.get(4);
 
-	          	  boolean UpdateDate = mysqlConnection.ChangeReturnDate(subscriberid , BookName , OldDate ,NewDate);
+	                // Update the return date
+	                boolean updateDate = mysqlConnection.ChangeReturnDate(subscriberid, BookName, OldDate, NewDate);
+
+	                // Send result to client
+	                try {
+	                    client.sendToClient(updateDate);
+	                } catch (IOException e) {
+	                    e.printStackTrace();
+	                }
+	                break;
+
 	          	  
 	            default:
 	                System.out.println("The server - Received message is not of the expected type.");
