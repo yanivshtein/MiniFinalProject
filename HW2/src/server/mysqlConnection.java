@@ -64,38 +64,39 @@ public class mysqlConnection {
             ps.setString(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return true;
+                    return true; // The ID exists in the database
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return false; // Return false if the ID does not exist
     }
 
     public static String canAddOrder(String id, String bookName, int copysAmount) {
         int count;
+     // query that returns the number of tuples with the same bookName 
         String canAddQuery = "SELECT COUNT(*) AS count FROM orders WHERE bookName = ?";
         try {
             PreparedStatement stmt = conn.prepareStatement(canAddQuery);
             stmt.setString(1, bookName);
-            try (ResultSet rs = stmt.executeQuery()) {
+            try (ResultSet rs = stmt.executeQuery()) { // execute the query
                 rs.next();
                 count = rs.getInt("count");
-                if ((count != 0) && (count == copysAmount))
+                if ((count != 0) && (count == copysAmount)) // which means that cant order anymore
                     return "can't";
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        addOrder(bookName, id, copysAmount);
-        addOrderToActivityHistory(bookName, id);
+        addOrder(bookName, id, copysAmount); // add the order to the orders table in the DB
+		addOrderToActivityHistory(bookName, id); // add the order to the acitivityHistory table in the DB
         return "can";
     }
 
     public static void addOrder(String bookName, String id, int copysAmount) {
         String addQuery = "INSERT INTO orders (time, bookName, subID) VALUES (?, ?, ?);";
-        String dateTime = LocalDateTime.now().toString();
+        String dateTime = LocalDateTime.now().toString(); // get the time of the computer
         try {
             PreparedStatement stmt = conn.prepareStatement(addQuery);
             stmt.setString(1, dateTime);
@@ -111,11 +112,11 @@ public class mysqlConnection {
         String addQuery = "INSERT INTO activityhistory (SubscriberID, BookName, ActionType, ActionDate, AdditionalDetails) VALUES (?, ?, ?, ?, ?);";
         try {
             PreparedStatement stmt = conn.prepareStatement(addQuery);
-            int ID = 1;
+            int ID = 1; //delete after check !!!!!!1
             stmt.setInt(1, ID);
             stmt.setString(2, bookName);
             stmt.setString(3, "Reservation");
-            stmt.setString(4, LocalDateTime.now().toString());
+            stmt.setString(4, LocalDateTime.now().toString()); // get the time of the computer
             stmt.setString(5, "");
             stmt.executeUpdate();
         } catch (SQLException e) {
