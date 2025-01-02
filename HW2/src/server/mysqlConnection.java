@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -15,21 +16,7 @@ public class mysqlConnection {
 
 	private static Connection conn;
 
-	public static mysqlConnection instance;
-	
-	private mysqlConnection() {
-		connectToDB();
-	}
-	
-	//singleton
-	public static synchronized mysqlConnection getInstance() {
-		if(instance == null) {
-			instance = new mysqlConnection();
-		}
-		return instance;
-	}
-	
-	private static void connectToDB() {
+	public static void connectToDB() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
 			System.out.println("Driver definition succeed");
@@ -40,7 +27,7 @@ public class mysqlConnection {
 
 		try {
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root",
-					"Aa123456");
+					"!vex123S");
 			System.out.println("SQL connection succeed");
 
 		} catch (SQLException ex) {/* handle any errors */
@@ -98,181 +85,128 @@ public class mysqlConnection {
 		return false; // Return false if the ID does not exist
 	}
 
-	public static String canAddOrder(String id, String bookName) {
-		String priority = null;
-		String copysAmount = null;
-		// query that returns the last priority and the total number of copys of the
-		String canAddQuery = "SELECT priority, copysAmount " + "FROM BooksTable " + "WHERE bookName = ? "
-				+ "AND priority = (SELECT MAX(priority) FROM orders WHERE bookName = ?);";
+	public static String canAddOrder(String id, String bookName, int copysAmount) {
+		int count;
+		// query that returns the number of tuples with the same bookName 
+		String canAddQuery = "SELECT COUNT(*) AS count FROM orders WHERE bookName = ?";				
 		try {
 			PreparedStatement stmt = conn.prepareStatement(canAddQuery);
 			stmt.setString(1, bookName);
-			stmt.setString(2, bookName);
 			try (ResultSet rs = stmt.executeQuery()) { // execute the query
 				rs.next();
-				priority = rs.getString("priority");
-				copysAmount = rs.getString("copysAmount");
-				if (priority.equals(copysAmount))//which means that cant order anymore
+				count = rs.getInt("count");
+				if ((count != 0) && (count == copysAmount))// which means that cant order anymore
 					return "can't";
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		addOrder(bookName, id, priority, copysAmount); // add the order to the orders table in the DB
+		addOrder(bookName, id, copysAmount); // add the order to the orders table in the DB
+		addOrderToActivityHistory(bookName, id); // add the order to the acitivityHistory table in the DB
 		return "can";
 	}
 
-	public static void addOrder(String bookName, String id, String priority, String copysAmount) {
-		String addQuery = "INSERT INTO orders (bookName, id, priority, copysAmount) VALUES (?, ?, ?, ?);";
-		//add 1 to the priority
-		int priorityInt = Integer.parseInt(priority);
-		priorityInt++;
-		String newPriority = Integer.toString(priorityInt);
+	public static void addOrder(String bookName, String id, int copysAmount) {
+		String addQuery = "INSERT INTO orders (time, bookName, subID) VALUES (?, ?, ?);";
+		String dateTime = LocalDateTime.now().toString(); // get the time of the computer
 		try {
 			PreparedStatement stmt = conn.prepareStatement(addQuery);
-			stmt.setString(1, bookName);
-			stmt.setString(2, id);
-			stmt.setString(3, newPriority);
-			stmt.setString(4, copysAmount);
-			stmt.executeUpdate(); //execute the query
+			stmt.setString(1, dateTime);
+			stmt.setString(2, bookName);
+			stmt.setString(3, id);
+			stmt.executeUpdate(); // execute the query
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
 	}
-	
+
+	public static void addOrderToActivityHistory(String bookName, String id) {
+		String addQuery = "INSERT INTO activityhistory (SubscriberID, BookName, ActionType, ActionDate, AdditionalDetails) VALUES (?, ?, ?, ?, ?);";
+		try {
+			PreparedStatement stmt = conn.prepareStatement(addQuery);
+			int ID =1; //delete after check !!!!!!1
+			stmt.setInt(1, ID);
+			stmt.setString(2, bookName);
+			stmt.setString(3, "Reservation");
+			String dateTime = LocalDateTime.now().toString(); // get the time of the computer
+			stmt.setString(4, dateTime);
+			stmt.setString(5, "");
+			stmt.executeUpdate(); // execute the query
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static ArrayList<String> getActivityHistory(String subscriberId) {
-	    ArrayList<String> activityHistory = new ArrayList<>();
-	    String query = "SELECT * FROM ActivityHistory WHERE SubscriberID = ?";
-	    
-	    try (PreparedStatement ps = conn.prepareStatement(query)) {
-	        ps.setString(1, subscriberId); 
-	        try (ResultSet rs = ps.executeQuery()) {
-	            while (rs.next()) {
-	                String bookName = rs.getString("BookName");
-	                String actionType = rs.getString("ActionType");
-	                String actionDate = rs.getString("ActionDate");
-	                String additionalDetails = rs.getString("AdditionalDetails");
+		ArrayList<String> activityHistory = new ArrayList<>();
+		String query = "SELECT * FROM ActivityHistory WHERE SubscriberID = ?";
 
-	                String activity = "Book Name: " + bookName + ", Action: " + actionType + 
-	                                  ", Date: " + actionDate + ", Details: " + additionalDetails;
-	                activityHistory.add(activity);
-	            }
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	    
-	    return activityHistory;
+		try (PreparedStatement ps = conn.prepareStatement(query)) {
+			ps.setString(1, subscriberId);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					String bookName = rs.getString("BookName");
+					String actionType = rs.getString("ActionType");
+					String actionDate = rs.getString("ActionDate");
+					String additionalDetails = rs.getString("AdditionalDetails");
+
+					String activity = "Book Name: " + bookName + ", Action: " + actionType + ", Date: " + actionDate
+							+ ", Details: " + additionalDetails;
+					activityHistory.add(activity);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return activityHistory;
 	}
+
 	public static ArrayList<String> getBorrowHistory(String subscriberId) {
-	    ArrayList<String> borrowHistory = new ArrayList<>();
-	    String query = "SELECT * FROM ActivityHistory WHERE SubscriberID = ? AND ActionType = 'Borrow'";
-	    try (PreparedStatement ps = conn.prepareStatement(query)) {
-	        ps.setString(1, subscriberId); 
-	        try (ResultSet rs = ps.executeQuery()) {
-	            while (rs.next()) {
-	                String bookName = rs.getString("BookName");
-	                String actionDate = rs.getString("ActionDate");
-	                String additionalDetails = rs.getString("AdditionalDetails");
+		ArrayList<String> borrowHistory = new ArrayList<>();
+		String query = "SELECT * FROM ActivityHistory WHERE SubscriberID = ? AND ActionType = 'Borrow'";
+		try (PreparedStatement ps = conn.prepareStatement(query)) {
+			ps.setString(1, subscriberId);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					String bookName = rs.getString("BookName");
+					String actionDate = rs.getString("ActionDate");
+					String additionalDetails = rs.getString("AdditionalDetails");
 
-	                String activity = "Book Name: " + bookName + ", Date: " + actionDate + ", Details: " + additionalDetails;
-	                borrowHistory.add(activity);
-	            }
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	    
-	    return borrowHistory;
+					String activity = "Book Name: " + bookName + ", Date: " + actionDate + ", Details: "
+							+ additionalDetails;
+					borrowHistory.add(activity);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return borrowHistory;
 	}
-	
+
 	public static boolean ChangeReturnDate(String subscriberId, String BookName, String OldDate, String NewDate) {
-	    String query = "UPDATE activityhistory SET ActionDate = ? WHERE SubscriberID = ? AND BookName = ? AND ActionDate = ? AND ActionType = 'Borrow'";
-	    
-	    try (PreparedStatement ps = conn.prepareStatement(query)) {
-	        
-	        // Set values 
-	        ps.setString(1, NewDate);
-	        ps.setString(2, subscriberId);
-	        ps.setString(3, BookName);
-	        ps.setString(4, OldDate);
+		String query = "UPDATE activityhistory SET ActionDate = ? WHERE SubscriberID = ? AND BookName = ? AND ActionDate = ? AND ActionType = 'Borrow'";
 
-	        int rowsAffected = ps.executeUpdate();
-	        if (rowsAffected > 0) {
-	            return true;
-	        } else {
-	            return false;
-	        }
-	    } catch (SQLException e) {
-	        System.out.println("SQL Error: " + e.getMessage());
-	        e.printStackTrace();
-	        return false;
-	    }
+		try (PreparedStatement ps = conn.prepareStatement(query)) {
+
+			// Set values
+			ps.setString(1, NewDate);
+			ps.setString(2, subscriberId);
+			ps.setString(3, BookName);
+			ps.setString(4, OldDate);
+
+			int rowsAffected = ps.executeUpdate();
+			if (rowsAffected > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (SQLException e) {
+			System.out.println("SQL Error: " + e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
 	}
-	
-	public static ArrayList<String> BringBorrowRepInfo() throws SQLException {
-	    String selectClause, fromClause, joinCondition, groupByClause, leftJoinClause, whereClause, query;
-	    ArrayList<String> FullBorrowRep = new ArrayList<>();
-
-	    // Query 1: For Borrowed and Returned Books (with AdditionalDetails from br2)
-	    selectClause = "SELECT br1.SubscriberID, br1.BookName, MIN(br1.ActionDate) AS BorrowDate, " +
-	                   "MIN(br2.ActionDate) AS ReturnDate, br2.AdditionalDetails AS AdditionalDetails";
-	    fromClause = "FROM activityhistory br1 JOIN activityhistory br2";
-	    joinCondition = "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName " +
-	                    "AND br1.ActionType = 'Borrow' AND br2.ActionType = 'Return' AND br1.ActionDate < br2.ActionDate";
-	    groupByClause = "GROUP BY br1.SubscriberID, br1.BookName, br2.AdditionalDetails";
-
-	    query = selectClause + " " + fromClause + " " + joinCondition + " " + groupByClause;
-
-	    try (PreparedStatement ps = conn.prepareStatement(query)) {
-	        try (ResultSet rs = ps.executeQuery()) {
-	            while (rs.next()) {
-	                String bookName = rs.getString("BookName");
-	                String subID = rs.getString("SubscriberID");
-	                String BorrowDate = rs.getString("BorrowDate");
-	                String ReturnDate = rs.getString("ReturnDate");
-	                String AdditionalDet = rs.getString("AdditionalDetails");
-
-	                String temp = "Subscriber ID: " + subID + "    Book Name: " + bookName +
-	                              "    Borrow Date: " + BorrowDate + "    Return Date: " + ReturnDate +
-	                              "    Additional Details: " + AdditionalDet;
-	                FullBorrowRep.add(temp);
-	            }
-	        }
-	    }
-
-	    // Query 2: For Borrowed but Not Returned Books
-	    selectClause = "SELECT br1.SubscriberID, br1.BookName, MIN(br1.ActionDate) AS BorrowDate";
-	    fromClause = "FROM activityhistory br1";
-	    leftJoinClause = "LEFT JOIN activityhistory br2";
-	    joinCondition = "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName " +
-	                    "AND br2.ActionType = 'Return'";
-	    whereClause = "WHERE br1.ActionType = 'Borrow' AND br2.ActionType IS NULL";
-	    groupByClause = "GROUP BY br1.SubscriberID, br1.BookName";
-
-	    query = selectClause + " " + fromClause + " " + leftJoinClause + " " + joinCondition + " " + whereClause + " " + groupByClause;
-
-	    try (PreparedStatement ps = conn.prepareStatement(query)) {
-	        try (ResultSet rs = ps.executeQuery()) {
-	            while (rs.next()) {
-	                String bookName = rs.getString("BookName");
-	                String subID = rs.getString("SubscriberID");
-	                String BorrowDate = rs.getString("BorrowDate");
-
-	                String temp = "Subscriber ID: " + subID + "    Book Name: " + bookName +
-	                              "    Borrow Date: " + BorrowDate + "    Return Date: __-__-____ __:__:__     Additional Details: N/A";
-	                FullBorrowRep.add(temp);
-	            }
-	        }
-	    }
-
-	    return FullBorrowRep;
-	}
-
-
-		
 }
-
-
-

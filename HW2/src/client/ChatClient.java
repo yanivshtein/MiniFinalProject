@@ -145,7 +145,7 @@ public void handleMessageFromClientUI(Object obj)  //changed from ArrayList<Obje
 		try
 		{
 			awaitResponse = true;
-			//if (needWait==7) //dont need to wait for response from the server
+			//if (needWait==11) //dont need to wait for response from the server
 				//awaitResponse=false;
 			sendToServer(arr1);
 			while (awaitResponse) {
