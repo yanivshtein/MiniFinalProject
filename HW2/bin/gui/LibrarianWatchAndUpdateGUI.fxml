@@ -26,7 +26,7 @@
       <Text layoutX="548.0" layoutY="125.0" strokeType="OUTSIDE" strokeWidth="0.0" text="original return date:" />
       <TextField fx:id="OldRetDate" layoutX="682.0" layoutY="108.0" />
       <Text layoutX="548.0" layoutY="176.0" strokeType="OUTSIDE" strokeWidth="0.0" text="set a new return date:" />
-      <TextField fx:id="NewRetDate" alignment="TOP_CENTER" layoutX="682.0" layoutY="159.0" promptText="DD.MM.YYYY" />
+      <TextField fx:id="NewRetDate" alignment="TOP_CENTER" layoutX="682.0" layoutY="159.0" promptText="DD.MM.YYYY HH:MM:SS" />
       <DialogPane fx:id="ChangesSavedPop" layoutX="540.0" layoutY="272.0" />
       <Button fx:id="SaveChangesbtt" layoutX="663.0" layoutY="216.0" mnemonicParsing="false" onAction="#SaveChangBtt" prefHeight="25.0" prefWidth="105.0" text="save changes" />
    </children>

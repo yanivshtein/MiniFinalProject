@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import client.ChatClient;
 import client.ClientUI;
-import client.LibrarianUI;
+import client.ReaderCardLibrariaViewUI;
 import common.Subscriber1;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -54,7 +54,7 @@ public class LibrarianWatchAndUpdateGUI {
 	
 	public void ViewDetBtt(ActionEvent event) throws IOException {
 	    // Retrieve Subscriber info
-	    LibrarianUI.chat.accept("select", subID.getText(), "", ""); 
+	    ReaderCardLibrariaViewUI.chat.accept("select", subID.getText(), "", ""); 
 	    Subscriber1 sub = ChatClient.s1; 
 	    subID.setText(String.valueOf(sub.getSubscriber_id())); // Cast from int to string
 	    name.setText(sub.getSubscriber_name());
@@ -62,7 +62,7 @@ public class LibrarianWatchAndUpdateGUI {
 	    email.setText(sub.getSubscriber_email());
 	    
 	    // Retrieve borrow history
-	    LibrarianUI.chat.accept("watch borrow history", subID.getText(), "", "");
+	    ReaderCardLibrariaViewUI.chat.accept("watch borrow history", subID.getText(), "", "");
 	    // Get the borrow history from the client
 	     borrowHistory = ChatClient.borrowHistory;
 	    
@@ -99,7 +99,7 @@ public class LibrarianWatchAndUpdateGUI {
 	
 	public void SaveChangBtt(ActionEvent event) throws IOException {
 	    // Call the method to update the return date
-	    LibrarianUI.chat.book_accept("set new return date", subID.getText(), BookName.getText(), OldRetDate.getText(), NewRetDate.getText());
+	    ReaderCardLibrariaViewUI.chat.book_accept("set new return date", subID.getText(), BookName.getText(), OldRetDate.getText(), NewRetDate.getText());
 
 	    // Check the result of the update
 	    if (ChatClient.bool) {
