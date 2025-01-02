@@ -48,8 +48,10 @@ public class ClientGUISecondController {
 	@FXML
 	private DialogPane afterUpdate = null;
 	
+	
+	
 	public void getSelectBtn(ActionEvent event) throws IOException{
-		ClientUI.chat.accept("select", ClientGUILandController.id, "", ""); //retrieve Subscriber info
+		ClientGUILandController.chat.accept("select", ClientGUILandController.id, "", ""); //retrieve Subscriber info
 		Subscriber1 sub = ChatClient.s1; 
 		secondID.setText(String.valueOf(sub.getSubscriber_id())); //cast from int to string
 		secondName.setText(sub.getSubscriber_name());
@@ -60,7 +62,7 @@ public class ClientGUISecondController {
 	
 	public void getViewBtn(ActionEvent event) throws IOException {
 	    // Send the request to the server for the activity history
-	    ClientUI.chat.accept("watch activity history", ClientGUILandController.id, "", "");
+		ClientGUILandController.chat.accept("watch activity history", ClientGUILandController.id, "", "");
 	    
 	    // Get the activity history from the client
 	    ArrayList<String> activityHistory = ChatClient.activityHistory;
@@ -100,7 +102,7 @@ public class ClientGUISecondController {
 
 	public void getUpdatedBtn(ActionEvent event) throws IOException{
 		afterUpdate.setContentText("Update sent");
-		ClientUI.chat.accept("update", ClientGUILandController.id, secondPhoneRight.getText(), secondEmailRight.getText());
+		ClientGUILandController.chat.accept("update", ClientGUILandController.id, secondPhoneRight.getText(), secondEmailRight.getText());
 	}
 	
 	public void getExitBtn(ActionEvent event) throws IOException {

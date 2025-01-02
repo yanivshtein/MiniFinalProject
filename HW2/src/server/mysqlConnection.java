@@ -15,7 +15,21 @@ public class mysqlConnection {
 
 	private static Connection conn;
 
-	public static void connectToDB() {
+	public static mysqlConnection instance;
+	
+	private mysqlConnection() {
+		connectToDB();
+	}
+	
+	//singleton
+	public static synchronized mysqlConnection getInstance() {
+		if(instance == null) {
+			instance = new mysqlConnection();
+		}
+		return instance;
+	}
+	
+	private static void connectToDB() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
 			System.out.println("Driver definition succeed");
@@ -26,7 +40,7 @@ public class mysqlConnection {
 
 		try {
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root",
-					"Aa123456");
+					"yaniv1234");
 			System.out.println("SQL connection succeed");
 
 		} catch (SQLException ex) {/* handle any errors */

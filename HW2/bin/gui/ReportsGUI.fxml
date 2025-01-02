@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Text?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="672.0" prefWidth="781.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ReportsGUI">
+   <children>
+      <Label layoutX="32.0" layoutY="45.0" prefHeight="17.0" prefWidth="207.0" />
+      <Text layoutX="39.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select report type:" />
+      <RadioButton fx:id="borrowRep" layoutX="170.0" layoutY="48.0" mnemonicParsing="false" text="Borrow time report" />
+      <RadioButton fx:id="statusRep" layoutX="170.0" layoutY="87.0" mnemonicParsing="false" text="Subscriber status report" />
+      <Text layoutX="409.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select report month " />
+      <ComboBox fx:id="months" layoutX="576.0" layoutY="65.0" prefWidth="150.0" />
+      <TextArea fx:id="Displayarea" layoutX="43.0" layoutY="215.0" prefHeight="218.0" prefWidth="696.0" />
+      <Button fx:id="Viewbtt" layoutX="324.0" layoutY="161.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" text="View report" />
+   </children>
+</Pane>

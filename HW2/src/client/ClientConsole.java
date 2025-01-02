@@ -35,7 +35,7 @@ public class ClientConsole implements ChatIF
    * The instance of the client that created this ConsoleChat.
    */
   ChatClient client;
-
+  public boolean connected = false;
   
   //Constructors ****************************************************
 
@@ -50,6 +50,7 @@ public class ClientConsole implements ChatIF
     try 
     {
       client= new ChatClient(host, port, this);
+      connected = true;
     } 
     catch(IOException exception) 
     {

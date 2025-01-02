@@ -82,7 +82,7 @@ public class EchoServer extends AbstractServer
    */
   protected void serverStarted()
   {
-	  	mysqlConnection.connectToDB();
+	  	mysqlConnection.getInstance();
 
     System.out.println
       ("Server listening for connections on port " + getPort());
