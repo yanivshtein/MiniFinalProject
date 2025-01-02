@@ -72,7 +72,12 @@ public class ClientConsole implements ChatIF
     {
       ArrayList<Object> arr1 = new ArrayList<>();
       
-      if(str.equals("watch borrow history")){
+      
+      if(str.equals("create borrow report")) {
+    	  arr1.add(11);
+      }
+      
+      else if(str.equals("watch borrow history")){
     	  arr1.add(8);
     	  arr1.add(id);  
       }
@@ -85,11 +90,11 @@ public class ClientConsole implements ChatIF
     	  arr1.add(4);
     	  arr1.add(id);
       }
-      else if (str.equals("select")) { //SELECT
+      else if (str.equals("select")) { 
     	  arr1.add(2);
     	  arr1.add(id);
       }  
-      else if (str.equals("update")) { //UPDATE
+      else if (str.equals("update")) { 
     	  arr1.add(1); 
     	  arr1.add(id);
     	  arr1.add(phone);

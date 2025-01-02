@@ -1,6 +1,10 @@
 package gui;
 
 import java.io.IOException;
+
+import client.ChatClient;
+import client.ReaderCardLibrariaViewUI;
+import client.ReportsUI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -35,6 +39,37 @@ public class ReportsGUI {
         
         // Add the months to the ComboBox
         months.getItems().addAll(monthsArray);
+    }
+    
+    public void ViewBttClick(ActionEvent event) {
+        // Get the selected month from the ComboBox
+        String selectedMonth = months.getValue();
+
+        if (borrowRep.isSelected()) {
+            // Send a request to create a borrow report
+            ReportsUI.chat.accept("create borrow report", "", "", "");
+
+            // Build a single string to display all borrow report entries
+            StringBuilder reportBuilder = new StringBuilder();
+            for (String reportEntry : ChatClient.FullBorrowRep) {
+                reportBuilder.append(reportEntry).append("\n\n");
+            }
+
+            // Display the complete report in the text area
+            Displayarea.setText(reportBuilder.toString());
+        }
+    }
+
+    
+    public void BorrowTimeRepClick(ActionEvent event) {
+    	statusRep.setSelected(false);
+    	
+    }
+    
+    public void SubStatusRepClick(ActionEvent event) {
+    	borrowRep.setSelected(false);
+    	
+    	
     }
 
     public void start(Stage primaryStage) throws Exception {

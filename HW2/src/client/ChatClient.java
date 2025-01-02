@@ -31,6 +31,7 @@ public class ChatClient extends AbstractClient
   public static Subscriber1 s1 = new Subscriber1(0,"",0,"","");
   public static ArrayList<String> activityHistory;
   public static ArrayList<String> borrowHistory;
+  public static ArrayList<String> FullBorrowRep;
   public static Boolean bool;
   public static Boolean isFrozen;
   public static Boolean isAvailable;
@@ -103,8 +104,11 @@ public class ChatClient extends AbstractClient
 		    // Check if it's activity or borrow history based on the marker in the string
 		    if (receivedHistory.size() > 0) {
 		        String firstEntry = receivedHistory.get(0);  // Get the first element to check the type
-		        System.out.println(firstEntry);
-		        if (firstEntry.contains("Action")) {
+		        
+		        if (firstEntry.contains("Borrow Date")) {
+		        	FullBorrowRep = receivedHistory;
+		        }
+		        else if (firstEntry.contains("Action")) {
 		            activityHistory = receivedHistory;  // Process as activity history
 		        } else   {
 		            borrowHistory = receivedHistory;  // Process as borrow history

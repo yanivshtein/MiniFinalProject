@@ -196,11 +196,69 @@ public class mysqlConnection {
 	        return false;
 	    }
 	}
+	
+	public static ArrayList<String> BringBorrowRepInfo() throws SQLException {
+	    String selectClause, fromClause, joinCondition, groupByClause, leftJoinClause, whereClause, query;
+	    ArrayList<String> FullBorrowRep = new ArrayList<>();
+
+	    // Query 1: For Borrowed and Returned Books (with AdditionalDetails from br2)
+	    selectClause = "SELECT br1.SubscriberID, br1.BookName, MIN(br1.ActionDate) AS BorrowDate, " +
+	                   "MIN(br2.ActionDate) AS ReturnDate, br2.AdditionalDetails AS AdditionalDetails";
+	    fromClause = "FROM activityhistory br1 JOIN activityhistory br2";
+	    joinCondition = "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName " +
+	                    "AND br1.ActionType = 'Borrow' AND br2.ActionType = 'Return' AND br1.ActionDate < br2.ActionDate";
+	    groupByClause = "GROUP BY br1.SubscriberID, br1.BookName, br2.AdditionalDetails";
+
+	    query = selectClause + " " + fromClause + " " + joinCondition + " " + groupByClause;
+
+	    try (PreparedStatement ps = conn.prepareStatement(query)) {
+	        try (ResultSet rs = ps.executeQuery()) {
+	            while (rs.next()) {
+	                String bookName = rs.getString("BookName");
+	                String subID = rs.getString("SubscriberID");
+	                String BorrowDate = rs.getString("BorrowDate");
+	                String ReturnDate = rs.getString("ReturnDate");
+	                String AdditionalDet = rs.getString("AdditionalDetails");
+
+	                String temp = "Subscriber ID: " + subID + "    Book Name: " + bookName +
+	                              "    Borrow Date: " + BorrowDate + "    Return Date: " + ReturnDate +
+	                              "    Additional Details: " + AdditionalDet;
+	                FullBorrowRep.add(temp);
+	            }
+	        }
+	    }
+
+	    // Query 2: For Borrowed but Not Returned Books
+	    selectClause = "SELECT br1.SubscriberID, br1.BookName, MIN(br1.ActionDate) AS BorrowDate";
+	    fromClause = "FROM activityhistory br1";
+	    leftJoinClause = "LEFT JOIN activityhistory br2";
+	    joinCondition = "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName " +
+	                    "AND br2.ActionType = 'Return'";
+	    whereClause = "WHERE br1.ActionType = 'Borrow' AND br2.ActionType IS NULL";
+	    groupByClause = "GROUP BY br1.SubscriberID, br1.BookName";
+
+	    query = selectClause + " " + fromClause + " " + leftJoinClause + " " + joinCondition + " " + whereClause + " " + groupByClause;
+
+	    try (PreparedStatement ps = conn.prepareStatement(query)) {
+	        try (ResultSet rs = ps.executeQuery()) {
+	            while (rs.next()) {
+	                String bookName = rs.getString("BookName");
+	                String subID = rs.getString("SubscriberID");
+	                String BorrowDate = rs.getString("BorrowDate");
+
+	                String temp = "Subscriber ID: " + subID + "    Book Name: " + bookName +
+	                              "    Borrow Date: " + BorrowDate + "    Return Date: __-__-____ __:__:__     Additional Details: N/A";
+	                FullBorrowRep.add(temp);
+	            }
+	        }
+	    }
+
+	    return FullBorrowRep;
+	}
+
+
+		
 }
-
-
-		
-		
 
 
 

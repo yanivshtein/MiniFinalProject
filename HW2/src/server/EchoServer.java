@@ -5,6 +5,7 @@ package server;
 
 import java.io.*;
 import java.net.ServerSocket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -220,6 +221,37 @@ public class EchoServer extends AbstractServer
 	                    e.printStackTrace();
 	                }
 	                break;
+	            case 11: 
+	                ArrayList<String> BorrowRepDet = null;
+
+	                // Fetch borrowed and returned books data
+	                try {
+	                    BorrowRepDet = mysqlConnection.BringBorrowRepInfo();
+	                } catch (SQLException e) {
+	                    e.printStackTrace();
+	                    // Optionally, set BorrowRepDet to an empty list or send a specific message
+	                    BorrowRepDet = new ArrayList<>();
+	                    BorrowRepDet.add("Error fetching data: " + e.getMessage());
+	                }
+
+	                // Check if the result is null or empty before sending to client
+	                if (BorrowRepDet != null && !BorrowRepDet.isEmpty()) {
+	                    // Send result to client
+	                    try {
+	                        client.sendToClient(BorrowRepDet);
+	                    } catch (IOException e) {
+	                        e.printStackTrace();
+	                    }
+	                } else {
+	                    // Send an empty or error message if no results
+	                    try {
+	                        client.sendToClient("No data available or an error occurred.");
+	                    } catch (IOException e) {
+	                        e.printStackTrace();
+	                    }
+	                }
+	                break;
+
 
 	          	  
 	            default:
