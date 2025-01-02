@@ -26,6 +26,7 @@ import ocsf.server.*;
  */
 public class EchoServer extends AbstractServer 
 {
+	private int copysAmount = 0;
 	private List<ConnectionListener> listeners = new ArrayList<>();
 	 
 	 
@@ -112,11 +113,13 @@ public class EchoServer extends AbstractServer
   @SuppressWarnings("unchecked")
   protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
 	    Subscriber1 sub = null;
-
+	    
 	    if (msg instanceof ArrayList<?>) {
 	        ArrayList<Object> arr = (ArrayList<Object>) msg;
 	        int request = (Integer) arr.get(0);
-
+	        String subID;
+	        String bookName;
+	        
 	        switch (request) { //go to DB controller based on the request
 	            case 1: // UPDATE
 	                mysqlConnection.update((String) arr.get(1), (String) arr.get(2), (String) arr.get(3));
@@ -146,7 +149,7 @@ public class EchoServer extends AbstractServer
 	                break;
 
 	            case 5: // Check subscriber's status
-	                String subID = (String) arr.get(1);
+	                subID = (String) arr.get(1);
 	                String retStatus = "frozen"; // for the example
 	                // go to subscriber's DB and return the status of subID (subscriber's id)
 	                try {
@@ -157,9 +160,11 @@ public class EchoServer extends AbstractServer
 	                break;
 
 	            case 6: // Check book availability
-	                String bookName = (String) arr.get(2);
-	                String retAvailability = "available"; // for the example
+	                bookName = (String) arr.get(2);
+	                String retAvailability = "notAvailable"; // for the example
 	                // go to book's DB and check if there is an available copy
+	                // also put the number of total copys of the book in the copysAmount for case 7 (add)
+	                copysAmount=2;
 	                try {
 	                    client.sendToClient(retAvailability); // send back to the client if the book is available
 	                } catch (IOException e) {
@@ -168,10 +173,10 @@ public class EchoServer extends AbstractServer
 	                break;
 
 	            case 7: // Add an order
-	                String subIdOrder = (String) arr.get(1);
-	                String bookNameOrder = (String) arr.get(2);
+	                subID = (String) arr.get(1);
+	                bookName = (String) arr.get(2);
 	             // go to orders table in the DB and check if can add a column (if the number of orders is less than the number of copys)
-	                String canAdd = mysqlConnection.canAddOrder(subIdOrder, bookNameOrder); 
+	                String canAdd = mysqlConnection.canAddOrder(subID, bookName, copysAmount); 
 	                try {
 	                    client.sendToClient(canAdd); 
 	                } catch (IOException e) {
@@ -179,10 +184,10 @@ public class EchoServer extends AbstractServer
 	                }
                 	break;
 	            case 8: //watch activity history
-	            	String subscriberID = (String)arr.get(1); //subscriber ID is in the second position of the array
+	            	subID = (String)arr.get(1); //subscriber ID is in the second position of the array
 	          	  	
 	            	// Retrieve the borrow history for the given subscriber ID
-	          	    ArrayList<String> borrowHistory = mysqlConnection.getBorrowHistory(subscriberID);
+	          	    ArrayList<String> borrowHistory = mysqlConnection.getBorrowHistory(subID);
 	          	  try {
 	        	        // Send the borrow history to the client
 	        	        client.sendToClient(borrowHistory);
@@ -191,10 +196,10 @@ public class EchoServer extends AbstractServer
 	        	    }
 	          	    break;
 	            case 9:	            		          	  
-		          	String subscriberId = (String)arr.get(1); //subscriber ID is in the second position of the array
+		          	subID = (String)arr.get(1); //subscriber ID is in the second position of the array
 	        	    
 	        	    // Retrieve the activity history for the given subscriber ID
-	        	    ArrayList<String> activityHistory = mysqlConnection.getActivityHistory(subscriberId);
+	        	    ArrayList<String> activityHistory = mysqlConnection.getActivityHistory(subID);
 	        	    
 	        	    try {
 	        	        // Send the activity history to the client
@@ -205,13 +210,13 @@ public class EchoServer extends AbstractServer
 	        	    break;
 	            case 10:
 	                // Extract parameters from the array
-	                String subscriberid = (String) arr.get(1);
-	                String BookName = (String) arr.get(2);
+	                subID = (String) arr.get(1);
+	                bookName = (String) arr.get(2);
 	                String OldDate = (String) arr.get(3);
 	                String NewDate = (String) arr.get(4);
 
 	                // Update the return date
-	                boolean updateDate = mysqlConnection.ChangeReturnDate(subscriberid, BookName, OldDate, NewDate);
+	                boolean updateDate = mysqlConnection.ChangeReturnDate(subID, bookName, OldDate, NewDate);
 
 	                // Send result to client
 	                try {
@@ -220,7 +225,7 @@ public class EchoServer extends AbstractServer
 	                    e.printStackTrace();
 	                }
 	                break;
-
+	            
 	          	  
 	            default:
 	                System.out.println("The server - Received message is not of the expected type.");
