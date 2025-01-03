@@ -8,13 +8,17 @@ import client.ClientUI;
 import common.Subscriber1;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
 
 
-public class ClientGUISecondController {
+public class ClientGUIHomePageController {
 	@FXML
 	private Button show = null;
 	@FXML
@@ -48,10 +52,17 @@ public class ClientGUISecondController {
 	@FXML
 	private DialogPane afterUpdate = null;
 	
-	
+	public void start(Stage primaryStage) throws Exception {
+		Parent root = FXMLLoader.load(getClass().getResource("/gui/ClientGUIHomePage.fxml"));
+		Scene scene = new Scene(root);
+		scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIHomePage.css").toExternalForm());
+		primaryStage.setTitle("Client GUI");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
 	
 	public void getSelectBtn(ActionEvent event) throws IOException{
-		ClientGUILoginController.chat.accept("select", ClientGUILoginController.id, "", ""); //retrieve Subscriber info
+		ClientGUIConnectionController.chat.accept("select", ClientGUILoginController.id, "", ""); //retrieve Subscriber info
 		Subscriber1 sub = ChatClient.s1; 
 		secondID.setText(String.valueOf(sub.getSubscriber_id())); //cast from int to string
 		secondName.setText(sub.getSubscriber_name());
@@ -62,7 +73,7 @@ public class ClientGUISecondController {
 	
 	public void getViewBtn(ActionEvent event) throws IOException {
 	    // Send the request to the server for the activity history
-		ClientGUILoginController.chat.accept("watch activity history", ClientGUILoginController.id, "", "");
+		ClientGUIConnectionController.chat.accept("watch activity history", ClientGUILoginController.id, "", "");
 	    
 	    // Get the activity history from the client
 	    ArrayList<String> activityHistory = ChatClient.activityHistory;
@@ -102,7 +113,7 @@ public class ClientGUISecondController {
 
 	public void getUpdatedBtn(ActionEvent event) throws IOException{
 		afterUpdate.setContentText("Update sent");
-		ClientGUILoginController.chat.accept("update", ClientGUILoginController.id, secondPhoneRight.getText(), secondEmailRight.getText());
+		ClientGUIConnectionController.chat.accept("update", ClientGUILoginController.id, secondPhoneRight.getText(), secondEmailRight.getText());
 	}
 	
 	public void getExitBtn(ActionEvent event) throws IOException {

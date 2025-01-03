@@ -34,7 +34,7 @@ public class ClientGUIConnectionController {
 		Parent root = FXMLLoader.load(getClass().getResource("/gui/ClientGUIConnection.fxml"));
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIConnection.css").toExternalForm());
-		primaryStage.setTitle("Client GUI");
+		primaryStage.setTitle("Client Connection");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
