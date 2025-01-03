@@ -22,7 +22,7 @@ import javafx.stage.Stage;
 import server.EchoServer;
 import server.ServerUI;
 
-public class ClientGUILandController {
+public class ClientGUILoginController {
 
 	public static String id;
 	@FXML
@@ -51,9 +51,9 @@ public class ClientGUILandController {
 
 
 	public void start(Stage primaryStage) throws Exception {
-		Parent root = FXMLLoader.load(getClass().getResource("/gui/ClientGUILand.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("/gui/ClientGUILogin.fxml"));
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(getClass().getResource("/gui/ClientGUILand.css").toExternalForm());
+		scene.getStylesheets().add(getClass().getResource("/gui/ClientGUILogin.css").toExternalForm());
 		primaryStage.setTitle("Client GUI");
 		primaryStage.setScene(scene);
 		primaryStage.show();

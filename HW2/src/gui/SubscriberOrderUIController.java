@@ -36,19 +36,19 @@ public class SubscriberOrderUIController {
 	public void getSendBtn(ActionEvent event) throws IOException {
 		bookNameGot = bookName.getText();
 		// check if subscriber's status is frozen
-		ClientGUILandController.chat.acceptFromOrderController(5, ClientGUILandController.id, "");
+		ClientGUILoginController.chat.acceptFromOrderController(5, ClientGUILoginController.id, "");
 		if (ChatClient.isFrozen == true) {
 			errorMsg.setContentText("Account is FROZEN!");
 			return; // exit the method
 		}
-		ClientGUILandController.chat.acceptFromOrderController(6, bookNameGot, "");
+		ClientGUILoginController.chat.acceptFromOrderController(6, bookNameGot, "");
 		if (ChatClient.isAvailable == true) { // which means there is an available copy of the book -> cant order
 			errorMsg.setContentText("Available copy of this book exists in the library!");
 			return; // exit the method
 		}
 		//send to reader's card the order
 		//add column in the Orders table in the DB:
-		ClientGUILandController.chat.acceptFromOrderController(7, ClientGUILandController.id, bookNameGot);
+		ClientGUILoginController.chat.acceptFromOrderController(7, ClientGUILoginController.id, bookNameGot);
 		//check if the number of copys of the book already been ordered, if yes -> cant execute order
 		if (ChatClient.isCan==false) {
 			errorMsg.setContentText("The number of orders and copys equals -> can't order");
