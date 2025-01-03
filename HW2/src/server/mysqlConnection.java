@@ -181,5 +181,42 @@ public class mysqlConnection {
 		
 		
 	}
+	
+	/*
+	 * method that return borrow date and return date of the borrower
+	 * if found in the database
+	 */
+	public static ArrayList<String>  getBorrowDateAndReturnDate(String borrowerId,String bookName) throws SQLException {
+		ArrayList<String> borrowAndReturnDate = new ArrayList<>();
+		PreparedStatement pr = conn.prepareStatement("SELECT borrowDate,returnDate FROM borrowers where BorrowerId=? AND BookName=?)");
+		
+		pr.setString(1, borrowerId);
+		pr.setString(2, bookName);
+		
+		ResultSet resultSet = pr.executeQuery();
+		if( resultSet.next()) {
+		borrowAndReturnDate.add(resultSet.getString(0));
+		borrowAndReturnDate.add(resultSet.getString(1));
+		return borrowAndReturnDate;
+		}
+		return null;
 
+		
+	}
+	
+	// method that checks in the database if there is a certain borrower that borrowed the selected book
+	// using "Exist" if there is a row  that match the borrower's ID and book's name  then
+	// the method return true
+	public static boolean  checkIfBorrowerFound(String borrowerId,String bookName) throws SQLException {
+		
+		PreparedStatement pr = conn.prepareStatement("SELECT EXISTS(SELECT * FROM borrowers where BorrowerId=? AND BookName=?)");
+		pr.setString(1, borrowerId);
+		pr.setString(2, bookName);
+		
+		if (pr.execute()) {
+			return true;
+		}
+		return false;
+		
+	}
 }

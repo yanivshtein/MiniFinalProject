@@ -2,7 +2,7 @@ package gui;
 
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
-
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 
 import client.ChatClient;
@@ -38,6 +38,8 @@ public class LibrarianReturnGUI {
 //	@FXML
 //	Button send;
 	
+	SimpleDateFormat time= new SimpleDateFormat("dd-MM-yyyy");
+	
 	
 	
 	public void sendButton(ActionEvent event) {		// method that sends information to the controller to return the book to the library
@@ -48,7 +50,7 @@ public class LibrarianReturnGUI {
 	
 	public void checkButton(ActionEvent event) {		// method that get information from the data the controller to return the book to the library
 		
-		ClientUI.chat.accept("select", subscriberId.getText(), j, null);
+		//ClientUI.chat.accept("select", subscriberId.getText(), j, null);
 	}
 	
 	
