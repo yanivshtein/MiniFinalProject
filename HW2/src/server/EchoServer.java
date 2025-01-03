@@ -14,7 +14,6 @@ import ocsf.server.*;
 
 public class EchoServer extends AbstractServer 
 {
-    private int copysAmount = 0;
     private List<ConnectionListener> listeners = new ArrayList<>();
      
     public interface ConnectionListener {
@@ -88,7 +87,7 @@ public class EchoServer extends AbstractServer
 
                 case 5: // Check subscriber's status
                     subID = (String) arr.get(1);
-                    String retStatus = "frozen"; // for the example
+                    String retStatus = "notFrozen"; // for the example
                  // go to subscriber's DB and return the status of subID (subscriber's id)
                     try {
                         client.sendToClient(retStatus); // send back to the client if the status is frozen or not
@@ -97,12 +96,12 @@ public class EchoServer extends AbstractServer
                     }
                     break;
 
-                case 6: // Check book availability
+                case 6: // Check if there is a book like this and then Check book availability
                     bookName = (String) arr.get(2); 
-                    String retAvailability = "notAvailable"; // for the example
-                 // go to book's DB and check if there is an available copy
-	                // also put the number of total copys of the book in the copysAmount for case 7 (add)
-                    copysAmount = 2; //for the example
+                    //retAvailability will have 'exist' if book even exists, or 'available' if can get a copy of it
+                    // go to book's DB and check if there is a book like this, if yes check if there is an available copy
+	                // also put the number of total copys in its variable
+                    String retAvailability = mysqlConnection.isAvailable(bookName); 
                     try {
                         client.sendToClient(retAvailability); // send back to the client if the book is available
                     } catch (IOException e) {
@@ -114,7 +113,7 @@ public class EchoServer extends AbstractServer
                     subID = (String) arr.get(1);
                     bookName = (String) arr.get(2);
                  // go to orders table in the DB and check if can add a column (if the number of orders is less than the number of copys)
-                    String canAdd = mysqlConnection.canAddOrder(subID, bookName, copysAmount);
+                    String canAdd = mysqlConnection.canAddOrder(subID, bookName);
                     try {
                         client.sendToClient(canAdd);
                     } catch (IOException e) {

@@ -61,6 +61,10 @@ public class SubscriberOrderUIController {
 			return; // exit the method
 		}
 		OrderUI.chat.acceptFromOrderController(6, "", bookNameGot);
+		if (ChatClient.isExist==false) { //which means there is not a book like this in our library
+			errorMsg.setContentText("Oops! :( We dont have this book in our library.");
+			return;
+		}
 		if (ChatClient.isAvailable == true) { // which means there is an available copy of the book -> cant order
 			errorMsg.setContentText("Sorry! 📚 An available copy of this book already exists in the library.");
 			return; // exit the method
