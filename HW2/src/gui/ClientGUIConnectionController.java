@@ -49,7 +49,7 @@ public class ClientGUIConnectionController {
 
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/gui/ClientGUILogin.css").toExternalForm());
-            primaryStage.setTitle("Client Second GUI");
+            primaryStage.setTitle("Login Page");
 
             primaryStage.setScene(scene);
             primaryStage.show();

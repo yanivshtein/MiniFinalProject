@@ -29,19 +29,15 @@ public class ClientGUILoginController {
 	private Button exit = null;
 
 	@FXML
-	private Button send = null;
+	private Button enter = null;
 	
-	@FXML
-	private Button connect = null;
 
 	@FXML
-	private TextField subID = null;
+	private TextField userName = null;
 	
 	@FXML
-	private TextField serverIP = null;
+	private TextField password = null;
 	
-	@FXML
-	private TextField status = null;
 	
 	
 	@FXML
@@ -59,10 +55,10 @@ public class ClientGUILoginController {
 	}
 
 	// This method is called on button click
-    public void getSendBtn(ActionEvent event) throws IOException, InterruptedException {
+    public void getEnterBtn(ActionEvent event) throws IOException, InterruptedException {
         FXMLLoader loader = new FXMLLoader();
 
-        id = subID.getText();
+        id = userName.getText();
         if (id.trim().isEmpty()) {
 
             System.out.println("You must enter an id number");
@@ -94,8 +90,6 @@ public class ClientGUILoginController {
 		System.out.println("exit");
 		System.exit(0);
 	}
-	public void getConnectBtn(ActionEvent event) {
-		 
-	}
+	
 
 }
