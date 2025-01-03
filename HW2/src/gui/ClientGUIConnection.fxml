@@ -6,16 +6,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ClientGUILandController">
+<AnchorPane prefHeight="245.0" prefWidth="482.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ClientGUIConnectionController">
    <children>
-      <Pane layoutY="6.0" prefHeight="300.0" prefWidth="482.0">
+      <Pane layoutY="3.0" prefHeight="250.0" prefWidth="482.0">
          <children>
             <TextField fx:id="serverIP" layoutX="157.0" layoutY="47.0" prefHeight="31.0" prefWidth="207.0" />
             <Label layoutX="35.0" layoutY="54.0" text="Server IP: " />
-            <Button fx:id="send" layoutX="100.0" layoutY="239.0" mnemonicParsing="false" onAction="#getSendBtn" text="Send" />
-            <Button fx:id="exit" layoutX="320.0" layoutY="239.0" mnemonicParsing="false" onAction="#getExitBtn" text="Exit" />
-            <Label layoutX="23.0" layoutY="191.0" text="Subscriber ID: " />
-            <TextField fx:id="subID" layoutX="157.0" layoutY="184.0" prefHeight="31.0" prefWidth="207.0" />
+            <Button fx:id="exit" layoutX="310.0" layoutY="182.0" mnemonicParsing="false" onAction="#getExitBtn" text="Exit" />
             <TextField fx:id="status" layoutX="157.0" layoutY="107.0" prefHeight="31.0" prefWidth="207.0" />
             <Button fx:id="connect" layoutX="391.0" layoutY="49.0" mnemonicParsing="false" onAction="#getConnectBtn" text="Connect" />
          </children>

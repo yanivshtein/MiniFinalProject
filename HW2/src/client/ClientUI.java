@@ -6,7 +6,8 @@ import javafx.stage.Stage;
 
 import java.util.Vector;
 
-import gui.ClientGUILandController;
+import gui.ClientGUIConnectionController;
+import gui.ClientGUILoginController;
 
 
 public class ClientUI extends Application {
@@ -28,7 +29,7 @@ public class ClientUI extends Application {
 
         // TODO Auto-generated method stub
 
-        ClientGUILandController aFrame = new ClientGUILandController(); 
+        ClientGUIConnectionController aFrame = new ClientGUIConnectionController(); 
 
         aFrame.start(primaryStage);
     }
