@@ -58,9 +58,24 @@ public class ClientGUIHomePageController {
 	}
 	
 	public void getViewHistory(ActionEvent event) throws IOException {
-		//need to wait for bari to add this page
-	
+	    // Hiding primary window
+	    ((Node) event.getSource()).getScene().getWindow().hide();
+	    
+	    // Loading FXML and setting up the new stage
+	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/ViewHistoryGUI.fxml"));
+	    Parent root = loader.load();
+	    
+	    Scene scene = new Scene(root);
+	    scene.getStylesheets().add(getClass().getResource("/gui/ViewHistoryGUI.css").toExternalForm());
+	    
+	    Stage primaryStage = new Stage();
+	    primaryStage.setTitle("View History");
+	    primaryStage.setScene(scene);
+	    primaryStage.show();
 	}
+
+	
+
 	
 	
 	public void getExitBtn(ActionEvent event) {
