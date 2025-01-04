@@ -47,7 +47,7 @@ public class SubscriberOrderUIController {
     }
 
     public void getSendBtn(ActionEvent event) throws IOException {
-        String subID = ClientGUILoginController.id;
+        String subID = ClientGUILoginController.email;
         bookNameGot = bookName.getText();
         
         if (bookNameGot.isEmpty()) {

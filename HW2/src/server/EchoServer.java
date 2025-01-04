@@ -14,6 +14,8 @@ import ocsf.server.*;
 
 public class EchoServer extends AbstractServer 
 {
+	
+	mysqlConnection instance;
     private List<ConnectionListener> listeners = new ArrayList<>();
      
     public interface ConnectionListener {
@@ -34,11 +36,11 @@ public class EchoServer extends AbstractServer
     public EchoServer(int port) 
     {
         super(port);
+        instance = mysqlConnection.getInstance();
     }
 
     protected void serverStarted()
     {
-        mysqlConnection.connectToDB();
         System.out.println("Server listening for connections on port " + getPort());
     }
   
@@ -50,6 +52,7 @@ public class EchoServer extends AbstractServer
     @SuppressWarnings("unchecked")
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
         Subscriber1 sub = null;
+        Boolean ret;
         
         if (msg instanceof ArrayList<?>) {
             ArrayList<Object> arr = (ArrayList<Object>) msg;
@@ -75,9 +78,17 @@ public class EchoServer extends AbstractServer
                         e.printStackTrace();
                     }
                     break;
-
-                case 4: // Search the id to check if the subscriber exists
-                    Boolean ret = mysqlConnection.searchId((String) arr.get(1));
+                case 3: //Search the database to check email and password for librarian
+                	ret = mysqlConnection.searchLibId((String) arr.get(1), (String) arr.get(2));
+                    try {
+                        client.sendToClient(ret);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                	
+                	break;
+                case 4: //Search the database to check email and password for subscriber
+                    ret = mysqlConnection.searchSubId((String) arr.get(1), (String) arr.get(2));
                     try {
                         client.sendToClient(ret);
                     } catch (IOException e) {

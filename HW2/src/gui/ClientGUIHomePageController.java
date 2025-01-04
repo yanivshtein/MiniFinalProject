@@ -27,7 +27,7 @@ public class ClientGUIHomePageController {
 	
 	@FXML
 	private void initialize() {
-		subName.setText(ClientGUILoginController.id);
+		subName.setText(ClientGUILoginController.email);
 	}
 	
 	
