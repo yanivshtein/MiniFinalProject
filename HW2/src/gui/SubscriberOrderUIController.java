@@ -1,7 +1,6 @@
 package gui;
 
 import java.io.IOException;
-
 import client.ChatClient;
 import client.ClientUI;
 import client.OrderUI;
@@ -53,27 +52,26 @@ public class SubscriberOrderUIController {
         
         if (bookNameGot.isEmpty()) {
             errorMsg.setContentText("Oops! 😞 You must enter a book name.");
-            return; // exit the method
+            return;
         }
         
         // check if subscriber's status is frozen
-        OrderUI.chat.acceptFromOrderController(5, subID, ""); //OrderUI needs to be changed to ClientUI !!!!!!!!!!!!!!!!
+        ClientGUIConnectionController.chat.acceptFromOrderController(5, subID, "");
         if (ChatClient.isFrozen == true) {
             errorMsg.setContentText("Uh-oh! 😬 Your account is FROZEN!");
-            return; // exit the method
+            return;
         }
         
-        OrderUI.chat.acceptFromOrderController(6, "", bookNameGot);
+        ClientGUIConnectionController.chat.acceptFromOrderController(6, bookNameGot, "");
         if (ChatClient.isAvailable == true) { // which means there is an available copy of the book -> cant order
             errorMsg.setContentText("Sorry! 📚 An available copy of this book already exists in the library.");
-            return; // exit the method
+            return;
         }
         
-        //add column in the Orders table in the DB and in the activityhistory:
-        OrderUI.chat.acceptFromOrderController(7, subID, bookNameGot);
-        //check if the number of copys of the book already been ordered, if yes -> cant execute order
-        //if no -> add the order to the 'order' table and into the 'activityhistory' table
-        if (ChatClient.isCan==false) {
+        // add column in the Orders table in the DB and in the activityhistory
+        ClientGUIConnectionController.chat.acceptFromOrderController(7, subID, bookNameGot);
+        // check if the number of copies of the book already been ordered
+        if (ChatClient.isCan == false) {
             errorMsg.setContentText("Whoops! 😅 The number of orders and copies are equal, so you can't place another order.");
             return;
         }

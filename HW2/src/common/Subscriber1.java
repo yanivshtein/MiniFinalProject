@@ -7,6 +7,7 @@ public class Subscriber1 implements Serializable{
     private int detailed_subscription_history;
     private String subscriber_phone_number;
     private String subscriber_email;
+    private String sub_status; // New field
 
     private static int i = 0;
 
@@ -16,14 +17,16 @@ public class Subscriber1 implements Serializable{
         this.detailed_subscription_history = 3;
         this.subscriber_phone_number = "1234";
         this.subscriber_email = "doroty.dorin@gmail.com";
+        this.sub_status = "Active"; // Default value for sub_status
     }
     
-    public Subscriber1(int sub_id, String name, int detail, String phone, String email) {
-    	subscriber_id = sub_id;
+    public Subscriber1(int sub_id, String name, int detail, String phone, String email, String status) {
+        subscriber_id = sub_id;
         subscriber_name = name;
         detailed_subscription_history = detail;
         subscriber_phone_number = phone;
         subscriber_email = email;
+        sub_status = status; // Initialize sub_status
     }
 
     // Getters and setters
@@ -63,8 +66,15 @@ public class Subscriber1 implements Serializable{
         return subscriber_email;
     }
 
-   public void setSubscriber_email (String subscriber_email) {
-	   this.subscriber_email = subscriber_email;
-   }
-}
+    public void setSubscriber_email(String subscriber_email) {
+        this.subscriber_email = subscriber_email;
+    }
 
+    public String getSub_status() {
+        return sub_status;
+    }
+
+    public void setSub_status(String sub_status) {
+        this.sub_status = sub_status;
+    }
+}

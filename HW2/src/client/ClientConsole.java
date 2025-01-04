@@ -123,7 +123,7 @@ public class ClientConsole implements ChatIF
 	  client.handleMessageFromClientUI(arr);		  
   }
   
-  public void book_accept(String str, String id, String BookName ,String OldDate ,String NewDate) 
+  public void book_accept(String str, String id, String BookName ,String OldDate ,String NewDate , String Librarian_name) 
   {
     try
     {
@@ -135,6 +135,7 @@ public class ClientConsole implements ChatIF
       	  arr1.add(BookName);
       	  arr1.add(OldDate);
       	  arr1.add(NewDate);
+      	  arr1.add(Librarian_name);
         }
     	client.handleMessageFromClientUI(arr1);
     } 

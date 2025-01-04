@@ -4,65 +4,29 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import client.ChatClient;
-import client.ClientUI;
-import common.Subscriber1;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
+import javafx.stage.Stage;
 
 
-public class ClientGUISecondController {
-	@FXML
-	private Button show = null;
-	@FXML
-	private Button update = null;
-	@FXML
-	private Button exitBtn = null;
-	@FXML
-	private TextField secondID = null;
+public class ViewHistoryGUI {
 	
 	@FXML
 	private TextArea HistoryView = null;
-
-	@FXML
-	private TextField secondName = null;
-
-	@FXML
-	private TextField secondPhoneLeft = null;
-
-	@FXML
-	private TextField secondHistory = null;
-
-	@FXML
-	private TextField secondEmailLeft = null;
-
-	@FXML
-	private TextField secondPhoneRight = null;
-
-	@FXML
-	private TextField secondEmailRight = null;
 	
 	@FXML
-	private DialogPane afterUpdate = null;
-	
-	
-	
-	public void getSelectBtn(ActionEvent event) throws IOException{
-		ClientGUILoginController.chat.accept("select", ClientGUILoginController.id, "", ""); //retrieve Subscriber info
-		Subscriber1 sub = ChatClient.s1; 
-		secondID.setText(String.valueOf(sub.getSubscriber_id())); //cast from int to string
-		secondName.setText(sub.getSubscriber_name());
-		secondHistory.setText(String.valueOf(sub.getDetailed_subscription_history()));
-		secondPhoneLeft.setText(sub.getSubscriber_phone_number());
-		secondEmailLeft.setText(sub.getSubscriber_email());
-	}
+	private Button ret = null;
+
 	
 	public void getViewBtn(ActionEvent event) throws IOException {
 	    // Send the request to the server for the activity history
-		ClientGUILoginController.chat.accept("watch activity history", ClientGUILoginController.id, "", "");
+		ClientGUIConnectionController.chat.accept("watch activity history", ClientGUILoginController.id, "", "");
 	    
 	    // Get the activity history from the client
 	    ArrayList<String> activityHistory = ChatClient.activityHistory;
@@ -97,16 +61,24 @@ public class ClientGUISecondController {
 	    // Set the formatted string into the HistoryView TextArea
 	    HistoryView.setText(historyMatrix.toString());
 	}
-
-
-
-	public void getUpdatedBtn(ActionEvent event) throws IOException{
-		afterUpdate.setContentText("Update sent");
-		ClientGUILoginController.chat.accept("update", ClientGUILoginController.id, secondPhoneRight.getText(), secondEmailRight.getText());
-	}
 	
-	public void getExitBtn(ActionEvent event) throws IOException {
-		System.out.println("Exit client");
-		System.exit(0);
+	public void getReturnBtn(ActionEvent event) throws IOException {
+	    // Close the current window
+	    ((Node) event.getSource()).getScene().getWindow().hide();
+	    
+	    // Load the ClientGUIHomePage FXML
+	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/ClientGUIHomePage.fxml"));
+	    Parent root = loader.load();
+	    
+	    Scene scene = new Scene(root);
+	    scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIHomePage.css").toExternalForm());
+	    
+	    Stage primaryStage = new Stage();
+	    primaryStage.setTitle("Client Home Page");
+	    primaryStage.setScene(scene);
+	    primaryStage.show();
 	}
+
+
+
 }
