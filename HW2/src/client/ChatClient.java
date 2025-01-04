@@ -27,7 +27,7 @@ public class ChatClient extends AbstractClient {
 	 * method in the client.
 	 */
 	ChatIF clientUI;
-	public static Subscriber1 s1 = new Subscriber1(0, "", 0, "", "","");
+	public static Subscriber1 s1 = new Subscriber1(0, "", "", "","","");
 	public static ArrayList<String> activityHistory;
 	public static ArrayList<String> borrowHistory;
 	public static ArrayList<String> FullBorrowRep;
@@ -109,14 +109,14 @@ public class ChatClient extends AbstractClient {
 		} else {
 			Subscriber1 sub = (Subscriber1) msg;
 			if (sub.equals(null)) {
-				s1 = new Subscriber1(0, "", 0, "", "","");
+				s1 = new Subscriber1(0, "", "", "","","");
 			} else {
 				s1.setSubscriber_id(sub.getSubscriber_id());
 				s1.setSubscriber_name(sub.getSubscriber_name());
-				s1.setDetailed_subscription_history(sub.getDetailed_subscription_history());
 				s1.setSubscriber_phone_number(sub.getSubscriber_phone_number());
 				s1.setSubscriber_email(sub.getSubscriber_email());
 				s1.setSub_status(sub.getSub_status());
+				s1.setPassword(sub.getPassword());
 			}
 		}
 
