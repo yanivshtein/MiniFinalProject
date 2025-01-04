@@ -82,6 +82,7 @@ public class ClientGUIUpdateDetailsController {
 	}
 	public void getReturnBtn(ActionEvent event) throws IOException{
 		FXMLLoader loader = new FXMLLoader();
+		
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
         Stage primaryStage = new Stage();
         Pane root = loader.load(getClass().getResource("/gui/ClientGUIHomePage.fxml").openStream());

@@ -179,9 +179,7 @@ public class mysqlConnection {
                     String bookName = rs.getString("BookName");
                     String actionType = rs.getString("ActionType");
                     String actionDate = rs.getString("ActionDate");
-                    String additionalDetails = rs.getString("AdditionalDetails");
-                    activityHistory.add("Book Name: " + bookName + ", Action: " + actionType + ", Date: " + actionDate
-                            + ", Details: " + additionalDetails);
+                    activityHistory.add("Book Name: " + bookName + ", Action: " + actionType + ", Date: " + actionDate);
                 }
             }
         } catch (SQLException e) {
@@ -199,8 +197,7 @@ public class mysqlConnection {
                 while (rs.next()) {
                     String bookName = rs.getString("BookName");
                     String actionDate = rs.getString("ActionDate");
-                    String additionalDetails = rs.getString("AdditionalDetails");
-                    borrowHistory.add("Book Name: " + bookName + ", Date: " + actionDate + ", Details: " + additionalDetails);
+                    borrowHistory.add("Book Name: " + bookName + ", Date: " + actionDate);
                 }
             }
         } catch (SQLException e) {
@@ -210,13 +207,12 @@ public class mysqlConnection {
     }
 
     public static boolean ChangeReturnDate(String subscriberId, String BookName, String OldDate, String NewDate, String Librarian_name) {
-        String query = "UPDATE activityhistory SET ActionDate = ?, AdditionalDetails = ? WHERE SubscriberID = ? AND BookName = ? AND ActionDate = ? AND ActionType = 'Borrow'";
+        String query = "UPDATE activityhistory SET ActionDate = ? WHERE SubscriberID = ? AND BookName = ? AND ActionDate = ? AND ActionType = 'Borrow'";
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, NewDate);
-            ps.setString(2, "Manual extension done by: " + Librarian_name);
-            ps.setString(3, subscriberId);
-            ps.setString(4, BookName);
-            ps.setString(5, OldDate);
+            ps.setString(2, subscriberId);
+            ps.setString(3, BookName);
+            ps.setString(4, OldDate);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.out.println("SQL Error: " + e.getMessage());
@@ -230,19 +226,19 @@ public class mysqlConnection {
 
         // Query for Borrowed and Returned Books
         String query1 = "SELECT br1.SubscriberID, br1.BookName, MIN(br1.ActionDate) AS BorrowDate, "
-                + "MIN(br2.ActionDate) AS ReturnDate, br2.AdditionalDetails "
+                + "MIN(br2.ActionDate) AS ReturnDate "
                 + "FROM activityhistory br1 JOIN activityhistory br2 "
                 + "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName "
                 + "AND br1.ActionType = 'Borrow' AND br2.ActionType = 'Return' AND br1.ActionDate < br2.ActionDate "
-                + "GROUP BY br1.SubscriberID, br1.BookName, br2.AdditionalDetails";
+                + "GROUP BY br1.SubscriberID, br1.BookName";
 
         try (PreparedStatement ps = conn.prepareStatement(query1)) {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     FullBorrowRep.add(String.format(
-                            "Subscriber ID: %s    Book Name: %s    Borrow Date: %s    Return Date: %s    Additional Details: %s",
+                            "Subscriber ID: %s Book Name: %s Borrow Date: %s Return Date: %s",
                             rs.getString("SubscriberID"), rs.getString("BookName"), rs.getString("BorrowDate"),
-                            rs.getString("ReturnDate"), rs.getString("AdditionalDetails")));
+                            rs.getString("ReturnDate")));
                 }
             }
         }
@@ -259,7 +255,7 @@ public class mysqlConnection {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     FullBorrowRep.add(String.format(
-                            "Subscriber ID: %s    Book Name: %s    Borrow Date: %s    Return Date: __-__-____ __:__:__     Additional Details: N/A",
+                            "Subscriber ID: %s Book Name: %s Borrow Date: %s Return Date: __-__-____ __:__:__",
                             rs.getString("SubscriberID"), rs.getString("BookName"), rs.getString("BorrowDate")));
                 }
             }

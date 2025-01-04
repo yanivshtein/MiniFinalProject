@@ -52,7 +52,6 @@ public class ViewHistoryGUI {
 	        historyMatrix.append("Book Name: ").append(activityDetails[0].split(":")[1].trim()).append("\n");
 	        historyMatrix.append("Action: ").append(activityDetails[1].split(":")[1].trim()).append("\n");
 	        historyMatrix.append("Date: ").append(activityDetails[2].split(":")[1].trim()).append("\n");
-	        historyMatrix.append("Details: ").append(activityDetails[3].split(":")[1].trim()).append("\n");
 	        
 	        // Add a separator between activities (optional)
 	        historyMatrix.append("\n-------------------------\n\n");
