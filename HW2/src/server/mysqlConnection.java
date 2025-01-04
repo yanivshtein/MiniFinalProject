@@ -62,11 +62,11 @@ public class mysqlConnection {
             if (rs.next()) {
                 int sub_id = rs.getInt("subscriber_id");
                 String sub_name = rs.getString("subscriber_name");
-                int detail = rs.getInt("detailed_subscription_history");
                 String phone = rs.getString("subscriber_phone_number");
                 String email = rs.getString("subscriber_email");
                 String status = rs.getString("Subscription_status");
-                sub = new Subscriber1(sub_id, sub_name, detail, phone, email, status);
+                String password = rs.getString("password");
+                sub = new Subscriber1(sub_id, sub_name, phone, email, status,password);
             }
         } catch (SQLException e) {
             e.printStackTrace();

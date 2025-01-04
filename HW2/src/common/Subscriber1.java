@@ -4,29 +4,29 @@ import java.io.Serializable;
 public class Subscriber1 implements Serializable{
     private int subscriber_id;
     private String subscriber_name;
-    private int detailed_subscription_history;
     private String subscriber_phone_number;
     private String subscriber_email;
     private String sub_status; // New field
+    private String Password;
 
     private static int i = 0;
 
     public Subscriber1() {
         this.subscriber_id = i++;
         this.subscriber_name = "Doroty";
-        this.detailed_subscription_history = 3;
         this.subscriber_phone_number = "1234";
         this.subscriber_email = "doroty.dorin@gmail.com";
         this.sub_status = "Active"; // Default value for sub_status
+        this.Password = "1234";
     }
     
-    public Subscriber1(int sub_id, String name, int detail, String phone, String email, String status) {
+    public Subscriber1(int sub_id, String name, String phone, String email, String status , String Password) {
         subscriber_id = sub_id;
         subscriber_name = name;
-        detailed_subscription_history = detail;
         subscriber_phone_number = phone;
         subscriber_email = email;
         sub_status = status; // Initialize sub_status
+        this.Password = Password;
     }
 
     // Getters and setters
@@ -44,14 +44,6 @@ public class Subscriber1 implements Serializable{
 
     public void setSubscriber_name(String subscriber_name) {
         this.subscriber_name = subscriber_name;
-    }
-
-    public int getDetailed_subscription_history() {
-        return detailed_subscription_history;
-    }
-
-    public void setDetailed_subscription_history(int detailed_subscription_history) {
-        this.detailed_subscription_history = detailed_subscription_history;
     }
 
     public String getSubscriber_phone_number() {
@@ -77,4 +69,12 @@ public class Subscriber1 implements Serializable{
     public void setSub_status(String sub_status) {
         this.sub_status = sub_status;
     }
+
+	public String getPassword() {
+		return Password;
+	}
+
+	public void setPassword(String password) {
+		Password = password;
+	}
 }
