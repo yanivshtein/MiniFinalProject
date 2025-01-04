@@ -8,12 +8,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ClientGUISecondController">
+<AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ClientGUIUpdateDetailsController">
    <children>
       <Pane layoutX="-7.0" layoutY="1.0" prefHeight="570.0" prefWidth="949.0">
          <children>
-            <Button layoutX="144.0" layoutY="104.0" mnemonicParsing="false" onAction="#getSelectBtn" text="Show Subscriber Details" />
-            <Button layoutX="456.0" layoutY="104.0" mnemonicParsing="false" onAction="#getUpdatedBtn" text="Update Subscriber" />
+            <Button fx:id="show" layoutX="144.0" layoutY="104.0" mnemonicParsing="false" onAction="#getSelectBtn" text="Show Subscriber Details" />
+            <Button fx:id="update" layoutX="456.0" layoutY="104.0" mnemonicParsing="false" onAction="#getUpdatedBtn" text="Update Subscriber" />
             <Label layoutX="70.0" layoutY="177.0" text="ID:" />
             <Label layoutX="70.0" layoutY="250.0" text="Name" />
             <Label layoutX="64.0" layoutY="323.0" text="History" />
@@ -30,7 +30,7 @@
             <Label layoutX="369.0" layoutY="249.0" text="Email:" />
             <Button fx:id="exitBtn" layoutX="437.0" layoutY="512.0" mnemonicParsing="false" onAction="#getExitBtn" text="EXIT" />
             <DialogPane fx:id="afterUpdate" layoutX="523.0" layoutY="435.0" prefHeight="31.0" prefWidth="217.0" />
-            <Button layoutX="724.0" layoutY="104.0" mnemonicParsing="false" onAction="#getViewBtn" text="Viewing activity history" />
+            <Button fx:id="view" layoutX="724.0" layoutY="104.0" mnemonicParsing="false" onAction="#getViewBtn" text="Viewing activity history" />
             <TextArea fx:id="HistoryView" layoutX="669.0" layoutY="164.0" prefHeight="358.0" prefWidth="247.0" />
          </children>
       </Pane>

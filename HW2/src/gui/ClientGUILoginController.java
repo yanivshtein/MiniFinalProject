@@ -29,47 +29,42 @@ public class ClientGUILoginController {
 	private Button exit = null;
 
 	@FXML
-	private Button send = null;
+	private Button enter = null;
 	
-	@FXML
-	private Button connect = null;
 
 	@FXML
-	private TextField subID = null;
+	private TextField userName = null;
 	
 	@FXML
-	private TextField serverIP = null;
+	private TextField password = null;
 	
-	@FXML
-	private TextField status = null;
 	
 	
 	@FXML
 	private DialogPane alertMsg = null;
 	
-	public static ClientConsole chat;
 
 
 	public void start(Stage primaryStage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("/gui/ClientGUILogin.fxml"));
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(getClass().getResource("/gui/ClientGUILogin.css").toExternalForm());
-		primaryStage.setTitle("Client GUI");
+		primaryStage.setTitle("Login Screen");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
 
 	// This method is called on button click
-    public void getSendBtn(ActionEvent event) throws IOException, InterruptedException {
+    public void getEnterBtn(ActionEvent event) throws IOException, InterruptedException {
         FXMLLoader loader = new FXMLLoader();
 
-        id = subID.getText();
+        id = userName.getText();
         if (id.trim().isEmpty()) {
 
             System.out.println("You must enter an id number");
         } else {
 
-            chat.accept("search", id, "", "");
+            ClientGUIConnectionController.chat.accept("search", id, "", "");
             if (ChatClient.bool==false) {
                 alertMsg.setContentText("The ID does not exist!");
             }
@@ -77,10 +72,10 @@ public class ClientGUILoginController {
                 System.out.println("Subscriber ID Found");
                 ((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
                 Stage primaryStage = new Stage();
-                Pane root = loader.load(getClass().getResource("/gui/ClientGUISecond.fxml").openStream());
+                Pane root = loader.load(getClass().getResource("/gui/ClientGUIHomePage.fxml").openStream());
 
                 Scene scene = new Scene(root);
-                scene.getStylesheets().add(getClass().getResource("/gui/ClientGUISecond.css").toExternalForm());
+                scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIHomePage.css").toExternalForm());
                 primaryStage.setTitle("Client Second GUI");
 
                 primaryStage.setScene(scene);
@@ -95,11 +90,6 @@ public class ClientGUILoginController {
 		System.out.println("exit");
 		System.exit(0);
 	}
-	public void getConnectBtn(ActionEvent event) {
-		 chat= new ClientConsole(serverIP.getText(), 5555);
-		if(chat.connected) {
-			status.setText("connected");
-		}
-	}
+	
 
 }
