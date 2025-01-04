@@ -116,6 +116,7 @@ public class ChatClient extends AbstractClient {
 				s1.setDetailed_subscription_history(sub.getDetailed_subscription_history());
 				s1.setSubscriber_phone_number(sub.getSubscriber_phone_number());
 				s1.setSubscriber_email(sub.getSubscriber_email());
+				s1.setSub_status(sub.getSub_status());
 			}
 		}
 
