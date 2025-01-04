@@ -149,7 +149,8 @@ public class EchoServer extends AbstractServer
                     bookName = (String) arr.get(2);
                     String OldDate = (String) arr.get(3);
                     String NewDate = (String) arr.get(4);
-                    boolean updateDate = mysqlConnection.ChangeReturnDate(subID, bookName, OldDate, NewDate);
+                    String Librarian_name = (String) arr.get(5);
+                    boolean updateDate = mysqlConnection.ChangeReturnDate(subID, bookName, OldDate, NewDate, Librarian_name);
                     try {
                         client.sendToClient(updateDate);
                     } catch (IOException e) {
