@@ -53,9 +53,9 @@ public class ClientGUIUpdateDetailsController {
 	
 	@FXML
 	private void initialize() {
-		ClientGUIConnectionController.chat.accept("select", ClientGUILoginController.id, "", ""); //retrieve Subscriber info
+		ClientGUIConnectionController.chat.accept("select", ClientGUILoginController.email, "", ""); //retrieve Subscriber info
 		Subscriber1 sub = ChatClient.s1; 
-		IdName.setText(ClientGUILoginController.id);
+		IdName.setText(ClientGUILoginController.email);
 		subName.setText(sub.getSubscriber_name());
 		Phone.setText(sub.getSubscriber_phone_number());
 		Email.setText(sub.getSubscriber_email());
@@ -73,7 +73,7 @@ public class ClientGUIUpdateDetailsController {
 
 	public void getUpdatedBtn(ActionEvent event) throws IOException{
 		afterUpdate.setContentText("Updated");
-		ClientGUIConnectionController.chat.accept("update", ClientGUILoginController.id, Phone.getText(), Email.getText());
+		ClientGUIConnectionController.chat.accept("update", ClientGUILoginController.email, Phone.getText(), Email.getText());
 	}
 	
 	public void getExitBtn(ActionEvent event) throws IOException {

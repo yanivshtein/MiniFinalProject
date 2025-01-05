@@ -60,6 +60,39 @@ public class ClientConsole implements ChatIF
     }
   }
 
+  public void acceptLogin(String str, String email, String password) 
+  {
+    try
+    {
+      ArrayList<Object> arr1 = new ArrayList<>();
+      
+      
+      if (str.equals("searchSub")) {
+    	  arr1.add(4);
+    	  arr1.add(email);
+    	  arr1.add(password);
+      }
+      else if (str.equals("searchLib")) {
+    	  arr1.add(3);
+    	  arr1.add(email);
+    	  arr1.add(password);
+      }
+      else  { //EXIT
+    	  arr1.add(0);
+      }
+      client.handleMessageFromClientUI(arr1);
+      
+      
+    } 
+    catch (Exception ex) 
+    {
+      System.out.println
+        ("Unexpected error while reading from console!");
+    }
+  }
+
+  
+  
   
   //Instance methods ************************************************
   
@@ -87,8 +120,12 @@ public class ClientConsole implements ChatIF
     	  arr1.add(9);
     	  arr1.add(id);  
       }
-      else if (str.equals("search")) {
+      else if (str.equals("searchSub")) {
     	  arr1.add(4);
+    	  arr1.add(id);
+      }
+      else if (str.equals("searchLib")) {
+    	  arr1.add(3);
     	  arr1.add(id);
       }
       else if (str.equals("select")) { 
@@ -102,7 +139,7 @@ public class ClientConsole implements ChatIF
     	  arr1.add(email);
       }
       else  { //EXIT
-    	  arr1.add(3);
+    	  arr1.add(0);
       }
       client.handleMessageFromClientUI(arr1);
       

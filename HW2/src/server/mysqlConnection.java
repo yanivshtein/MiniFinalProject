@@ -32,7 +32,7 @@ public class mysqlConnection {
         }
 
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "Aa123456");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "yaniv1234");
             System.out.println("SQL connection succeed");
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
@@ -74,10 +74,27 @@ public class mysqlConnection {
         return sub;
     }
 
-    public static Boolean searchId(String id) {
-        String searchQuery = "SELECT 1 FROM subscriber WHERE subscriber_id = ?";
+    public static Boolean searchSubId(String id, String password) {
+        String searchQuery = "SELECT 1 FROM subscriber WHERE subscriber_email = ? AND password = ?";
         try (PreparedStatement ps = conn.prepareStatement(searchQuery)) {
             ps.setString(1, id);
+            ps.setString(2, password);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    public static Boolean searchLibId(String email, String password) {
+        String searchQuery = "SELECT 1 FROM librarian WHERE librarian_email = ? AND librarian_password = ?";
+        try (PreparedStatement ps = conn.prepareStatement(searchQuery)) {
+            ps.setString(1, email);
+            ps.setString(2, password);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return true;
