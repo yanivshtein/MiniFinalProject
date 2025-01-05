@@ -252,7 +252,8 @@ public class mysqlConnection {
                 while (rs.next()) {
                     String bookName = rs.getString("BookName");
                     String actionDate = rs.getString("ActionDate");
-                    borrowHistory.add("Book Name: " + bookName + ", Date: " + actionDate);
+                    String deadline = rs.getString("deadline");
+                    borrowHistory.add("Book Name: " + bookName + ", Date: " + actionDate + ", Deadline: " + deadline);
                 }
             }
         } catch (SQLException e) {
