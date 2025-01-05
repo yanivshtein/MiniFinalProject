@@ -95,6 +95,19 @@ public class LibrarianGUIHomePageController {
         primaryStage.setScene(scene);
         primaryStage.show();
 	}
+	public void getAddSubBtn(ActionEvent event) throws IOException{
+		FXMLLoader loader = new FXMLLoader();
+		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+        Stage primaryStage = new Stage();
+        Pane root = loader.load(getClass().getResource("/gui/AddSubscriberGUIController.fxml").openStream());
+
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/gui/AddSubscriberGUIController.css").toExternalForm());
+        primaryStage.setTitle("Add new subscriber");
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+	}
 	
 
 }

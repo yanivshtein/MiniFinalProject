@@ -168,6 +168,21 @@ public class mysqlConnection {
             e.printStackTrace();
         }
     }
+    //add addSubcriber
+    public static void addSubscriber(int subId, String subName, String phone, String email,String status , String password) {
+        String insertQuery = "INSERT INTO subscriber (subscriber_id, subscriber_name, subscriber_phone_number, subscriber_email, subscription_status, password) VALUES (?, ?, ?, ?, ?, ?);";
+        try (PreparedStatement ps = conn.prepareStatement(insertQuery)) {
+            ps.setInt(1, subId);
+            ps.setString(2, subName);
+            ps.setString(3, phone);
+            ps.setString(4, email);
+            ps.setString(5, status);
+            ps.setString(6, password);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static ArrayList<String> getActivityHistory(String subscriberId) {
         ArrayList<String> activityHistory = new ArrayList<>();

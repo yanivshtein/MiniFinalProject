@@ -182,6 +182,22 @@ public class EchoServer extends AbstractServer
                         }
                     }
                     break;
+                case 13:
+                	int Sub_id = (int)arr.get(1); 
+                	String subName = (String)arr.get(2);
+                	String subPhone =(String)arr.get(3);
+                	String subEmail =(String)arr.get(4);
+                	String subStatus =(String)arr.get(5);
+                	String subPassword = (String)arr.get(6);
+                	mysqlConnection.addSubscriber(Sub_id,subName,subPhone,subEmail,subStatus,subPassword); 
+                	try {
+                		client.sendToClient(new Boolean(true)); 
+                	}catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                	break;
+                	
+                	
 
                 default:
                     System.out.println("The server - Received message is not of the expected type.");

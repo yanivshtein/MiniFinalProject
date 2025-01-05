@@ -14,7 +14,7 @@
          </font></Label>
       <Text layoutX="39.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" />
       <Label fx:id="librarianName" layoutX="131.0" layoutY="53.0" text="Label" />
-      <Button fx:id="addSub" layoutX="32.0" layoutY="165.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="151.0" text="Add subscriber" />
+      <Button fx:id="addSub" layoutX="32.0" layoutY="165.0" mnemonicParsing="false" onAction="#getAddSubBtn" prefHeight="25.0" prefWidth="151.0" text="Add subscriber" />
       <Button fx:id="borrowBook" layoutX="32.0" layoutY="227.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="151.0" text="Borrowing a book" />
       <Button fx:id="returnBook" layoutX="244.0" layoutY="227.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="151.0" text="Return a book" />
       <Button fx:id="searchBook" layoutX="244.0" layoutY="165.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="151.0" text="Search a book" />

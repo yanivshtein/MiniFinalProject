@@ -101,6 +101,7 @@ public class ClientConsole implements ChatIF
     	  arr1.add(phone);
     	  arr1.add(email);
       }
+
       else  { //EXIT
     	  arr1.add(3);
       }
@@ -120,6 +121,18 @@ public class ClientConsole implements ChatIF
 	  arr.add(request);
 	  arr.add(id);
 	  arr.add(bookName);
+	  client.handleMessageFromClientUI(arr);		  
+  }
+  
+  public void acceptAddSubscriber(int id, String name, String phoneNumber , String email ,String status , String password) {
+	  ArrayList<Object> arr = new ArrayList<>();
+	  arr.add(13);
+	  arr.add(id);
+	  arr.add(name);
+	  arr.add(phoneNumber);
+	  arr.add(email);
+	  arr.add(status);
+	  arr.add(password);
 	  client.handleMessageFromClientUI(arr);		  
   }
   
