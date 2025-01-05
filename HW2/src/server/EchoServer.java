@@ -5,7 +5,9 @@ package server;
 
 import java.io.*;
 import java.net.ServerSocket;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import common.Subscriber1;
@@ -209,6 +211,32 @@ public class EchoServer extends AbstractServer
 
 	          	  boolean UpdateDate = mysqlConnection.ChangeReturnDate(subscriberid , BookName , OldDate ,NewDate);
 	          	  
+	            case 11:	// SELECT from borrowers table if exist
+	            	String borrowerId = (String)arr.get(1);
+	            	String bookNameBorrow = (String)arr.get(2);
+	            	
+				try {
+					boolean isBorrowerExist= mysqlConnection.checkIfBorrowerFound(borrowerId, bookNameBorrow);
+					client.sendToClient(isBorrowerExist);
+				} catch (SQLException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+	            case 12:	// Select specific borrow date and return date from borrowers table
+	            	String borrowId = (String)arr.get(1);
+	            	String bookNameForBorrow = (String)arr.get(2);
+	            	LinkedHashSet<String> dateArr = new LinkedHashSet<String>();
+				try {
+					dateArr = mysqlConnection.getBorrowDateAndReturnDate(borrowId, bookNameForBorrow);
+					client.sendToClient(dateArr);
+				} catch (SQLException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	            	
+	            	
+	            	
 	            default:
 	                System.out.println("The server - Received message is not of the expected type.");
 	                break;

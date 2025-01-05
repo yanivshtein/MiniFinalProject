@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.Scanner;
 
 import common.Subscriber1;
@@ -186,17 +187,17 @@ public class mysqlConnection {
 	 * method that return borrow date and return date of the borrower
 	 * if found in the database
 	 */
-	public static ArrayList<String>  getBorrowDateAndReturnDate(String borrowerId,String bookName) throws SQLException {
-		ArrayList<String> borrowAndReturnDate = new ArrayList<>();
-		PreparedStatement pr = conn.prepareStatement("SELECT borrowDate,returnDate FROM borrowers where BorrowerId=? AND BookName=?)");
+	public static LinkedHashSet<String>  getBorrowDateAndReturnDate(String borrowerId,String bookName) throws SQLException {
+		LinkedHashSet<String> borrowAndReturnDate = new LinkedHashSet<>();
+		PreparedStatement pr = conn.prepareStatement("SELECT borrowDate,returnDate FROM borrowers where BorrowerId=? AND BookName=?");
 		
 		pr.setString(1, borrowerId);
 		pr.setString(2, bookName);
 		
 		ResultSet resultSet = pr.executeQuery();
 		if( resultSet.next()) {
-		borrowAndReturnDate.add(resultSet.getString(0));
 		borrowAndReturnDate.add(resultSet.getString(1));
+		borrowAndReturnDate.add(resultSet.getString(2));
 		return borrowAndReturnDate;
 		}
 		return null;

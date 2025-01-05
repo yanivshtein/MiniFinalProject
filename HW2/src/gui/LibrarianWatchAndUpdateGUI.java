@@ -10,11 +10,13 @@ import common.Subscriber1;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
 
@@ -46,6 +48,8 @@ public class LibrarianWatchAndUpdateGUI {
 	private DialogPane ChangesSavedPop = null;
 	@FXML
 	private Button SaveChangesbtt = null;
+	@FXML
+	private Button returnBookButton=null;
 	
 	private ArrayList<String> borrowHistory;
 	private String datePart;
@@ -104,8 +108,20 @@ public class LibrarianWatchAndUpdateGUI {
 		
 	}
 	
-	
+//	// added returnBook window
+	public void ReturnBookBtt(ActionEvent event) throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		//((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+		Stage primaryStage = new Stage();
+		Pane root = loader.load(getClass().getResource("/gui/LibrarianReturnGUI.fxml").openStream());
 
+		Scene scene = new Scene(root);
+		scene.getStylesheets().add(getClass().getResource("/gui/LibrarianReturnGUI.css").toExternalForm());
+		primaryStage.setTitle("Return Book");
+
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
 
 
 
