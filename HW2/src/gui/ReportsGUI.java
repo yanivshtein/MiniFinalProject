@@ -28,6 +28,8 @@ public class ReportsGUI {
     private TextArea Displayarea = null;
     @FXML
     private Button Viewbtt = null;
+    @FXML
+    private ComboBox<String> years = null;  // Specify type String for ComboBox
 
     // This method will be called when the FXML file is loaded
     public void initialize() {
@@ -37,17 +39,24 @@ public class ReportsGUI {
             "July", "August", "September", "October", "November", "December"
         };
         
+        String[] yearsArray = {
+        	    "2020", "2021", "2022", "2023", "2024", "2025"
+        	};
+
+        
         // Add the months to the ComboBox
         months.getItems().addAll(monthsArray);
+        years.getItems().addAll(yearsArray);
     }
     
     public void ViewBttClick(ActionEvent event) {
         // Get the selected month from the ComboBox
-        String selectedMonth = months.getValue();
+        String selectedMonth = getMonthNumber(months.getValue());
+        String selectedYear = years.getValue();
 
         if (borrowRep.isSelected()) {
             // Send a request to create a borrow report
-            ReportsUI.chat.accept("create borrow report", "", "", "");
+            ReportsUI.chat.reports_accept("create borrow report", selectedMonth , selectedYear );
 
             // Build a single string to display all borrow report entries
             StringBuilder reportBuilder = new StringBuilder();
@@ -80,5 +89,26 @@ public class ReportsGUI {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+    
+    
+    public String getMonthNumber(String monthName) {
+        String[] monthsArray = {
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        };
+
+        // Loop through the array to find the index of the month
+        for (int i = 0; i < monthsArray.length; i++) {
+            if (monthsArray[i].equalsIgnoreCase(monthName)) {
+                // Format the month number with leading zero if necessary
+                return String.format("%02d", i + 1);  // Adds leading zero if the month number is single digit
+            }
+        }
+
+        // If the month name is not valid, return an error string or throw an exception
+        return "Invalid month";  // Invalid month name
+    }
+
+
 
 }
