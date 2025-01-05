@@ -50,7 +50,7 @@ public class LibrarianWatchAndUpdateGUI {
     @FXML
     private Button SaveChangesbtt = null;
     @FXML
-    private TextField SubStatus = null;
+    private TextField SubStatus = null; //active OR frozen
     
     private  String TempStatus;
     
@@ -134,20 +134,27 @@ public class LibrarianWatchAndUpdateGUI {
     }
 
     private boolean isLessThanTwoWeeks(String oldDateStr, String newDateStr) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        if (oldDateStr == null || newDateStr == null || oldDateStr.isEmpty() || newDateStr.isEmpty()) {
+            ChangesSavedPop.setContentText("Error: One or both date strings are null or empty.");
+            return false;
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date oldDate = dateFormat.parse(oldDateStr);
             Date newDate = dateFormat.parse(newDateStr);
 
-            long diffInMillis = Math.abs(newDate.getTime() - oldDate.getTime());
-            long diffInDays = TimeUnit.MILLISECONDS.toDays(diffInMillis);
+            // Calculate the difference in days
+            long diffInDays = TimeUnit.MILLISECONDS.toDays(Math.abs(newDate.getTime() - oldDate.getTime()));
 
+            // Return true if less than 14 days
             return diffInDays < 14;
         } catch (ParseException e) {
             ChangesSavedPop.setContentText("Error parsing dates: " + e.getMessage());
             return false;
         }
     }
+
 
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/gui/LibrarianWatchAndUpdateGUI.fxml"));
