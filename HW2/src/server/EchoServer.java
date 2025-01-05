@@ -17,6 +17,7 @@ public class EchoServer extends AbstractServer
 	
 	mysqlConnection instance;
     private List<ConnectionListener> listeners = new ArrayList<>();
+	private String subEmail;
      
     public interface ConnectionListener {
         void onClientConnected(ClientInfo c);
@@ -145,8 +146,8 @@ public class EchoServer extends AbstractServer
                     break;
 
                 case 9:
-                    subID = (String)arr.get(1);
-                    ArrayList<String> activityHistory = mysqlConnection.getActivityHistory(subID);
+                	subEmail = (String)arr.get(3);
+                    ArrayList<String> activityHistory = mysqlConnection.getActivityHistory(subEmail);
                     try {
                         client.sendToClient(activityHistory);
                     } catch (IOException e) {

@@ -26,7 +26,7 @@ public class ViewHistoryGUI {
 	
 	public void getViewBtn(ActionEvent event) throws IOException {
 	    // Send the request to the server for the activity history
-		ClientGUIConnectionController.chat.accept("watch activity history", ClientGUILoginController.email, "", "");
+		ClientGUIConnectionController.chat.accept("watch activity history", "", "", ClientGUILoginController.email);
 	    
 	    // Get the activity history from the client
 	    ArrayList<String> activityHistory = ChatClient.activityHistory;

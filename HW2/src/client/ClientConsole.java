@@ -118,7 +118,9 @@ public class ClientConsole implements ChatIF
       
       if (str.equals("watch activity history")) {
     	  arr1.add(9);
-    	  arr1.add(id);  
+    	  arr1.add("");  
+    	  arr1.add("");
+    	  arr1.add(email);
       }
       else if (str.equals("searchSub")) {
     	  arr1.add(4);

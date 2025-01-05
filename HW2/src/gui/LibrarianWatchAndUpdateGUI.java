@@ -89,21 +89,31 @@ public class LibrarianWatchAndUpdateGUI {
     }
 
     public void ManReturnBtt(ActionEvent event) throws IOException {
-    	if (TempStatus.equals("frozen")) {
-    		return;
-    	}
+        if (TempStatus.equals("frozen")) {
+            return;
+        }
         for (int i = 0; i < borrowHistory.size(); i++) {
             if (borrowHistory.get(i).contains(BookName.getText())) {
+                
+                // Extract the "Date" portion
                 int dateIndex = borrowHistory.get(i).indexOf("Date: ");
                 if (dateIndex != -1) {
-                    int startIndex = dateIndex + 6;
-                    String dateTimePart = borrowHistory.get(i).substring(startIndex, startIndex + 19);
+                    int startIndex = dateIndex + 6; // Length of "Date: " is 6
+                    int endIndex = borrowHistory.get(i).indexOf(",", startIndex);
+                    
+                    // If there's no comma, assume the date goes to the end of the string
+                    if (endIndex == -1) {
+                        endIndex = borrowHistory.get(i).length();
+                    }
+                    
+                    String dateTimePart = borrowHistory.get(i).substring(startIndex, endIndex).trim();
                     OldRetDate.setText(dateTimePart);
                     break;
                 }
             }
         }
     }
+
 
     public void SaveChangBtt(ActionEvent event) throws IOException {
     	if (TempStatus.equals("frozen")) {

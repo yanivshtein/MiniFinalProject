@@ -32,7 +32,7 @@ public class mysqlConnection {
         }
 
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "yaniv1234");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "Aa123456");
             System.out.println("SQL connection succeed");
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
@@ -186,22 +186,45 @@ public class mysqlConnection {
         }
     }
 
-    public static ArrayList<String> getActivityHistory(String subscriberId) {
-        ArrayList<String> activityHistory = new ArrayList<>();
-        String query = "SELECT * FROM ActivityHistory WHERE SubscriberID = ?";
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setString(1, subscriberId);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    String bookName = rs.getString("BookName");
-                    String actionType = rs.getString("ActionType");
-                    String actionDate = rs.getString("ActionDate");
-                    activityHistory.add("Book Name: " + bookName + ", Action: " + actionType + ", Date: " + actionDate);
+    public static ArrayList getActivityHistory(String subscriberEmail) {
+        System.out.println(subscriberEmail);
+        ArrayList activityHistory = new ArrayList<>();
+        
+        // First query to get subscriber ID
+        String subscriberQuery = "SELECT subscriber_id FROM subscriber WHERE subscriber_email = ?";
+        
+        try (PreparedStatement psSubscriber = conn.prepareStatement(subscriberQuery)) {
+            psSubscriber.setString(1, subscriberEmail);
+            
+            try (ResultSet rsSubscriber = psSubscriber.executeQuery()) {
+                if (rsSubscriber.next()) {
+                    int subscriberId = rsSubscriber.getInt("subscriber_id");
+                    
+                    // Second query to get activity history using subscriber ID
+                    String activityQuery = "SELECT * FROM activityhistory WHERE SubscriberID = ?";
+                    
+                    try (PreparedStatement psActivity = conn.prepareStatement(activityQuery)) {
+                        psActivity.setInt(1, subscriberId);
+                        
+                        try (ResultSet rsActivity = psActivity.executeQuery()) {
+                            while (rsActivity.next()) {
+                                String bookName = rsActivity.getString("BookName");
+                                String actionType = rsActivity.getString("ActionType");
+                                String actionDate = rsActivity.getString("ActionDate");
+                                activityHistory.add("Book Name: " + bookName + 
+                                                 ", Action: " + actionType + 
+                                                 ", Date: " + actionDate);
+                            }
+                        }
+                    }
+                } else {
+                    System.out.println("No subscriber found with email: " + subscriberEmail);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        
         return activityHistory;
     }
 
@@ -224,7 +247,7 @@ public class mysqlConnection {
     }
 
     public static boolean ChangeReturnDate(String subscriberId, String BookName, String OldDate, String NewDate, String Librarian_name) {
-        String query = "UPDATE activityhistory SET ActionDate = ? WHERE SubscriberID = ? AND BookName = ? AND ActionDate = ? AND ActionType = 'Borrow'";
+        String query = "UPDATE activityhistory SET deadline = ? WHERE SubscriberID = ? AND BookName = ? AND ActionDate = ? AND ActionType = 'Borrow'";
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, NewDate);
             ps.setString(2, subscriberId);
