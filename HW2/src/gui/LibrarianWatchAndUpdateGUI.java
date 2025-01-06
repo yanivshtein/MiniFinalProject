@@ -96,9 +96,9 @@ public class LibrarianWatchAndUpdateGUI {
             if (borrowHistory.get(i).contains(BookName.getText())) {
                 
                 // Extract the "Date" portion
-                int dateIndex = borrowHistory.get(i).indexOf("Date: ");
+                int dateIndex = borrowHistory.get(i).indexOf("Deadline: ");
                 if (dateIndex != -1) {
-                    int startIndex = dateIndex + 6; // Length of "Date: " is 6
+                    int startIndex = dateIndex + 10; // Length of "Date: " is 10
                     int endIndex = borrowHistory.get(i).indexOf(",", startIndex);
                     
                     // If there's no comma, assume the date goes to the end of the string

@@ -262,46 +262,52 @@ public class mysqlConnection {
         return borrowHistory;
     }
 
-    public static boolean ChangeReturnDate(String subscriberId, String BookName, String OldDate, String NewDate, String Librarian_name) {
-        String query = "UPDATE activityhistory SET deadline = ? WHERE SubscriberID = ? AND BookName = ? AND ActionDate = ? AND ActionType = 'Borrow'";
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setString(1, NewDate);
+    public static boolean ChangeReturnDate(String subscriberId, String BookName, String OldDate, String NewDate, String Librarian_name) { 
+        String query = "UPDATE activityhistory SET deadline = ? WHERE SubscriberID = ? AND BookName = ? AND deadline = ? AND ActionType = 'Borrow'"; 
+        try (PreparedStatement ps = conn.prepareStatement(query)) { 
+        	ps.setString(1, NewDate);
             ps.setString(2, subscriberId);
             ps.setString(3, BookName);
             ps.setString(4, OldDate);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.out.println("SQL Error: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
+            
+            int result = ps.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) { 
+            e.printStackTrace(); 
+            return false; 
+        } 
     }
 
     public static ArrayList<String> BringBorrowRepInfo(String SelectedMonth , String SelectedYear) throws SQLException {
         ArrayList<String> FullBorrowRep = new ArrayList<>();
 
-        // Query for Borrowed and Returned Books
+     // Query for Borrowed and Returned Books
         String query1 = "SELECT br1.SubscriberID, br1.BookName, MIN(br1.ActionDate) AS BorrowDate, "
-                + "MIN(br2.ActionDate) AS ReturnDate, br1.Deadline "
+                + "MIN(br2.ActionDate) AS ReturnDate, br1.Deadline , br2.returned_late "
                 + "FROM activityhistory br1 JOIN activityhistory br2 "
                 + "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName "
                 + "AND br1.ActionType = 'Borrow' AND br2.ActionType = 'Return' AND br1.ActionDate < br2.ActionDate "
                 + "WHERE DATE_FORMAT(br1.ActionDate, '%Y-%m') = ? "
-                + "GROUP BY br1.SubscriberID, br1.BookName, br1.Deadline";
+                + "GROUP BY br1.SubscriberID, br1.BookName, br1.Deadline , br2.returned_late";
 
         try (PreparedStatement ps = conn.prepareStatement(query1)) {
             // Set the SelectedMonth parameter for the query
-            ps.setString(1,SelectedYear + "-" + SelectedMonth);
+            ps.setString(1, SelectedYear + "-" + SelectedMonth);
             
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
+                    // Check if the book was returned late or on time
+                    String lateStatus = rs.getInt("returned_late") == 1 ? "Late" : "On Time";
+                    
+                    // Add the information to the list, including the late status
                     FullBorrowRep.add(String.format(
-                            "Subscriber ID: %s Book Name: %s Borrow Date: %s Return Date: %s Deadline: %s",
+                            "Subscriber ID: %s Book Name: %s Borrow Date: %s Return Date: %s Deadline: %s Status: %s",
                             rs.getString("SubscriberID"), rs.getString("BookName"), rs.getString("BorrowDate"),
-                            rs.getString("ReturnDate"), rs.getString("Deadline")));
+                            rs.getString("ReturnDate"), rs.getString("Deadline"), lateStatus));
                 }
             }
         }
+
 
         // Query for Borrowed but Not Returned Books
         String query2 = "SELECT br1.SubscriberID, br1.BookName, MIN(br1.ActionDate) AS BorrowDate, br1.Deadline "
