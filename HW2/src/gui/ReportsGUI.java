@@ -60,12 +60,16 @@ public class ReportsGUI {
 
             // Build a single string to display all borrow report entries
             StringBuilder reportBuilder = new StringBuilder();
-            for (String reportEntry : ChatClient.FullBorrowRep) {
-                reportBuilder.append(reportEntry).append("\n\n");
+            if(ChatClient.FullBorrowRep == null) {
+            	Displayarea.setText("No information to display");
             }
-
-            // Display the complete report in the text area
-            Displayarea.setText(reportBuilder.toString());
+            else {
+                for (String reportEntry : ChatClient.FullBorrowRep) {
+                    reportBuilder.append(reportEntry).append("\n\n");
+                } 
+             // Display the complete report in the text area
+                Displayarea.setText(reportBuilder.toString());
+            }
         }
     }
 
