@@ -26,10 +26,11 @@ CREATE TABLE `activityhistory` (
   `SubscriberID` int NOT NULL,
   `BookName` varchar(255) DEFAULT NULL,
   `ActionType` enum('Borrow','Return','Reservation','UpdateDetails') NOT NULL,
-  `ActionDate` varchar(50) NOT NULL,
-  `returned_late` text,
+  `ActionDate` date NOT NULL,
+  `returned_late` tinyint DEFAULT NULL,
   `librarian_extend_id` int DEFAULT NULL,
   `deadline` date DEFAULT NULL,
+  PRIMARY KEY (`ActionDate`),
   KEY `SubscriberID` (`SubscriberID`),
   KEY `librarian_id_idx` (`librarian_extend_id`),
   CONSTRAINT `activityhistory_ibfk_1` FOREIGN KEY (`SubscriberID`) REFERENCES `subscriber` (`subscriber_id`),
@@ -44,9 +45,18 @@ CREATE TABLE `activityhistory` (
 
 LOCK TABLES `activityhistory` WRITE;
 /*!40000 ALTER TABLE `activityhistory` DISABLE KEYS */;
-INSERT INTO `activityhistory` VALUES (1,'The Great Gatsby','Return','31-12-2024 11:14:04','Book returned in good condition.',NULL,NULL),(1,'The Great Gatsby','Borrow','31-12-2024 14:59:48','First loan of the subscriber.',NULL,NULL),(1,'To Kill a Mockingbird','Borrow','01-01-2024 10:15:00','Borrowed for school project.',NULL,NULL),(1,'1984','Borrow','15-02-2024 15:30:00','Returned in good condition.',NULL,NULL),(1,'Moby Dick','Borrow','10-03-2024 09:00:00','Reserved for summer reading.',NULL,NULL),(2,'The Catcher in the Rye','Borrow','05-04-2024 11:45:00','Borrowed by a new subscriber.',NULL,NULL),(2,'Pride and Prejudice','Borrow','20-05-2024 14:20:00','Loan for literature class.',NULL,NULL),(2,'War and Peace','Borrow','10-06-2024 16:00:00','Returned late with a small fine.',NULL,NULL),(3,'Great Expectations','Borrow','12-07-2024 12:00:00','First-time loan for this subscriber.',NULL,NULL),(3,'Ulysses','Borrow','15-08-2024 10:30:00','Reserved for advanced literature study.',NULL,NULL),(3,'Jane Eyre','Borrow','01-09-2024 09:45:00','Borrowed along with other novels.',NULL,NULL),(3,'Brave New World','Borrow','10-09-2024 17:15:00','Returned in excellent condition.',NULL,NULL),(1,'harry 5','Reservation','2025-01-02T17:39:54.855017700','',NULL,NULL),(1,'hooho','Reservation','2025-01-02T17:47:28.239459200','',NULL,NULL),(1,'charley bit my finger!','Reservation','2025-01-02T17:48:16.565638800','',NULL,NULL),(1,'bottle of water','Reservation','2025-01-02T18:36:35.073977900','',NULL,NULL),(1,'bottle of water','Reservation','2025-01-02T18:36:58.715549700','',NULL,NULL),(1,'bottle of water','Reservation','2025-01-02T18:37:16.246017700','',NULL,NULL),(1,'bottle of water','Reservation','2025-01-02T18:37:58.534415','',NULL,NULL),(1,'bottle of water','Reservation','2025-01-02T18:38:41.452350700','',NULL,NULL),(1,'bottle of water','Reservation','2025-01-02T18:39:50.871937200','',NULL,NULL),(1,'bottle of water','Reservation','2025-01-02T18:40:54.797356300','',NULL,NULL),(1,'bottle of water','Reservation','2025-01-02T18:42:39.116033','',NULL,NULL),(1,'bottle','Reservation','2025-01-02T18:45:13.440294700','',NULL,NULL),(1,'bottle','Reservation','2025-01-02T18:45:46.407858400','',NULL,NULL),(1,'bottle of rum','Reservation','2025-01-02T18:49:07.771957300','',NULL,NULL),(1,'bottle of rumi','Reservation','2025-01-02T18:50:23.914685200','',NULL,NULL),(1,'dor shamo 2','Reservation','2025-01-02T20:24:16.221023200','',NULL,NULL),(1,'War and Peace','Reservation','2025-01-03T12:47:04.266877','',NULL,NULL);
+INSERT INTO `activityhistory` VALUES (1,'To Kill a Mockingbird','Borrow','2024-01-01',NULL,NULL,'2024-01-15'),(1,'To Kill a Mockingbird','Return','2024-01-16',1,NULL,NULL),(3,'Jane Eyre','Borrow','2024-02-02',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `activityhistory` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 --
 -- Table structure for table `books`
