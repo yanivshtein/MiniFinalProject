@@ -1,15 +1,18 @@
 package gui;
 
-import java.awt.TextField;
-import java.awt.event.ActionEvent;
+
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 
 import client.ChatClient;
 import client.ClientUI;
+import client.LibrarianUI;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 
 public class LibrarianReturnGUI {
 
@@ -35,10 +38,12 @@ public class LibrarianReturnGUI {
 	@FXML
 	Button exitButton=null;
 	
-//	@FXML
-//	Button send;
+	@FXML
+	private Label alertMsg = null;
 	
-	SimpleDateFormat time= new SimpleDateFormat("dd-MM-yyyy");
+
+	
+	
 	
 	
 	
@@ -48,9 +53,32 @@ public class LibrarianReturnGUI {
 	}
 	
 	
-	public void checkButton(ActionEvent event) {		// method that get information from the data the controller to return the book to the library
+	public void checkBttn(ActionEvent event) {		// method that get information from the data the controller to return the book to the library
 		
-		//ClientUI.chat.accept("select", subscriberId.getText(), j, null);
+		String actionDate = null;
+		String Deadline = null;
+		String BorrowerId=subscriberId.getText();
+		String BookName=bookName.getText();
+		int index =0;
+		LibrarianUI.chat.borrowBook_accept("EXIST", BorrowerId, BookName);
+		
+		if (ChatClient.bool==false) {
+			alertMsg.setText("The Borrow does not exist!");
+			return;
+		}
+		LibrarianUI.chat.borrowBook_accept("SELECT DATE",BorrowerId,BookName);
+		
+		for (String date : ChatClient.ActionDateAndDeadline) {
+			if(index ==0)
+				actionDate = date;
+			else if(index ==1)
+				Deadline = date;
+			
+			index++;
+		}
+		
+		bookArriveDate.setText(actionDate);
+		deadline.setText(Deadline);
 	}
 	
 	
