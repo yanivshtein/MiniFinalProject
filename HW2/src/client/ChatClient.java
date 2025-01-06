@@ -9,7 +9,6 @@ import common.*;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 
 /**
  * This class overrides some of the methods defined in the abstract
@@ -32,7 +31,6 @@ public class ChatClient extends AbstractClient
   public static Subscriber1 s1 = new Subscriber1(0,"",0,"","");
   public static ArrayList<String> activityHistory;
   public static ArrayList<String> borrowHistory;
-  public static LinkedHashSet<String> dateTimeSet;
   public static Boolean bool;
   public static Boolean isFrozen;
   public static Boolean isAvailable;
@@ -113,12 +111,6 @@ public class ChatClient extends AbstractClient
 		        }
 		    }
 		}
-	  
-	  else if (msg instanceof LinkedHashSet) {
-		  dateTimeSet= (LinkedHashSet<String>) msg;
-		  
-		  
-	  }
 	  else {
 		  Subscriber1 sub = (Subscriber1)msg;
 			 if (sub.equals(null)) {

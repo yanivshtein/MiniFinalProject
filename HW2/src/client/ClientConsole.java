@@ -138,30 +138,6 @@ public class ClientConsole implements ChatIF
         ("Unexpected error while reading from console!");
     }
   }
-  
-  public void borrower_accept(String actionType,String BorrowerId, String BookName) {
-	  
-	  ArrayList<Object> arr = new ArrayList<Object>();
-	  
-	  
-	  
-	  if (actionType.equals("EXIST")) {	// check if a row exist in database
-		  arr.add(0,11);
-		  
-	  }
-	  if (actionType.equals("SELECT DATE")) {	//get borrow date and return date
-		  
-		  arr.add(0,12);
-		  
-	  }
-	  
-	  arr.add(BorrowerId);
-	  arr.add(BookName);
-	  
-	  client.handleMessageFromClientUI(arr);
-	  
-  }
-  
   /**
    * This method overrides the method in the ChatIF interface.  It
    * displays a message onto the screen.
