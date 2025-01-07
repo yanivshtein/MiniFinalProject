@@ -161,7 +161,7 @@ public class EchoServer extends AbstractServer
                 case 11:
                     ArrayList<String> BorrowRepDet = null;
                     try {
-                        BorrowRepDet = mysqlConnection.BringBorrowRepInfo();
+                        BorrowRepDet = mysqlConnection.BringBorrowRepInfo((String)arr.get(1) , (String)arr.get(2));
                     } catch (SQLException e) {
                         e.printStackTrace();
                         BorrowRepDet = new ArrayList<>();

@@ -74,16 +74,13 @@ public class ClientConsole implements ChatIF
       ArrayList<Object> arr1 = new ArrayList<>();
       
       
-      if(str.equals("create borrow report")) {
-    	  arr1.add(11);
-      }
       
-      else if(str.equals("watch borrow history")){
+      if(str.equals("watch borrow history")){
     	  arr1.add(8);
     	  arr1.add(id);  
       }
       
-      if (str.equals("watch activity history")) {
+      else if (str.equals("watch activity history")) {
     	  arr1.add(9);
     	  arr1.add(id);  
       }
@@ -158,6 +155,27 @@ public class ClientConsole implements ChatIF
         ("Unexpected error while reading from console!");
     }
   }
+  public void reports_accept(String str, String selectedMonth , String selectedYear) 
+  {
+    try
+    {
+    	ArrayList<Object> arr1 = new ArrayList<>();
+    	
+    	if(str.equals("create borrow report")) {
+      	  arr1.add(11);
+      	  arr1.add(selectedMonth);
+      	  arr1.add(selectedYear);
+        }
+    	client.handleMessageFromClientUI(arr1);
+    } 
+    catch (Exception ex) 
+    {
+      System.out.println
+        ("Unexpected error while reading from console!");
+    }
+  }
+  
+  
   /**
    * This method overrides the method in the ChatIF interface.  It
    * displays a message onto the screen.

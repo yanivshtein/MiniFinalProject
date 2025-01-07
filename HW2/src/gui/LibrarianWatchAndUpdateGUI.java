@@ -50,7 +50,7 @@ public class LibrarianWatchAndUpdateGUI {
     @FXML
     private Button SaveChangesbtt = null;
     @FXML
-    private TextField SubStatus = null;
+    private TextField SubStatus = null; //active OR frozen
     
     private  String TempStatus;
     
@@ -94,10 +94,26 @@ public class LibrarianWatchAndUpdateGUI {
     	}
         for (int i = 0; i < borrowHistory.size(); i++) {
             if (borrowHistory.get(i).contains(BookName.getText())) {
+<<<<<<< Updated upstream
                 int dateIndex = borrowHistory.get(i).indexOf("Date: ");
                 if (dateIndex != -1) {
                     int startIndex = dateIndex + 6;
                     String dateTimePart = borrowHistory.get(i).substring(startIndex, startIndex + 19);
+=======
+                
+                // Extract the "Date" portion
+                int dateIndex = borrowHistory.get(i).indexOf("Deadline: ");
+                if (dateIndex != -1) {
+                    int startIndex = dateIndex + 10; // Length of "Date: " is 10
+                    int endIndex = borrowHistory.get(i).indexOf(",", startIndex);
+                    
+                    // If there's no comma, assume the date goes to the end of the string
+                    if (endIndex == -1) {
+                        endIndex = borrowHistory.get(i).length();
+                    }
+                    
+                    String dateTimePart = borrowHistory.get(i).substring(startIndex, endIndex).trim();
+>>>>>>> Stashed changes
                     OldRetDate.setText(dateTimePart);
                     break;
                 }
@@ -124,20 +140,27 @@ public class LibrarianWatchAndUpdateGUI {
     }
 
     private boolean isLessThanTwoWeeks(String oldDateStr, String newDateStr) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        if (oldDateStr == null || newDateStr == null || oldDateStr.isEmpty() || newDateStr.isEmpty()) {
+            ChangesSavedPop.setContentText("Error: One or both date strings are null or empty.");
+            return false;
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date oldDate = dateFormat.parse(oldDateStr);
             Date newDate = dateFormat.parse(newDateStr);
 
-            long diffInMillis = Math.abs(newDate.getTime() - oldDate.getTime());
-            long diffInDays = TimeUnit.MILLISECONDS.toDays(diffInMillis);
+            // Calculate the difference in days
+            long diffInDays = TimeUnit.MILLISECONDS.toDays(Math.abs(newDate.getTime() - oldDate.getTime()));
 
+            // Return true if less than 14 days
             return diffInDays < 14;
         } catch (ParseException e) {
             ChangesSavedPop.setContentText("Error parsing dates: " + e.getMessage());
             return false;
         }
     }
+
 
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/gui/LibrarianWatchAndUpdateGUI.fxml"));
