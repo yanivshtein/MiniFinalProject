@@ -81,6 +81,35 @@ public class LibrarianGUIHomePageController {
         primaryStage.setScene(scene);
         primaryStage.show();
 	}
+	public void BorrowingBookBtn(ActionEvent event) throws IOException{
+		FXMLLoader loader = new FXMLLoader();
+		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+        Stage primaryStage = new Stage();
+        Pane root = loader.load(getClass().getResource("/gui/BorrowBookGUIController.fxml").openStream());
+
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/gui/BorrowBookGUIController.css").toExternalForm());
+        primaryStage.setTitle("Borrow a book");
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+	}
+	public void SearchBookBtn(ActionEvent event) throws IOException{
+		FXMLLoader loader = new FXMLLoader();
+		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+        Stage primaryStage = new Stage();
+        Pane root = loader.load(getClass().getResource("/gui/SearchBookGUIController.fxml").openStream());
+
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/gui/SearchBookGUIController.css").toExternalForm());
+        primaryStage.setTitle("Search a book");
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+	}
+	
+	
+	
 	
 	public void getLibrarianWatchAndUpdateBtn(ActionEvent event) throws IOException{
 		FXMLLoader loader = new FXMLLoader();

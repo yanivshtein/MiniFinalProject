@@ -159,6 +159,39 @@ public class ClientConsole implements ChatIF
 	  arr.add(bookName);
 	  client.handleMessageFromClientUI(arr);		  
   }
+  public void acceptAddToActivityHistoryController(int request, int id, String bookName) {
+	  ArrayList<Object> arr = new ArrayList<>();
+	  arr.add(request);
+	  arr.add(id);
+	  arr.add(bookName);
+	  client.handleMessageFromClientUI(arr);		  
+  }
+  public void acceptBorrowBook(int id) {
+	  ArrayList<Object> arr = new ArrayList<>();
+	  arr.add(15);
+	  arr.add(id);
+	  client.handleMessageFromClientUI(arr);		  
+  }
+  public void reports_accept(String str, String selectedMonth , String selectedYear) 
+  {
+    try
+    {
+        ArrayList<Object> arr1 = new ArrayList<>();
+
+        if(str.equals("create borrow report")) {
+            arr1.add(11);
+            arr1.add(selectedMonth);
+            arr1.add(selectedYear);
+        }
+        client.handleMessageFromClientUI(arr1);
+    } 
+    catch (Exception ex) 
+    {
+      System.out.println
+        ("Unexpected error while reading from console!");
+    }
+  }
+  
   
   public void acceptAddSubscriber(int id, String name, String phoneNumber , String email ,String status , String password) {
 	  ArrayList<Object> arr = new ArrayList<>();
@@ -171,6 +204,20 @@ public class ClientConsole implements ChatIF
 	  arr.add(password);
 	  client.handleMessageFromClientUI(arr);		  
   }
+  public void acceptSearchBook(int request,String bookName) {
+	  ArrayList<Object> arr = new ArrayList<>();
+	  arr.add(request);
+	  arr.add(bookName);
+	  client.handleMessageFromClientUI(arr);		  
+  }
+  public void acceptAllTheBooks(int request) {
+	  ArrayList<Object> arr = new ArrayList<>();
+	  arr.add(request);
+	  client.handleMessageFromClientUI(arr);		  
+  }
+  
+  
+  
   
   public void book_accept(String str, String id, String BookName ,String OldDate ,String NewDate , String Librarian_name) 
   {
