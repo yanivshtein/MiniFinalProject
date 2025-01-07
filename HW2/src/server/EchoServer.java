@@ -33,7 +33,6 @@ public class EchoServer extends AbstractServer
 	 
 	private String subscriberID ;
 	private String bookName ;
-	private String ActionType;
 	private boolean returnLate;
 	private boolean freeze;
 	//Interface to notify about connections
@@ -241,19 +240,34 @@ public class EchoServer extends AbstractServer
 				}
 				
 	            case 21:
-	            	 borrowerid = (String)arr.get(1);
-	            	 bookName = (String)arr.get(2);          	 
+	            	 this.subscriberID = (String)arr.get(1);
+	            	 this.bookName = (String)arr.get(2);          	 
 	            	 returnLate = (boolean) arr.get(4);
 	            	 freeze = (boolean)arr.get(5);
+	            	 boolean bookIncrement = false;
+	            	 boolean freezeSuccess = false;
+	            	 boolean insertRowToActivity = false;
 	            	 
-	            	 if (returnLate==false && freeze==false) {
-	            		 
-	            	 }
-	            	 else if(returnLate==true && freeze==false) {
-	            		 
-	            	 }
-	            	 else if(returnLate==true && freeze==true){
-	            		 
+	            	 try {
+	            		 if(returnLate==false && freeze==false) {
+		            		 insertRowToActivity = mysqlConnection.insertReturnBookRowInActivityHistory(this.subscriberID, this.bookName,0);
+
+		            	 }
+	            		 if(returnLate==true) {
+		            		 insertRowToActivity = mysqlConnection.insertReturnBookRowInActivityHistory(this.subscriberID, this.bookName,1);
+
+		            	 }
+		            	 if(freeze==true){
+		            		 freezeSuccess = mysqlConnection.updateSubscriberStatusToFrozen(this.subscriberID, this.bookName);
+		            	 }
+		            	
+		            	 bookIncrement = mysqlConnection.incrimentBookAvailability(this.bookName);
+		           	 
+		            	 client.sendToClient(bookIncrement || freezeSuccess || insertRowToActivity );
+
+	            	 } catch (SQLException | IOException e) {
+					
+	            		 e.printStackTrace();
 	            	 }
 	            	 
 	            default:

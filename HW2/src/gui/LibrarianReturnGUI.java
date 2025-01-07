@@ -42,7 +42,10 @@ public class LibrarianReturnGUI {
 	Button exitButton=null;
 	
 	@FXML
-	private Label alertMsg = null;
+	Label alertMsg = null;
+	
+	@FXML
+	private Label successMsg = null;
 	
 	private Alert alertMessege = new Alert(AlertType.NONE);
 
@@ -57,6 +60,9 @@ public class LibrarianReturnGUI {
 			alertMessege.setContentText("Error need to check if exist borrow first");	
 		 	alertMessege.setAlertType(AlertType.ERROR);
 			return;
+		}
+		if(successMsg!=null) {
+			successMsg=null;
 		}
 		
 		String BorrowerId=subscriberId.getText();
@@ -88,15 +94,28 @@ public class LibrarianReturnGUI {
 		if (currentDateAsInt<deadlineDateAsInt) {
 			
 			LibrarianUI.chat.returnBook_accept("INSERT", BorrowerId, BookName,false,false);
-
-			if (ChatClient.bool==false) {
-				alertMsg.setText("The Borrow does not exist!");
-				return;
-			}
+			
 			
 		}
-		
-		
+		else if(currentDateAsInt-deadlineDateAsInt<7) {
+			LibrarianUI.chat.returnBook_accept("INSERT", BorrowerId, BookName,true,false);
+
+			
+		}
+		else if(currentDateAsInt-deadlineDateAsInt>=7) {
+			LibrarianUI.chat.returnBook_accept("INSERT", BorrowerId, BookName,true,true);
+
+			
+		}
+		if (ChatClient.bool==false) {
+			alertMessege.setContentText("Error need to check if exist borrow first");	
+		 	alertMessege.setAlertType(AlertType.ERROR);
+			return;
+			
+		}
+		else {
+			successMsg.setText("Return operation successfully finished!");
+		}
 	}
 	
 	
@@ -125,6 +144,7 @@ public class LibrarianReturnGUI {
 		
 		// if there isn't any row that match, then show in label.
 		if (ChatClient.bool==false) {
+			alertMsg= new Label();
 			alertMsg.setText("The Borrow does not exist!");
 			return;
 		}

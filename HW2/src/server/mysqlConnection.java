@@ -225,17 +225,16 @@ public class mysqlConnection {
 	public static boolean insertReturnBookRowInActivityHistory(String borrowerId,String bookName,int returnedLate) throws SQLException {
 		
 		int borrowerIdAsInt = Integer.parseInt(borrowerId);
-		String insertQuary = "INSERT INTO activityhistory (SubScriberID, BookName, ActionType, ActionDate,returned_late"
-								+ ",librarian_extend_id, deadline) VALUES (?,?,?,?,?,?,?)";
+		String insertQuary = "INSERT INTO activityhistory (SubScriberID, BookName, ActionType, ActionDate,"
+				+ "returned_late) VALUES (?,?,?,?,?)";
 		PreparedStatement ps = conn.prepareStatement(insertQuary);
 		LocalDate actionDate = LocalDate.now();
 		ps.setInt(1,borrowerIdAsInt);
 		ps.setString(2,bookName);
 		ps.setString(3,"Return");
 		ps.setDate(4,Date.valueOf(actionDate));
-		ps.setInt(5,borrowerIdAsInt);
-		ps.setInt(6,borrowerIdAsInt);
-		ps.setInt(7,borrowerIdAsInt);
+		ps.setInt(5,returnedLate);
+		
 		
 		return ps.execute();
 	}
