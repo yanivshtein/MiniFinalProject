@@ -1,11 +1,13 @@
 package server;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Scanner;
@@ -184,7 +186,7 @@ public class mysqlConnection {
 	}
 	
 	/*
-	 * method that return borrow date and return date of the borrower
+	 * method that return the last borrow date and deadline of the borrow.
 	 * if found in the database
 	 */
 	public static LinkedHashSet<String>  getBorrowDateAndReturnDate(String borrowerId,String bookName) throws SQLException {
@@ -195,10 +197,10 @@ public class mysqlConnection {
 		pr.setString(2, bookName);
 		
 		ResultSet resultSet = pr.executeQuery();
-		if( resultSet.next()) {
-		borrowAndReturnDate.add(resultSet.getString(1));
-		borrowAndReturnDate.add(resultSet.getString(2));
-		return borrowAndReturnDate;
+		if( resultSet.last()) {
+			borrowAndReturnDate.add(resultSet.getString(1));
+			borrowAndReturnDate.add(resultSet.getString(2));
+			return borrowAndReturnDate;
 		}
 		return null;
 
@@ -217,6 +219,24 @@ public class mysqlConnection {
 		if (rs.next()) {
             return rs.getBoolean(1); // Retrieve the result from the first column
         }
+		return false;
+	}
+	
+	public static boolean insertReturnBookRowInActivityHistory(String borrowerId,String bookName,int returnedLate) throws SQLException {
+		
+		int borrowerIdAsInt = Integer.parseInt(borrowerId);
+		String insertQuary = "INSERT INTO activityhistory (SubScriberID, BookName, ActionType, ActionDate,returned_late"
+								+ ",librarian_extend_id, deadline) VALUES (?,?,?,?,?,?,?)";
+		PreparedStatement pr = conn.prepareStatement(insertQuary);
+		LocalDate actionDate = LocalDate.now();
+		pr.setInt(1,borrowerIdAsInt);
+		pr.setString(2,bookName);
+		pr.setString(3,"Return");
+		pr.setDate(4,Date.valueOf(actionDate));
+		pr.setInt(5,borrowerIdAsInt);
+		pr.setInt(6,borrowerIdAsInt);
+		pr.setInt(7,borrowerIdAsInt);
+		
 		return false;
 	}
 }

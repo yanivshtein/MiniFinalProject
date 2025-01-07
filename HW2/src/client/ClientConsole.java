@@ -139,20 +139,66 @@ public class ClientConsole implements ChatIF
     }
   }
   
-  public void borrowBook_accept(String actionType, String borrowerID,String bookName) {
+  public void returnBook_accept(String actionType, String borrowerID,String bookName) {
 	  
 	  ArrayList<Object> arr1 = new ArrayList<>();
 	  
+	  
+	  switch (actionType) {
+	case "EXIST":
+		
+		arr1.add(18);
+		arr1.add(borrowerID);
+		arr1.add(bookName);
+		break;
+		
+	case "SELECT DATE":
+		
+		arr1.add(19);
+		arr1.add(borrowerID);
+		arr1.add(bookName);
+		break;
+		
+	case "INSERT NOT LATE":
+		
+		arr1.add(20);
+		arr1.add(borrowerID);
+		arr1.add(bookName);
+		break;
+		
+	case "INSERT LATE":
+		
+		break;
+		
+	case "INSERT LATE AND FREEZE STATUS":
+		
+		break;
+	default:
+		break;
+	}
 	  if(actionType.equals("EXIST")) {
-		  arr1.add(18);
-		  arr1.add(borrowerID);
-		  arr1.add(bookName);
+		  
 	  }
 	  
 	  if(actionType.equals("SELECT DATE")) {
-		  arr1.add(19);
+		  
+	  }
+	  
+	  if(actionType.equals("INSERT NOT LATE")) {
+		  
+		  
+	  }
+	  if(actionType.equals("INSERT LATE")) {
+		  arr1.add(20);
 		  arr1.add(borrowerID);
 		  arr1.add(bookName);
+		  
+	  }
+	  if(actionType.equals("INSERT LATE")) {
+		  arr1.add(20);
+		  arr1.add(borrowerID);
+		  arr1.add(bookName);
+		  
 	  }
 	  client.handleMessageFromClientUI(arr1);
 	  
