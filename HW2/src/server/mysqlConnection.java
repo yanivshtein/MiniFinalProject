@@ -32,7 +32,7 @@ public class mysqlConnection {
         }
 
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "Aa123456");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "!vex123S");
             System.out.println("SQL connection succeed");
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
@@ -159,10 +159,11 @@ public class mysqlConnection {
 
     public static void addOrder(String bookName, String id) {
         String addQuery = "INSERT INTO orders (time, bookName, subID) VALUES (?, ?, ?);";
-        String dateTime = LocalDateTime.now().toString();
+        LocalDateTime now = LocalDateTime.now();
+        Timestamp timestamp = Timestamp.valueOf(now);
         try {
             PreparedStatement stmt = conn.prepareStatement(addQuery);
-            stmt.setString(1, dateTime);
+            stmt.setTimestamp(1, timestamp);
             stmt.setString(2, bookName);
             stmt.setString(3, id);
             stmt.executeUpdate();
