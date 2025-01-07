@@ -14,7 +14,10 @@ import ocsf.server.*;
 
 public class EchoServer extends AbstractServer 
 {
+	
+	mysqlConnection instance;
     private List<ConnectionListener> listeners = new ArrayList<>();
+	private String subEmail;
      
     public interface ConnectionListener {
         void onClientConnected(ClientInfo c);
@@ -34,11 +37,11 @@ public class EchoServer extends AbstractServer
     public EchoServer(int port) 
     {
         super(port);
+        instance = mysqlConnection.getInstance();
     }
 
     protected void serverStarted()
     {
-        mysqlConnection.connectToDB();
         System.out.println("Server listening for connections on port " + getPort());
     }
   
@@ -50,6 +53,7 @@ public class EchoServer extends AbstractServer
     @SuppressWarnings("unchecked")
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
         Subscriber1 sub = null;
+        Boolean ret;
         
         if (msg instanceof ArrayList<?>) {
             ArrayList<Object> arr = (ArrayList<Object>) msg;
@@ -75,9 +79,17 @@ public class EchoServer extends AbstractServer
                         e.printStackTrace();
                     }
                     break;
-
-                case 4: // Search the id to check if the subscriber exists
-                    Boolean ret = mysqlConnection.searchId((String) arr.get(1));
+                case 3: //Search the database to check email and password for librarian
+                	ret = mysqlConnection.searchLibId((String) arr.get(1), (String) arr.get(2));
+                    try {
+                        client.sendToClient(ret);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                	
+                	break;
+                case 4: //Search the database to check email and password for subscriber
+                    ret = mysqlConnection.searchSubId((String) arr.get(1), (String) arr.get(2));
                     try {
                         client.sendToClient(ret);
                     } catch (IOException e) {
@@ -134,8 +146,8 @@ public class EchoServer extends AbstractServer
                     break;
 
                 case 9:
-                    subID = (String)arr.get(1);
-                    ArrayList<String> activityHistory = mysqlConnection.getActivityHistory(subID);
+                	subEmail = (String)arr.get(3);
+                    ArrayList<String> activityHistory = mysqlConnection.getActivityHistory(subEmail);
                     try {
                         client.sendToClient(activityHistory);
                     } catch (IOException e) {
@@ -161,7 +173,7 @@ public class EchoServer extends AbstractServer
                 case 11:
                     ArrayList<String> BorrowRepDet = null;
                     try {
-                        BorrowRepDet = mysqlConnection.BringBorrowRepInfo((String)arr.get(1) , (String)arr.get(2));
+                        BorrowRepDet = mysqlConnection.BringBorrowRepInfo();
                     } catch (SQLException e) {
                         e.printStackTrace();
                         BorrowRepDet = new ArrayList<>();
@@ -196,8 +208,60 @@ public class EchoServer extends AbstractServer
                         e.printStackTrace();
                     }
                 	break;
+                case 14:
+
+                    bookName = (String) arr.get(1);
+                    Integer BookIsInTheInvatory = mysqlConnection.getBookAvailability(bookName);
+                    try {
+                        client.sendToClient(BookIsInTheInvatory);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break; 
+                case 15:
+
+                    Sub_id = (int) arr.get(1);
+                    Boolean subExist = mysqlConnection.isSubscriberExist(Sub_id);
+                    System.out.println(subExist);
+                    try {
+                        client.sendToClient(subExist);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 16:
+                    bookName = (String) arr.get(1);
+                    Boolean decreaseBook = mysqlConnection.decrementBookAvailability(bookName);
+                    try {
+                        client.sendToClient(decreaseBook);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 17:
+                	Sub_id =(int) arr.get(1);
+                    bookName = (String) arr.get(2);
+                     mysqlConnection.addActivityToHistory(Sub_id,bookName);
+                    try {
+                    	client.sendToClient(new Boolean(true));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 18:
+
+                       ArrayList<String> AllBooks = mysqlConnection.getAllBookNames();
+                       System.out.println(AllBooks+ "echoserver");
+                       try {
+                       	// Send the borrow history to the client
+                           client.sendToClient(AllBooks);
+                       } catch (IOException e) {
+                           e.printStackTrace();
+                       }
+                       break;
+                    
                 	
-                	
+                    
 
                 default:
                     System.out.println("The server - Received message is not of the expected type.");

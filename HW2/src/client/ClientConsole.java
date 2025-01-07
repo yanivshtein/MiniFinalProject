@@ -60,6 +60,39 @@ public class ClientConsole implements ChatIF
     }
   }
 
+  public void acceptLogin(String str, String email, String password) 
+  {
+    try
+    {
+      ArrayList<Object> arr1 = new ArrayList<>();
+      
+      
+      if (str.equals("searchSub")) {
+    	  arr1.add(4);
+    	  arr1.add(email);
+    	  arr1.add(password);
+      }
+      else if (str.equals("searchLib")) {
+    	  arr1.add(3);
+    	  arr1.add(email);
+    	  arr1.add(password);
+      }
+      else  { //EXIT
+    	  arr1.add(0);
+      }
+      client.handleMessageFromClientUI(arr1);
+      
+      
+    } 
+    catch (Exception ex) 
+    {
+      System.out.println
+        ("Unexpected error while reading from console!");
+    }
+  }
+
+  
+  
   
   //Instance methods ************************************************
   
@@ -74,18 +107,27 @@ public class ClientConsole implements ChatIF
       ArrayList<Object> arr1 = new ArrayList<>();
       
       
+      if(str.equals("create borrow report")) {
+    	  arr1.add(11);
+      }
       
-      if(str.equals("watch borrow history")){
+      else if(str.equals("watch borrow history")){
     	  arr1.add(8);
     	  arr1.add(id);  
       }
       
-      else if (str.equals("watch activity history")) {
+      if (str.equals("watch activity history")) {
     	  arr1.add(9);
-    	  arr1.add(id);  
+    	  arr1.add("");  
+    	  arr1.add("");
+    	  arr1.add(email);
       }
-      else if (str.equals("search")) {
+      else if (str.equals("searchSub")) {
     	  arr1.add(4);
+    	  arr1.add(id);
+      }
+      else if (str.equals("searchLib")) {
+    	  arr1.add(3);
     	  arr1.add(id);
       }
       else if (str.equals("select")) { 
@@ -100,7 +142,7 @@ public class ClientConsole implements ChatIF
       }
 
       else  { //EXIT
-    	  arr1.add(3);
+    	  arr1.add(0);
       }
       client.handleMessageFromClientUI(arr1);
       
@@ -120,6 +162,39 @@ public class ClientConsole implements ChatIF
 	  arr.add(bookName);
 	  client.handleMessageFromClientUI(arr);		  
   }
+  public void acceptAddToActivityHistoryController(int request, int id, String bookName) {
+	  ArrayList<Object> arr = new ArrayList<>();
+	  arr.add(request);
+	  arr.add(id);
+	  arr.add(bookName);
+	  client.handleMessageFromClientUI(arr);		  
+  }
+  public void acceptBorrowBook(int id) {
+	  ArrayList<Object> arr = new ArrayList<>();
+	  arr.add(15);
+	  arr.add(id);
+	  client.handleMessageFromClientUI(arr);		  
+  }
+  public void reports_accept(String str, String selectedMonth , String selectedYear) 
+  {
+    try
+    {
+        ArrayList<Object> arr1 = new ArrayList<>();
+
+        if(str.equals("create borrow report")) {
+            arr1.add(11);
+            arr1.add(selectedMonth);
+            arr1.add(selectedYear);
+        }
+        client.handleMessageFromClientUI(arr1);
+    } 
+    catch (Exception ex) 
+    {
+      System.out.println
+        ("Unexpected error while reading from console!");
+    }
+  }
+  
   
   public void acceptAddSubscriber(int id, String name, String phoneNumber , String email ,String status , String password) {
 	  ArrayList<Object> arr = new ArrayList<>();
@@ -132,6 +207,20 @@ public class ClientConsole implements ChatIF
 	  arr.add(password);
 	  client.handleMessageFromClientUI(arr);		  
   }
+  public void acceptSearchBook(int request,String bookName) {
+	  ArrayList<Object> arr = new ArrayList<>();
+	  arr.add(request);
+	  arr.add(bookName);
+	  client.handleMessageFromClientUI(arr);		  
+  }
+  public void acceptAllTheBooks(int request) {
+	  ArrayList<Object> arr = new ArrayList<>();
+	  arr.add(request);
+	  client.handleMessageFromClientUI(arr);		  
+  }
+  
+  
+  
   
   public void book_accept(String str, String id, String BookName ,String OldDate ,String NewDate , String Librarian_name) 
   {
@@ -155,27 +244,6 @@ public class ClientConsole implements ChatIF
         ("Unexpected error while reading from console!");
     }
   }
-  public void reports_accept(String str, String selectedMonth , String selectedYear) 
-  {
-    try
-    {
-    	ArrayList<Object> arr1 = new ArrayList<>();
-    	
-    	if(str.equals("create borrow report")) {
-      	  arr1.add(11);
-      	  arr1.add(selectedMonth);
-      	  arr1.add(selectedYear);
-        }
-    	client.handleMessageFromClientUI(arr1);
-    } 
-    catch (Exception ex) 
-    {
-      System.out.println
-        ("Unexpected error while reading from console!");
-    }
-  }
-  
-  
   /**
    * This method overrides the method in the ChatIF interface.  It
    * displays a message onto the screen.
