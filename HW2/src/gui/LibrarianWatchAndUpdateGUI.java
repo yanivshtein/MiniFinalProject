@@ -89,11 +89,17 @@ public class LibrarianWatchAndUpdateGUI {
     }
 
     public void ManReturnBtt(ActionEvent event) throws IOException {
-        if (TempStatus.equals("frozen")) {
-            return;
-        }
+    	if (TempStatus.equals("frozen")) {
+    		return;
+    	}
         for (int i = 0; i < borrowHistory.size(); i++) {
             if (borrowHistory.get(i).contains(BookName.getText())) {
+<<<<<<< Updated upstream
+                int dateIndex = borrowHistory.get(i).indexOf("Date: ");
+                if (dateIndex != -1) {
+                    int startIndex = dateIndex + 6;
+                    String dateTimePart = borrowHistory.get(i).substring(startIndex, startIndex + 19);
+=======
                 
                 // Extract the "Date" portion
                 int dateIndex = borrowHistory.get(i).indexOf("Deadline: ");
@@ -107,13 +113,13 @@ public class LibrarianWatchAndUpdateGUI {
                     }
                     
                     String dateTimePart = borrowHistory.get(i).substring(startIndex, endIndex).trim();
+>>>>>>> Stashed changes
                     OldRetDate.setText(dateTimePart);
                     break;
                 }
             }
         }
     }
-
 
     public void SaveChangBtt(ActionEvent event) throws IOException {
     	if (TempStatus.equals("frozen")) {
