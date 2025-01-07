@@ -5,6 +5,7 @@ package server;
 
 import java.io.*;
 import java.net.ServerSocket;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -30,7 +31,11 @@ public class EchoServer extends AbstractServer
 {
 	private List<ConnectionListener> listeners = new ArrayList<>();
 	 
-	 
+	private String subscriberID ;
+	private String bookName ;
+	private String ActionType;
+	private boolean returnLate;
+	private boolean freeze;
 	//Interface to notify about connections
 	 public interface ConnectionListener {
 	     void onClientConnected(ClientInfo c);
@@ -212,18 +217,18 @@ public class EchoServer extends AbstractServer
 	          	  boolean UpdateDate = mysqlConnection.ChangeReturnDate(subscriberid , BookName , OldDate ,NewDate);
 	          	 
 	          	  
-	            case 18:	// search if exist borrower in the DB
+	            case 19:	// search if exist borrower in the DB
 	            	String borrowerid = (String)arr.get(1); //subscriber ID is in the second position of the array
 		          	String bookname = (String)arr.get(2);
 				try {
 					boolean isExist= mysqlConnection.checkIfBorrowerFound(borrowerid, bookname);
 					client.sendToClient(isExist);
 				} catch (SQLException | IOException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				}
 		          	
-	            case 19:
+	            case 20:
 	            	LinkedHashSet<String> Dates= new LinkedHashSet<String>();
 	            	String Borrowerid = (String)arr.get(1); //subscriber ID is in the second position of the array
 		          	String Bookname = (String)arr.get(2);
@@ -231,9 +236,26 @@ public class EchoServer extends AbstractServer
 					Dates=mysqlConnection.getBorrowDateAndReturnDate(Borrowerid, Bookname);
 					client.sendToClient(Dates);
 				} catch (SQLException | IOException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				}
+				
+	            case 21:
+	            	 borrowerid = (String)arr.get(1);
+	            	 bookName = (String)arr.get(2);          	 
+	            	 returnLate = (boolean) arr.get(4);
+	            	 freeze = (boolean)arr.get(5);
+	            	 
+	            	 if (returnLate==false && freeze==false) {
+	            		 
+	            	 }
+	            	 else if(returnLate==true && freeze==false) {
+	            		 
+	            	 }
+	            	 else if(returnLate==true && freeze==true){
+	            		 
+	            	 }
+	            	 
 	            default:
 	                System.out.println("The server - Received message is not of the expected type.");
 	                break;

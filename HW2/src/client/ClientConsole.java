@@ -139,7 +139,7 @@ public class ClientConsole implements ChatIF
     }
   }
   
-  public void returnBook_accept(String actionType, String borrowerID,String bookName) {
+  public void returnBook_accept(String actionType, String borrowerID,String bookName, boolean isLate,boolean freezeStatus) {
 	  
 	  ArrayList<Object> arr1 = new ArrayList<>();
 	  
@@ -147,59 +147,33 @@ public class ClientConsole implements ChatIF
 	  switch (actionType) {
 	case "EXIST":
 		
-		arr1.add(18);
+		arr1.add(19);
 		arr1.add(borrowerID);
 		arr1.add(bookName);
 		break;
 		
 	case "SELECT DATE":
 		
-		arr1.add(19);
-		arr1.add(borrowerID);
-		arr1.add(bookName);
-		break;
-		
-	case "INSERT NOT LATE":
-		
 		arr1.add(20);
 		arr1.add(borrowerID);
 		arr1.add(bookName);
 		break;
 		
-	case "INSERT LATE":
+	case "INSERT":
 		
+		arr1.add(21);
+		arr1.add(borrowerID);
+		arr1.add(bookName);
+		arr1.add(isLate);
+		arr1.add(freezeStatus);
 		break;
 		
-	case "INSERT LATE AND FREEZE STATUS":
-		
-		break;
 	default:
+		System.err.println("Entered default in switch case None of the above selected");
 		break;
 	}
-	  if(actionType.equals("EXIST")) {
-		  
-	  }
+	 
 	  
-	  if(actionType.equals("SELECT DATE")) {
-		  
-	  }
-	  
-	  if(actionType.equals("INSERT NOT LATE")) {
-		  
-		  
-	  }
-	  if(actionType.equals("INSERT LATE")) {
-		  arr1.add(20);
-		  arr1.add(borrowerID);
-		  arr1.add(bookName);
-		  
-	  }
-	  if(actionType.equals("INSERT LATE")) {
-		  arr1.add(20);
-		  arr1.add(borrowerID);
-		  arr1.add(bookName);
-		  
-	  }
 	  client.handleMessageFromClientUI(arr1);
 	  
   }

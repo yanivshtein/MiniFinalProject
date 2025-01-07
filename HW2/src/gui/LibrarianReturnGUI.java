@@ -87,9 +87,15 @@ public class LibrarianReturnGUI {
 		
 		if (currentDateAsInt<deadlineDateAsInt) {
 			
-			LibrarianUI.chat.returnBook_accept("INSERT", BorrowerId, BookName);
+			LibrarianUI.chat.returnBook_accept("INSERT", BorrowerId, BookName,false,false);
 
+			if (ChatClient.bool==false) {
+				alertMsg.setText("The Borrow does not exist!");
+				return;
+			}
+			
 		}
+		
 		
 	}
 	
@@ -115,7 +121,7 @@ public class LibrarianReturnGUI {
 			alertMsg=null;
 		
 		// check in the database if exist a borrow with the same borrower ID and book name
-		LibrarianUI.chat.returnBook_accept("EXIST", BorrowerId, BookName);
+		LibrarianUI.chat.returnBook_accept("EXIST", BorrowerId, BookName,false,false);
 		
 		// if there isn't any row that match, then show in label.
 		if (ChatClient.bool==false) {
@@ -124,7 +130,7 @@ public class LibrarianReturnGUI {
 		}
 		
 		// if there is a match then select the borrow date and deadline.
-		LibrarianUI.chat.returnBook_accept("SELECT DATE",BorrowerId,BookName);
+		LibrarianUI.chat.returnBook_accept("SELECT DATE",BorrowerId,BookName,false,false);
 		
 		for (String date : ChatClient.ActionDateAndDeadline) {	// get action date and deadline
 			if(index ==0)

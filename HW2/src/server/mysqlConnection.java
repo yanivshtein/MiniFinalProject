@@ -191,12 +191,12 @@ public class mysqlConnection {
 	 */
 	public static LinkedHashSet<String>  getBorrowDateAndReturnDate(String borrowerId,String bookName) throws SQLException {
 		LinkedHashSet<String> borrowAndReturnDate = new LinkedHashSet<>();
-		PreparedStatement pr = conn.prepareStatement("SELECT ActionDate,deadline FROM activityhistory where SubscriberID=? AND BookName=? AND ActionType='Borrow'");
+		PreparedStatement ps = conn.prepareStatement("SELECT ActionDate,deadline FROM activityhistory where SubscriberID=? AND BookName=? AND ActionType='Borrow'");
 		
-		pr.setString(1, borrowerId);
-		pr.setString(2, bookName);
+		ps.setString(1, borrowerId);
+		ps.setString(2, bookName);
 		
-		ResultSet resultSet = pr.executeQuery();
+		ResultSet resultSet = ps.executeQuery();
 		if( resultSet.last()) {
 			borrowAndReturnDate.add(resultSet.getString(1));
 			borrowAndReturnDate.add(resultSet.getString(2));
@@ -212,10 +212,10 @@ public class mysqlConnection {
 	// the method return true
 	public static boolean  checkIfBorrowerFound(String borrowerId,String bookName) throws SQLException {
 		
-		PreparedStatement pr = conn.prepareStatement("SELECT EXISTS(SELECT * FROM activityhistory where SubscriberID=? AND BookName=? AND ActionType='Borrow')");
-		pr.setString(1, borrowerId);
-		pr.setString(2, bookName);
-		ResultSet rs = pr.executeQuery();
+		PreparedStatement ps = conn.prepareStatement("SELECT EXISTS(SELECT * FROM activityhistory where SubscriberID=? AND BookName=? AND ActionType='Borrow')");
+		ps.setString(1, borrowerId);
+		ps.setString(2, bookName);
+		ResultSet rs = ps.executeQuery();
 		if (rs.next()) {
             return rs.getBoolean(1); // Retrieve the result from the first column
         }
@@ -227,15 +227,55 @@ public class mysqlConnection {
 		int borrowerIdAsInt = Integer.parseInt(borrowerId);
 		String insertQuary = "INSERT INTO activityhistory (SubScriberID, BookName, ActionType, ActionDate,returned_late"
 								+ ",librarian_extend_id, deadline) VALUES (?,?,?,?,?,?,?)";
-		PreparedStatement pr = conn.prepareStatement(insertQuary);
+		PreparedStatement ps = conn.prepareStatement(insertQuary);
 		LocalDate actionDate = LocalDate.now();
-		pr.setInt(1,borrowerIdAsInt);
-		pr.setString(2,bookName);
-		pr.setString(3,"Return");
-		pr.setDate(4,Date.valueOf(actionDate));
-		pr.setInt(5,borrowerIdAsInt);
-		pr.setInt(6,borrowerIdAsInt);
-		pr.setInt(7,borrowerIdAsInt);
+		ps.setInt(1,borrowerIdAsInt);
+		ps.setString(2,bookName);
+		ps.setString(3,"Return");
+		ps.setDate(4,Date.valueOf(actionDate));
+		ps.setInt(5,borrowerIdAsInt);
+		ps.setInt(6,borrowerIdAsInt);
+		ps.setInt(7,borrowerIdAsInt);
+		
+		return ps.execute();
+	}
+	
+	public static boolean updateSubscriberStatusToFrozen(String subscriberId,String IsFrozen) throws SQLException {
+		
+		String insertQuary = "UPDATE subscriber SET subscription_status=? WHERE subscriber_id = ?";
+		PreparedStatement ps = conn.prepareStatement(insertQuary);
+			
+		ps.setString(1, IsFrozen);
+		ps.setString(2, subscriberId);
+			
+		if(ps.executeUpdate()==1)
+			return true;
+		
+		return false;
+		
+	}
+	
+	public static boolean incrimentBookAvailability(String bookName) throws SQLException {
+		PreparedStatement checkIfFull= conn.prepareStatement("SELECT totalCopys From books WHERE bookName=? AND copysAvailable>=totalCopys");
+		//int numOfCopiesAvailable=getBookAvailality(bookName);		//need to add to code
+		ResultSet rs;
+		checkIfFull.setString(1, bookName);
+		rs= checkIfFull.executeQuery();
+		
+		
+		if(rs.next())	{	// if there is a row that book copies available is equal or greater then total copies of the book
+			System.err.println("there shouldn't be a book borrow in the first place");
+			return false;	// then it is an error.
+		
+		}
+			
+		
+		String insertQuary = "UPDATE books SET copysAvailable=copysAvailable + 1 WHERE bookName = ?";
+		PreparedStatement ps = conn.prepareStatement(insertQuary);
+		ps.setString(1, bookName);
+		
+		if(ps.executeUpdate()==1)
+			return true;
 		
 		return false;
 	}
