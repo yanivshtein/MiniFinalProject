@@ -3,7 +3,6 @@ package gui;
 import java.io.IOException;
 
 import client.ChatClient;
-import client.ReaderCardLibrariaViewUI;
 import client.ReportsUI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

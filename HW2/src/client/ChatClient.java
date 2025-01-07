@@ -101,7 +101,7 @@ public class ChatClient extends AbstractClient {
 			if (receivedHistory.size() > 0) {
 				String firstEntry = receivedHistory.get(0); // Get the first element to check the type
 
-				if (firstEntry.contains("Borrow Date")) {
+				if (firstEntry.contains("Borrow Report")) {
 					FullBorrowRep = receivedHistory;
 				} else if (firstEntry.contains("Action")) {
 					activityHistory = receivedHistory; // Process as activity history

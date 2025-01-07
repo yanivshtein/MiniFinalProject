@@ -33,7 +33,7 @@ public class mysqlConnection {
         }
 
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "Sheli123");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "Aa123456");
             System.out.println("SQL connection succeed");
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
@@ -271,9 +271,11 @@ public class mysqlConnection {
             ps.setString(1, subscriberId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
+                	String deadline = rs.getString("deadline");
+                	//System.out.println(deadline);
                     String bookName = rs.getString("BookName");
                     String actionDate = rs.getString("ActionDate");
-                    borrowHistory.add("Book Name: " + bookName + ", Date: " + actionDate);
+                    borrowHistory.add("Book Name: " + bookName + ",Borrow Date: " + actionDate + ", Deadline: "+ deadline);
                 }
             }
         } catch (SQLException e) {
@@ -282,19 +284,20 @@ public class mysqlConnection {
         return borrowHistory;
     }
 
-    public static boolean ChangeReturnDate(String subscriberId, String BookName, String OldDate, String NewDate, String Librarian_name) {
-        String query = "UPDATE activityhistory SET deadline = ? WHERE SubscriberID = ? AND BookName = ? AND ActionDate = ? AND ActionType = 'Borrow'";
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setString(1, NewDate);
+    public static boolean ChangeReturnDate(String subscriberId, String BookName, String OldDate, String NewDate, String Librarian_name) { 
+        String query = "UPDATE activityhistory SET deadline = ? WHERE SubscriberID = ? AND BookName = ? AND deadline = ? AND ActionType = 'Borrow'"; 
+        try (PreparedStatement ps = conn.prepareStatement(query)) { 
+        	ps.setString(1, NewDate);
             ps.setString(2, subscriberId);
             ps.setString(3, BookName);
             ps.setString(4, OldDate);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.out.println("SQL Error: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
+            
+            int result = ps.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) { 
+            e.printStackTrace(); 
+            return false; 
+        } 
     }
     public static boolean isSubscriberExist(int id) {
         String selectQuery = "SELECT 1 FROM subscriber WHERE subscriber_id = ?";
