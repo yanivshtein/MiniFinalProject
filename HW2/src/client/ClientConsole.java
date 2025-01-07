@@ -241,25 +241,7 @@ public class ClientConsole implements ChatIF
         ("Unexpected error while reading from console!");
     }
   }
-  public void reports_accept(String str, String selectedMonth , String selectedYear) 
-  {
-    try
-    {
-    	ArrayList<Object> arr1 = new ArrayList<>();
-    	
-    	if(str.equals("create borrow report")) {
-      	  arr1.add(11);
-      	  arr1.add(selectedMonth);
-      	  arr1.add(selectedYear);
-        }
-    	client.handleMessageFromClientUI(arr1);
-    } 
-    catch (Exception ex) 
-    {
-      System.out.println
-        ("Unexpected error while reading from console!");
-    }
-  }
+
   
   
   /**

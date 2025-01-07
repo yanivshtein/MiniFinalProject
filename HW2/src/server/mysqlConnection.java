@@ -368,42 +368,56 @@ public class mysqlConnection {
     }
 
 
-    public static ArrayList<String> BringBorrowRepInfo() throws SQLException {
+    public static ArrayList<String> BringBorrowRepInfo(String SelectedMonth , String SelectedYear) throws SQLException {
         ArrayList<String> FullBorrowRep = new ArrayList<>();
 
-        // Query for Borrowed and Returned Books
+     // Query for Borrowed and Returned Books
         String query1 = "SELECT br1.SubscriberID, br1.BookName, MIN(br1.ActionDate) AS BorrowDate, "
-                + "MIN(br2.ActionDate) AS ReturnDate "
+                + "MIN(br2.ActionDate) AS ReturnDate, br1.Deadline , br2.returned_late "
                 + "FROM activityhistory br1 JOIN activityhistory br2 "
                 + "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName "
                 + "AND br1.ActionType = 'Borrow' AND br2.ActionType = 'Return' AND br1.ActionDate < br2.ActionDate "
-                + "GROUP BY br1.SubscriberID, br1.BookName";
+                + "WHERE DATE_FORMAT(br1.ActionDate, '%Y-%m') = ? "
+                + "GROUP BY br1.SubscriberID, br1.BookName, br1.Deadline , br2.returned_late";
 
         try (PreparedStatement ps = conn.prepareStatement(query1)) {
+            // Set the SelectedMonth parameter for the query
+            ps.setString(1, SelectedYear + "-" + SelectedMonth);
+            
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
+                    // Check if the book was returned late or on time
+                    String lateStatus = rs.getInt("returned_late") == 1 ? "Late" : "On Time";
+                    
+                    // Add the information to the list, including the late status
                     FullBorrowRep.add(String.format(
-                            "Subscriber ID: %s Book Name: %s Borrow Date: %s Return Date: %s",
+                            "Subscriber ID: %s Book Name: %s Borrow Date: %s Return Date: %s Deadline: %s Status: %s",
                             rs.getString("SubscriberID"), rs.getString("BookName"), rs.getString("BorrowDate"),
-                            rs.getString("ReturnDate")));
+                            rs.getString("ReturnDate"), rs.getString("Deadline"), lateStatus));
                 }
             }
         }
 
+
         // Query for Borrowed but Not Returned Books
-        String query2 = "SELECT br1.SubscriberID, br1.BookName, MIN(br1.ActionDate) AS BorrowDate "
+        String query2 = "SELECT br1.SubscriberID, br1.BookName, MIN(br1.ActionDate) AS BorrowDate, br1.Deadline "
                 + "FROM activityhistory br1 LEFT JOIN activityhistory br2 "
                 + "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName "
                 + "AND br2.ActionType = 'Return' "
                 + "WHERE br1.ActionType = 'Borrow' AND br2.ActionType IS NULL "
-                + "GROUP BY br1.SubscriberID, br1.BookName";
+                + "AND DATE_FORMAT(br1.ActionDate, '%Y-%m') = ? "
+                + "GROUP BY br1.SubscriberID, br1.BookName, br1.Deadline";
 
         try (PreparedStatement ps = conn.prepareStatement(query2)) {
+            // Set the SelectedMonth parameter for the query
+            ps.setString(1,SelectedYear + "-" + SelectedMonth);
+            
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     FullBorrowRep.add(String.format(
-                            "Subscriber ID: %s Book Name: %s Borrow Date: %s Return Date: __-__-____ __:__:__",
-                            rs.getString("SubscriberID"), rs.getString("BookName"), rs.getString("BorrowDate")));
+                            "Subscriber ID: %s Book Name: %s Borrow Date: %s Return Date: __-__-____ __:__:__ Deadline: %s",
+                            rs.getString("SubscriberID"), rs.getString("BookName"), rs.getString("BorrowDate"),
+                            rs.getString("Deadline")));
                 }
             }
         }
