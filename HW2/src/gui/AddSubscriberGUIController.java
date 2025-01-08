@@ -5,7 +5,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import client.AddSubscriberUI;
 import client.ChatClient;
-import client.ReaderCardLibrariaViewUI;
 import common.Subscriber1;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

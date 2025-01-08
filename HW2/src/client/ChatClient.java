@@ -33,6 +33,8 @@ public class ChatClient extends AbstractClient {
 	public static ArrayList<String> FullBorrowRep;
 	public static Boolean bool, isFrozen, isAvailable, isCan, isExist;
 	public static boolean awaitResponse = false;
+	public static Integer bookAvailability=0;
+	public static ArrayList<String> allbooks = new ArrayList<>();
 	// Constructors ****************************************************
 
 	/**
@@ -91,14 +93,15 @@ public class ChatClient extends AbstractClient {
 			}
 
 		} else if (msg instanceof ArrayList) {
-
+			allbooks =(ArrayList<String>) msg;  //
+			System.out.println(allbooks +"chatclient");
 			ArrayList<String> receivedHistory = (ArrayList<String>) msg;
 
 			// Check if it's activity or borrow history based on the marker in the string
 			if (receivedHistory.size() > 0) {
 				String firstEntry = receivedHistory.get(0); // Get the first element to check the type
 
-				if (firstEntry.contains("Borrow Date")) {
+				if (firstEntry.contains("Borrow Report")) {
 					FullBorrowRep = receivedHistory;
 				} else if (firstEntry.contains("Action")) {
 					activityHistory = receivedHistory; // Process as activity history
@@ -106,7 +109,25 @@ public class ChatClient extends AbstractClient {
 					borrowHistory = receivedHistory; // Process as borrow history
 				}
 			}
-		} else {
+			System.out.println(allbooks +"chatclient2");
+		}else if (msg instanceof Integer) {
+			Integer bookAvailabilitytmp = (Integer)msg;
+			if(bookAvailabilitytmp.equals(0)) {
+				bookAvailability = 0;
+			}
+			else if(bookAvailabilitytmp.equals(-1)) {
+				bookAvailability =-1;
+			}
+			else if(bookAvailabilitytmp>0) {
+				bookAvailability =bookAvailabilitytmp;
+			}
+			else {
+				bookAvailability=-2;
+			}
+			
+			
+		}
+		else {
 			Subscriber1 sub = (Subscriber1) msg;
 			if (sub.equals(null)) {
 				s1 = new Subscriber1(0, "", "", "","","");

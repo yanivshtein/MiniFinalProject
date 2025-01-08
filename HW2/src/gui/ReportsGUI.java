@@ -3,7 +3,6 @@ package gui;
 import java.io.IOException;
 
 import client.ChatClient;
-import client.ReaderCardLibrariaViewUI;
 import client.ReportsUI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -50,7 +49,7 @@ public class ReportsGUI {
     }
     
     public void ViewBttClick(ActionEvent event) {
-        // Get the selected month from the ComboBox
+        // Get the selected month and year from the ComboBox
         String selectedMonth = getMonthNumber(months.getValue());
         String selectedYear = years.getValue();
 
@@ -60,14 +59,25 @@ public class ReportsGUI {
 
             // Build a single string to display all borrow report entries
             StringBuilder reportBuilder = new StringBuilder();
-            for (String reportEntry : ChatClient.FullBorrowRep) {
-                reportBuilder.append(reportEntry).append("\n\n");
-            }
+            if (ChatClient.FullBorrowRep == null || ChatClient.FullBorrowRep.isEmpty()) {
+                Displayarea.setText("No information to display.");
+            } else {
+                // Add a title for the report
+                reportBuilder.append("### Borrow Report for ").append(selectedMonth).append("/").append(selectedYear).append(" ###\n\n");
 
-            // Display the complete report in the text area
-            Displayarea.setText(reportBuilder.toString());
+                // Iterate over each entry and format it
+                int entryNumber = 1;
+                for (String reportEntry : ChatClient.FullBorrowRep) {
+                    reportBuilder.append(String.format("Entry %d:\n%s\n", entryNumber++, reportEntry));
+                    reportBuilder.append("\n-------------------------------\n");  // Separator between entries
+                }
+
+                // Display the formatted report in the text area
+                Displayarea.setText(reportBuilder.toString());
+            }
         }
     }
+
 
     
     public void BorrowTimeRepClick(ActionEvent event) {

@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 
 import client.ChatClient;
 import client.ClientUI;
-import client.ReaderCardLibrariaViewUI;
 import common.Subscriber1;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -81,20 +80,64 @@ public class LibrarianGUIHomePageController {
         primaryStage.setScene(scene);
         primaryStage.show();
 	}
-	
-	public void getLibrarianWatchAndUpdateBtn(ActionEvent event) throws IOException{
+	public void BorrowingBookBtn(ActionEvent event) throws IOException{
 		FXMLLoader loader = new FXMLLoader();
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
         Stage primaryStage = new Stage();
-        Pane root = loader.load(getClass().getResource("/gui/LibrarianWatchAndUpdateGUI.fxml").openStream());
+        Pane root = loader.load(getClass().getResource("/gui/BorrowBookGUIController.fxml").openStream());
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/gui/LibrarianWatchAndUpdateGUI.css").toExternalForm());
-        primaryStage.setTitle("Home page");
+        scene.getStylesheets().add(getClass().getResource("/gui/BorrowBookGUIController.css").toExternalForm());
+        primaryStage.setTitle("Borrow a book");
 
         primaryStage.setScene(scene);
         primaryStage.show();
 	}
+	public void SearchBookBtn(ActionEvent event) throws IOException{
+		FXMLLoader loader = new FXMLLoader();
+		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+        Stage primaryStage = new Stage();
+        Pane root = loader.load(getClass().getResource("/gui/SearchBookGUIController.fxml").openStream());
+
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/gui/SearchBookGUIController.css").toExternalForm());
+        primaryStage.setTitle("Search a book");
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+	}
+	
+	
+	
+	
+	public void getLibrarianWatchAndUpdateBtn(ActionEvent event) throws IOException {
+	    try {
+	        ((Node) event.getSource()).getScene().getWindow().hide(); // Hide the current window
+
+	        // Load the LibrarianWatchAndUpdateGUI FXML
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/LibrarianWatchAndUpdateGUI.fxml"));
+	        Parent root = loader.load();
+
+	        // Set up the new stage
+	        Stage primaryStage = new Stage();
+	        Scene scene = new Scene(root);
+
+	        // Apply stylesheets
+	        scene.getStylesheets().add(getClass().getResource("/gui/LibrarianWatchAndUpdateGUI.css").toExternalForm());
+
+	        // Configure the stage
+	        primaryStage.setTitle("Librarian Watch and Update GUI");
+	        primaryStage.setScene(scene);
+
+	        // Show the stage
+	        primaryStage.show();
+	    } catch (IOException e) {
+	        System.err.println("Error: Could not load FXML file");
+	        e.printStackTrace();
+	        // Optionally, display an error message to the user here
+	    }
+	}
+
 	public void getAddSubBtn(ActionEvent event) throws IOException{
 		FXMLLoader loader = new FXMLLoader();
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
