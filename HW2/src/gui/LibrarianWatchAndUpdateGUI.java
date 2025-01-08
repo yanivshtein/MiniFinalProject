@@ -94,28 +94,29 @@ public class LibrarianWatchAndUpdateGUI {
     	}
         for (int i = 0; i < borrowHistory.size(); i++) {
             if (borrowHistory.get(i).contains(BookName.getText())) {
-<<<<<<< Updated upstream
+
                 int dateIndex = borrowHistory.get(i).indexOf("Date: ");
                 if (dateIndex != -1) {
                     int startIndex = dateIndex + 6;
                     String dateTimePart = borrowHistory.get(i).substring(startIndex, startIndex + 19);
-=======
+
                 
                 // Extract the "Date" portion
-                int dateIndex = borrowHistory.get(i).indexOf("Deadline: ");
-                if (dateIndex != -1) {
-                    int startIndex = dateIndex + 10; // Length of "Date: " is 10
-                    int endIndex = borrowHistory.get(i).indexOf(",", startIndex);
+                int dateIndex1 = borrowHistory.get(i).indexOf("Deadline: ");
+                if (dateIndex1 != -1) {
+                    int startIndex1 = dateIndex1 + 10; // Length of "Date: " is 10
+                    int endIndex = borrowHistory.get(i).indexOf(",", startIndex1);
                     
                     // If there's no comma, assume the date goes to the end of the string
                     if (endIndex == -1) {
                         endIndex = borrowHistory.get(i).length();
                     }
                     
-                    String dateTimePart = borrowHistory.get(i).substring(startIndex, endIndex).trim();
->>>>>>> Stashed changes
-                    OldRetDate.setText(dateTimePart);
+                    String dateTimePart1 = borrowHistory.get(i).substring(startIndex1, endIndex).trim();
+
+                    OldRetDate.setText(dateTimePart1);
                     break;
+                }
                 }
             }
         }
