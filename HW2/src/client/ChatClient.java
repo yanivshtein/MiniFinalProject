@@ -62,6 +62,7 @@ public class ChatClient extends AbstractClient {
 		}catch(IOException e) {
 			
 			System.out.println("Connection failed: " + e.getMessage());
+			connected = false;
 			
 		}
 		});
@@ -72,9 +73,9 @@ public class ChatClient extends AbstractClient {
 	        if (connectionThread.isAlive()) {
 	            System.out.println("Connection attempt timed out.");
 	            connectionThread.interrupt(); // Stop the thread if it's still running
-	            if(connected == false)
-	            	throw new IOException();
 	        }
+	        if(!connected)
+            	throw new IOException();
 	    } catch (InterruptedException e) {
 	        System.out.println("Error waiting for connection thread: " + e.getMessage());
 	    }
