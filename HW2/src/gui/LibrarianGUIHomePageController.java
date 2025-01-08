@@ -25,6 +25,9 @@ import javafx.scene.control.TextArea;
 
 public class LibrarianGUIHomePageController {
 	
+
+	public static String BringLibName;
+	
 	@FXML
 	private Label librarianName = null;
 	
@@ -52,8 +55,10 @@ public class LibrarianGUIHomePageController {
 	@FXML
 	private void initialize() {
 		librarianName.setText("Elena");
+		BringLibName = librarianName.getText();
 
 	}
+		
 	public void getExitBtn(ActionEvent event) throws IOException {
 		System.out.println("Exit client");
 		System.exit(0);

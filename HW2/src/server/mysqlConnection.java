@@ -285,20 +285,42 @@ public class mysqlConnection {
     }
 
     public static boolean ChangeReturnDate(String subscriberId, String BookName, String OldDate, String NewDate, String Librarian_name) { 
-        String query = "UPDATE activityhistory SET deadline = ? WHERE SubscriberID = ? AND BookName = ? AND deadline = ? AND ActionType = 'Borrow'"; 
-        try (PreparedStatement ps = conn.prepareStatement(query)) { 
-        	ps.setString(1, NewDate);
-            ps.setString(2, subscriberId);
-            ps.setString(3, BookName);
-            ps.setString(4, OldDate);
-            
-            int result = ps.executeUpdate();
-            return result > 0;
-        } catch (SQLException e) { 
-            e.printStackTrace(); 
-            return false; 
-        } 
+        String checkQuery = "SELECT additionalInfo FROM activityhistory WHERE SubscriberID = ? AND BookName = ? AND deadline = ? AND ActionType = 'Borrow'";
+        String updateQuery = "UPDATE activityhistory SET deadline = ?, additionalInfo = ? WHERE SubscriberID = ? AND BookName = ? AND deadline = ? AND ActionType = 'Borrow'";
+
+        try (PreparedStatement checkPs = conn.prepareStatement(checkQuery)) {
+            // Set parameters for the check query
+            checkPs.setString(1, subscriberId);
+            checkPs.setString(2, BookName);
+            checkPs.setString(3, OldDate);
+
+            try (ResultSet rs = checkPs.executeQuery()) {
+                if (rs.next()) {
+                    String additionalInfo = rs.getString("additionalInfo");
+                    if (additionalInfo != null && !additionalInfo.isEmpty()) {
+                        // Return false if there is already an entry in additionalInfo
+                        return false;
+                    }
+                }
+            }
+
+            // Proceed with the update query if no entry exists in additionalInfo
+            try (PreparedStatement updatePs = conn.prepareStatement(updateQuery)) {
+                updatePs.setString(1, NewDate);
+                updatePs.setString(2, "Extended by: " + Librarian_name + " , at: ");
+                updatePs.setString(3, subscriberId);
+                updatePs.setString(4, BookName);
+                updatePs.setString(5, OldDate);
+
+                int result = updatePs.executeUpdate();
+                return result > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
+
     public static boolean isSubscriberExist(int id) {
         String selectQuery = "SELECT 1 FROM subscriber WHERE subscriber_id = ?";
         try (PreparedStatement ps = conn.prepareStatement(selectQuery)) {
