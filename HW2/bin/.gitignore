@@ -1,4 +1,6 @@
-/gui/
-/server/
-/common/
+/.DS_Store
 /client/
+/common/
+/gui/
+/logic/
+/server/

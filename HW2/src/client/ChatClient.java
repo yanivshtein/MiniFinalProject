@@ -27,14 +27,16 @@ public class ChatClient extends AbstractClient {
 	 * method in the client.
 	 */
 	ChatIF clientUI;
-	public static Subscriber1 s1 = new Subscriber1(0, "", "", "","","");
+	public static Subscriber1 s1 = new Subscriber1(0, "", "", "", "", "");
 	public static ArrayList<String> activityHistory;
 	public static ArrayList<String> borrowHistory;
 	public static ArrayList<String> FullBorrowRep;
 	public static Boolean bool, isFrozen, isAvailable, isCan, isExist;
 	public static boolean awaitResponse = false;
+	public static boolean connected;
 	public static Integer bookAvailability=0;
 	public static ArrayList<String> allbooks = new ArrayList<>();
+
 	// Constructors ****************************************************
 
 	/**
@@ -43,12 +45,41 @@ public class ChatClient extends AbstractClient {
 	 * @param host     The server to connect to.
 	 * @param port     The port number to connect on.
 	 * @param clientUI The interface type variable.
+	 * @throws IOException 
 	 */
 
-	public ChatClient(String host, int port, ChatIF clientUI) throws IOException {
+	public ChatClient(String host, int port, ChatIF clientUI) throws IOException{
 		super(host, port); // Call the superclass constructor
+		connected = false;
 		this.clientUI = clientUI;
-		openConnection();
+		Thread connectionThread = new Thread(() -> {
+	        
+	            System.out.println("Attempting to connect to " + host + ":" + port);
+		try {
+			
+			openConnection();
+			connected = true;
+		}catch(IOException e) {
+			
+			System.out.println("Connection failed: " + e.getMessage());
+			connected = false;
+			
+		}
+		});
+		connectionThread.start();
+		
+		try {
+	        connectionThread.join(1000); // Wait for the thread to finish within the timeout
+	        if (connectionThread.isAlive()) {
+	            System.out.println("Connection attempt timed out.");
+	            connectionThread.interrupt(); // Stop the thread if it's still running
+	        }
+	        if(!connected)
+            	throw new IOException();
+	    } catch (InterruptedException e) {
+	        System.out.println("Error waiting for connection thread: " + e.getMessage());
+	    }
+		
 	}
 
 	// Instance methods ************************************************
@@ -130,7 +161,7 @@ public class ChatClient extends AbstractClient {
 		else {
 			Subscriber1 sub = (Subscriber1) msg;
 			if (sub.equals(null)) {
-				s1 = new Subscriber1(0, "", "", "","","");
+				s1 = new Subscriber1(0, "", "", "", "", "");
 			} else {
 				s1.setSubscriber_id(sub.getSubscriber_id());
 				s1.setSubscriber_name(sub.getSubscriber_name());
