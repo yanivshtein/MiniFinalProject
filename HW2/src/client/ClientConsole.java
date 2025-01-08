@@ -4,6 +4,8 @@
 package client;
 
 import java.io.*;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -44,9 +46,19 @@ public class ClientConsole implements ChatIF
    *
    * @param host The host to connect to.
    * @param port The port to connect on.
+ * @throws IOException 
    */
-  public ClientConsole(String host, int port) 
+  public ClientConsole(String host, int port) throws IOException 
   {
+	  /*try {
+          Socket socket = new Socket();
+          socket.connect(new InetSocketAddress(host, port), 200);
+          System.out.println("Host is reachable on port " + port);
+          socket.close();
+      } catch (Exception e) {
+          System.out.println("Error: " + e.getMessage());
+          throw e;
+      }*/
     try 
     {
       client= new ChatClient(host, port, this);
@@ -56,7 +68,7 @@ public class ClientConsole implements ChatIF
     {
       System.out.println("Error: Can't setup connection!"
                 + " Terminating client.");
-      System.exit(1);
+      throw exception;
     }
   }
 
@@ -208,104 +220,6 @@ public class ClientConsole implements ChatIF
     System.out.println("> " + message);
   }
   
- 
-
   
-  //Class methods ***************************************************
-  
-  /**
-   * This method is responsible for the creation of the Client UI.
-   *
-   * @param args[0] The host to connect to.
-   */
-  public static void main(String[] args) 
-  {
-    String host = "";
-    int port = 0;  //The port number
-
-    try
-    {
-      host = args[0];
-    }
-    catch(ArrayIndexOutOfBoundsException e)
-    {
-      host = "localhost";
-    }
-    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
-    Scanner scanner = new Scanner(System.in);
-
-    while (true) {
-        // Display menu
-        System.out.println("Choose an action:");
-        System.out.println("1. Insert data into the database");
-        System.out.println("2. Fetch data from the database");
-        System.out.println("3. Exit");
-        System.out.print("Enter your choice: ");
-
-        int choice = scanner.nextInt();
-        scanner.nextLine();  // Consume the newline character after the number
-
-        switch (choice) {
-            case 1:
-                // Insert data into the database
-                chat.insertData();
-                break;
-
-            case 2:
-                // Fetch data from the database
-                //fetchData();
-                break;
-
-            case 3:
-                // Exit the program
-                System.out.println("Exiting...");
-                scanner.close();
-                return;
-
-            default:
-                System.out.println("Invalid choice. Please try again.");
-        }
-    }
-  }
-  public void insertData() 
-  {
-	  ArrayList<Object> list = new ArrayList<>();
-	  list.add(1);
-	  list.add(new Subscriber1());
-    try
-    {
-      
-          client.handleMessageFromClientUI(list);
-
-
-    } 
-    catch (Exception ex) 
-    {
-      System.out.println
-        ("Unexpected error while reading from console!");
-    }
-  }
-  
-  
-  public void fetchData() {
-	  ArrayList<Object> list = new ArrayList<>();
-	  list.add(2);
-    try
-    {
-      
-          client.handleMessageFromClientUI(list);
-
-    } 
-    catch (Exception ex) 
-    {
-      System.out.println
-        ("Unexpected error while reading from console!");
-    }
-	  
-	  
-  }
-
-
-
 }
 //End of ConsoleChat class
