@@ -4,6 +4,8 @@
 package client;
 
 import java.io.*;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -35,7 +37,7 @@ public class ClientConsole implements ChatIF
    * The instance of the client that created this ConsoleChat.
    */
   ChatClient client;
-
+  public boolean connected = false;
   
   //Constructors ****************************************************
 
@@ -44,23 +46,56 @@ public class ClientConsole implements ChatIF
    *
    * @param host The host to connect to.
    * @param port The port to connect on.
+   * @throws IOException 
    */
-  public ClientConsole(String host, int port) 
+  public ClientConsole(String host, int port) throws IOException 
   {
     try 
     {
       client= new ChatClient(host, port, this);
+      connected = true;
     } 
     catch(IOException exception) 
     {
       System.out.println("Error: Can't setup connection!"
                 + " Terminating client.");
-      System.exit(1);
+      throw exception;
     }
   }
 
   
-  //Instance methods ************************************************
+  public void acceptLogin(String str, String email, String password) 
+  {
+    try
+    {
+      ArrayList<Object> arr1 = new ArrayList<>();
+      
+      
+      if (str.equals("searchSub")) {
+    	  arr1.add(4);
+    	  arr1.add(email);
+    	  arr1.add(password);
+      }
+      else if (str.equals("searchLib")) {
+    	  arr1.add(3);
+    	  arr1.add(email);
+    	  arr1.add(password);
+      }
+      else  { //EXIT
+    	  arr1.add(0);
+      }
+      client.handleMessageFromClientUI(arr1);
+      
+      
+    } 
+    catch (Exception ex) 
+    {
+      System.out.println
+        ("Unexpected error while reading from console!");
+    }
+  }
+  
+//Instance methods ************************************************
   
   /**
    * This method waits for input from the console.  Once it is 
@@ -72,31 +107,40 @@ public class ClientConsole implements ChatIF
     {
       ArrayList<Object> arr1 = new ArrayList<>();
       
+      
+      
       if(str.equals("watch borrow history")){
     	  arr1.add(8);
     	  arr1.add(id);  
       }
       
-      if (str.equals("watch activity history")) {
+      else if (str.equals("watch activity history")) {
     	  arr1.add(9);
-    	  arr1.add(id);  
+    	  arr1.add("");  
+    	  arr1.add("");
+    	  arr1.add(email);
       }
-      else if (str.equals("search")) {
+      else if (str.equals("searchSub")) {
     	  arr1.add(4);
     	  arr1.add(id);
       }
-      else if (str.equals("select")) { //SELECT
+      else if (str.equals("searchLib")) {
+    	  arr1.add(3);
+    	  arr1.add(id);
+      }
+      else if (str.equals("select")) { 
     	  arr1.add(2);
     	  arr1.add(id);
       }  
-      else if (str.equals("update")) { //UPDATE
+      else if (str.equals("update")) { 
     	  arr1.add(1); 
     	  arr1.add(id);
     	  arr1.add(phone);
     	  arr1.add(email);
       }
+
       else  { //EXIT
-    	  arr1.add(3);
+    	  arr1.add(0);
       }
       client.handleMessageFromClientUI(arr1);
       
@@ -116,8 +160,70 @@ public class ClientConsole implements ChatIF
 	  arr.add(bookName);
 	  client.handleMessageFromClientUI(arr);		  
   }
+  public void acceptAddToActivityHistoryController(int request, int id, String bookName) {
+	  ArrayList<Object> arr = new ArrayList<>();
+	  arr.add(request);
+	  arr.add(id);
+	  arr.add(bookName);
+	  client.handleMessageFromClientUI(arr);		  
+  }
+  public void acceptBorrowBook(int id) {
+	  ArrayList<Object> arr = new ArrayList<>();
+	  arr.add(15);
+	  arr.add(id);
+	  client.handleMessageFromClientUI(arr);		  
+  }
   
-  public void book_accept(String str, String BookName, String id,String OldDate ,String NewDate) 
+  public void reports_accept(String str, String selectedMonth , String selectedYear) 
+  {
+    try
+    {
+        ArrayList<Object> arr1 = new ArrayList<>();
+
+        if(str.equals("create borrow report")) {
+            arr1.add(11);
+            arr1.add(selectedMonth);
+            arr1.add(selectedYear);
+        }
+        client.handleMessageFromClientUI(arr1);
+    } 
+    catch (Exception ex) 
+    {
+      System.out.println
+        ("Unexpected error while reading from console!");
+    }
+  }
+  
+  
+  
+  
+  public void acceptAddSubscriber(int id, String name, String phoneNumber , String email ,String status , String password) {
+	  ArrayList<Object> arr = new ArrayList<>();
+	  arr.add(13);
+	  arr.add(id);
+	  arr.add(name);
+	  arr.add(phoneNumber);
+	  arr.add(email);
+	  arr.add(status);
+	  arr.add(password);
+	  client.handleMessageFromClientUI(arr);		  
+  }
+  public void acceptSearchBook(int request,String bookName) {
+	  ArrayList<Object> arr = new ArrayList<>();
+	  arr.add(request);
+	  arr.add(bookName);
+	  client.handleMessageFromClientUI(arr);		  
+  }
+  public void acceptAllTheBooks(int request) {
+	  ArrayList<Object> arr = new ArrayList<>();
+	  arr.add(request);
+	  client.handleMessageFromClientUI(arr);		  
+  }
+  
+  
+  
+  
+  public void book_accept(String str, String id, String BookName ,String OldDate ,String NewDate , String Librarian_name) 
   {
     try
     {
@@ -129,6 +235,7 @@ public class ClientConsole implements ChatIF
       	  arr1.add(BookName);
       	  arr1.add(OldDate);
       	  arr1.add(NewDate);
+      	  arr1.add(Librarian_name);
         }
     	client.handleMessageFromClientUI(arr1);
     } 
@@ -186,103 +293,6 @@ public class ClientConsole implements ChatIF
   public void display(String message) 
   {
     System.out.println("> " + message);
-  }
-  
- 
-
-  
-  //Class methods ***************************************************
-  
-  /**
-   * This method is responsible for the creation of the Client UI.
-   *
-   * @param args[0] The host to connect to.
-   */
-  public static void main(String[] args) 
-  {
-    String host = "";
-    int port = 0;  //The port number
-
-    try
-    {
-      host = args[0];
-    }
-    catch(ArrayIndexOutOfBoundsException e)
-    {
-      host = "localhost";
-    }
-    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
-    Scanner scanner = new Scanner(System.in);
-
-    while (true) {
-        // Display menu
-        System.out.println("Choose an action:");
-        System.out.println("1. Insert data into the database");
-        System.out.println("2. Fetch data from the database");
-        System.out.println("3. Exit");
-        System.out.print("Enter your choice: ");
-
-        int choice = scanner.nextInt();
-        scanner.nextLine();  // Consume the newline character after the number
-
-        switch (choice) {
-            case 1:
-                // Insert data into the database
-                chat.insertData();
-                break;
-
-            case 2:
-                // Fetch data from the database
-                //fetchData();
-                break;
-
-            case 3:
-                // Exit the program
-                System.out.println("Exiting...");
-                scanner.close();
-                return;
-
-            default:
-                System.out.println("Invalid choice. Please try again.");
-        }
-    }
-  }
-  public void insertData() 
-  {
-	  ArrayList<Object> list = new ArrayList<>();
-	  list.add(1);
-	  list.add(new Subscriber1());
-    try
-    {
-      
-          client.handleMessageFromClientUI(list);
-
-
-    } 
-    catch (Exception ex) 
-    {
-      System.out.println
-        ("Unexpected error while reading from console!");
-    }
-  }
-  
-  
-  public void fetchData() {
-	  ArrayList<Object> list = new ArrayList<>();
-	  list.add(2);
-    try
-    {
-      
-          client.handleMessageFromClientUI(list);
-
-    } 
-    catch (Exception ex) 
-    {
-      System.out.println
-        ("Unexpected error while reading from console!");
-    }
-	  
-	  
   }
 
 

@@ -29,15 +29,16 @@ public class ChatClient extends AbstractClient
    * the display method in the client.
    */
   ChatIF clientUI; 
-  public static Subscriber1 s1 = new Subscriber1(0,"",0,"","");
+  public static Subscriber1 s1 = new Subscriber1(0, "", "", "", "", "");
   public static ArrayList<String> activityHistory;
   public static ArrayList<String> borrowHistory;
+  public static ArrayList<String> FullBorrowRep;
   public static LinkedHashSet<String> ActionDateAndDeadline;
-  public static Boolean bool;
-  public static Boolean isFrozen;
-  public static Boolean isAvailable;
-  public static Boolean isCan;
+  public static Boolean bool, isFrozen, isAvailable, isCan, isExist;
   public static boolean awaitResponse = false;
+  public static boolean connected;
+  public static Integer bookAvailability=0;
+  public static ArrayList<String> allbooks = new ArrayList<>();
   //Constructors ****************************************************
   
   /**
@@ -51,19 +52,40 @@ public class ChatClient extends AbstractClient
   public ChatClient(String host, int port, ChatIF clientUI) 
     throws IOException 
   {
-    super(host, port); //Call the superclass constructor
-    this.clientUI = clientUI;
-    openConnection();
+	  super(host, port); // Call the superclass constructor
+		connected = false;
+		this.clientUI = clientUI;
+		Thread connectionThread = new Thread(() -> {
+	        
+	            System.out.println("Attempting to connect to " + host + ":" + port);
+		try {
+			
+			openConnection();
+			connected = true;
+		}catch(IOException e) {
+			
+			System.out.println("Connection failed: " + e.getMessage());
+			connected = false;
+			
+		}
+		});
+		connectionThread.start();
+		
+		try {
+	        connectionThread.join(1000); // Wait for the thread to finish within the timeout
+	        if (connectionThread.isAlive()) {
+	            System.out.println("Connection attempt timed out.");
+	            connectionThread.interrupt(); // Stop the thread if it's still running
+	        }
+	        if(!connected)
+          	throw new IOException();
+	    } catch (InterruptedException e) {
+	        System.out.println("Error waiting for connection thread: " + e.getMessage());
+	    }
   }
 
   
-  //Instance methods ************************************************
-    
-  /**
-   * This method handles all data that comes in from the server.
-   *
-   * @param msg The message from the server.
-   */
+ 
   public void handleMessageFromServer(Object msg) 
   {
 	  awaitResponse = false;
@@ -72,7 +94,7 @@ public class ChatClient extends AbstractClient
 	  }
 	  else if (msg instanceof String) { 
 		  String returned = (String) msg; //returned from the server
-
+		  isExist = true;
 		  switch (returned) {
 		      case "frozen":
 		          isFrozen = true;
@@ -92,46 +114,70 @@ public class ChatClient extends AbstractClient
 		      case "can't":
 		          isCan = false;
 		          break;
+		      case "notExist":
+		    	  isExist = false;
+		    	  break;
 		      default:
 		          System.out.println("Unexpected status: " + returned);
 		          break;
 		  }
 
 	  }
-//	  else if (msg instanceof ArrayList<Object>) {
-//		  
-//	  }
-	  else if (msg instanceof ArrayList) {
-		  bool=(Boolean) ( (ArrayList<Object>)msg).get(0);
-		  System.out.println("Here:");
+
+//	  else if (msg instanceof ArrayList) {
+//		  bool=(Boolean) ( (ArrayList<Object>)msg).get(0);
+//		  System.out.println("Here:");
 //		    ArrayList<String> receivedHistory = (ArrayList<String>) msg;
-//
-//		    // Check if it's activity or borrow history based on the marker in the string
-//		    if (receivedHistory.size() > 0) {
-//		        String firstEntry = receivedHistory.get(0);  // Get the first element to check the type
-//		        System.out.println(firstEntry);
-//		        if (firstEntry.contains("Action")) {
-//		            activityHistory = receivedHistory;  // Process as activity history
-//		        } else   {
-//		            borrowHistory = receivedHistory;  // Process as borrow history
-//		        }
-//		    }
+	  else if (msg instanceof ArrayList) {
+			allbooks =(ArrayList<String>) msg;  //
+			System.out.println(allbooks +"chatclient");
+			ArrayList<String> receivedHistory = (ArrayList<String>) msg;
+
+			// Check if it's activity or borrow history based on the marker in the string
+			if (receivedHistory.size() > 0) {
+				String firstEntry = receivedHistory.get(0); // Get the first element to check the type
+
+				if (firstEntry.contains("Borrow Report")) {
+					FullBorrowRep = receivedHistory;
+				} else if (firstEntry.contains("Action")) {
+					activityHistory = receivedHistory; // Process as activity history
+				} else {
+					borrowHistory = receivedHistory; // Process as borrow history
+				}
+			}
+			System.out.println(allbooks +"chatclient2");
 		}
-	  
+	  else if (msg instanceof Integer) {
+			Integer bookAvailabilitytmp = (Integer)msg;
+			if(bookAvailabilitytmp.equals(0)) {
+				bookAvailability = 0;
+			}
+			else if(bookAvailabilitytmp.equals(-1)) {
+				bookAvailability =-1;
+			}
+			else if(bookAvailabilitytmp>0) {
+				bookAvailability =bookAvailabilitytmp;
+			}
+			else {
+				bookAvailability=-2;
+			}
+			
+			
+		}
 	  else if (msg instanceof LinkedHashSet) {
 		  ActionDateAndDeadline = (LinkedHashSet<String>)msg;
 	  }
 	  else {
-		  Subscriber1 sub = (Subscriber1)msg;
-			 if (sub.equals(null)) {
-				 s1 = new Subscriber1(0,"",0,"","");
-			 }
-			 else {
-				 s1.setSubscriber_id(sub.getSubscriber_id());
-				 s1.setSubscriber_name(sub.getSubscriber_name());
-				 s1.setDetailed_subscription_history(sub.getDetailed_subscription_history());
-				 s1.setSubscriber_phone_number(sub.getSubscriber_phone_number());
-				 s1.setSubscriber_email(sub.getSubscriber_email()); 
+		  Subscriber1 sub = (Subscriber1) msg;
+			if (sub.equals(null)) {
+				s1 = new Subscriber1(0, "", "", "", "", "");
+			} else {
+				s1.setSubscriber_id(sub.getSubscriber_id());
+				s1.setSubscriber_name(sub.getSubscriber_name());
+				s1.setSubscriber_phone_number(sub.getSubscriber_phone_number());
+				s1.setSubscriber_email(sub.getSubscriber_email());
+				s1.setSub_status(sub.getSub_status());
+				s1.setPassword(sub.getPassword());
 			 }
 	  }
 	 
@@ -151,9 +197,8 @@ public void handleMessageFromClientUI(Object obj)  //changed from ArrayList<Obje
 		try
 		{
 			awaitResponse = true;
-			//if (needWait==7) //dont need to wait for response from the server
-				//awaitResponse=false;
-			System.out.println("arr1: " + arr1);
+			// if (needWait==11) //dont need to wait for response from the server
+			// awaitResponse=false;			System.out.println("arr1: " + arr1);
 			sendToServer(arr1);
 			while (awaitResponse) {
 				try {
@@ -168,7 +213,6 @@ public void handleMessageFromClientUI(Object obj)  //changed from ArrayList<Obje
 		{
 		  clientUI.display
 		    ("Could not send message to server.  Terminating client.");
-		  e.printStackTrace();
 		  quit();
 		}
 	}
@@ -179,12 +223,11 @@ public void handleMessageFromClientUI(Object obj)  //changed from ArrayList<Obje
    */
   public void quit()
   {
-    try
-    {
-      closeConnection();
-    }
-    catch(IOException e) {}
-    System.exit(0);
+	  try {
+			closeConnection();
+		} catch (IOException e) {
+		}
+		System.exit(0);
   }
   
   public void method() {
