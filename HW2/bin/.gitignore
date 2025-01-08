@@ -1,5 +1,7 @@
-/client/
 /.DS_Store
+/client/
 /common/
 /gui/
+/logic/
+/ocsf/
 /server/
