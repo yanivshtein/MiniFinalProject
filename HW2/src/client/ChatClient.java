@@ -98,20 +98,24 @@ public class ChatClient extends AbstractClient
 		  }
 
 	  }
+//	  else if (msg instanceof ArrayList<Object>) {
+//		  
+//	  }
 	  else if (msg instanceof ArrayList) {
-		  
-		    ArrayList<String> receivedHistory = (ArrayList<String>) msg;
-
-		    // Check if it's activity or borrow history based on the marker in the string
-		    if (receivedHistory.size() > 0) {
-		        String firstEntry = receivedHistory.get(0);  // Get the first element to check the type
-		        System.out.println(firstEntry);
-		        if (firstEntry.contains("Action")) {
-		            activityHistory = receivedHistory;  // Process as activity history
-		        } else   {
-		            borrowHistory = receivedHistory;  // Process as borrow history
-		        }
-		    }
+		  bool=(Boolean) ( (ArrayList<Object>)msg).get(0);
+		  System.out.println("Here:");
+//		    ArrayList<String> receivedHistory = (ArrayList<String>) msg;
+//
+//		    // Check if it's activity or borrow history based on the marker in the string
+//		    if (receivedHistory.size() > 0) {
+//		        String firstEntry = receivedHistory.get(0);  // Get the first element to check the type
+//		        System.out.println(firstEntry);
+//		        if (firstEntry.contains("Action")) {
+//		            activityHistory = receivedHistory;  // Process as activity history
+//		        } else   {
+//		            borrowHistory = receivedHistory;  // Process as borrow history
+//		        }
+//		    }
 		}
 	  
 	  else if (msg instanceof LinkedHashSet) {
@@ -149,6 +153,7 @@ public void handleMessageFromClientUI(Object obj)  //changed from ArrayList<Obje
 			awaitResponse = true;
 			//if (needWait==7) //dont need to wait for response from the server
 				//awaitResponse=false;
+			System.out.println("arr1: " + arr1);
 			sendToServer(arr1);
 			while (awaitResponse) {
 				try {
@@ -163,6 +168,7 @@ public void handleMessageFromClientUI(Object obj)  //changed from ArrayList<Obje
 		{
 		  clientUI.display
 		    ("Could not send message to server.  Terminating client.");
+		  e.printStackTrace();
 		  quit();
 		}
 	}

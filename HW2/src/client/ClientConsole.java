@@ -139,7 +139,7 @@ public class ClientConsole implements ChatIF
     }
   }
   
-  public void returnBook_accept(String actionType, String borrowerID,String bookName, boolean isLate,boolean freezeStatus) {
+  public void returnBook_accept(String actionType, String borrowerID,String bookName, Boolean isLate,Boolean freezeStatus) {
 	  
 	  ArrayList<Object> arr1 = new ArrayList<>();
 	  

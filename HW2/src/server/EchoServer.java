@@ -219,14 +219,17 @@ public class EchoServer extends AbstractServer
 	            case 19:	// search if exist borrower in the DB
 	            	String borrowerid = (String)arr.get(1); //subscriber ID is in the second position of the array
 		          	String bookname = (String)arr.get(2);
+		          	ArrayList<Object> ar2 = new ArrayList<Object>();
 				try {
-					boolean isExist= mysqlConnection.checkIfBorrowerFound(borrowerid, bookname);
-					client.sendToClient(isExist);
+					Boolean isExist= mysqlConnection.checkIfBorrowerFound(borrowerid, bookname);
+					ar2.add(isExist);
+					//client.sendToClient(isExist);
+					client.sendToClient(ar2);
 				} catch (SQLException | IOException e) {
 					
 					e.printStackTrace();
 				}
-		          	
+		          	break;
 	            case 20:
 	            	LinkedHashSet<String> Dates= new LinkedHashSet<String>();
 	            	String Borrowerid = (String)arr.get(1); //subscriber ID is in the second position of the array
@@ -238,7 +241,7 @@ public class EchoServer extends AbstractServer
 					
 					e.printStackTrace();
 				}
-				
+				 break;
 	            case 21:
 	            	 this.subscriberID = (String)arr.get(1);
 	            	 this.bookName = (String)arr.get(2);          	 
@@ -269,7 +272,7 @@ public class EchoServer extends AbstractServer
 					
 	            		 e.printStackTrace();
 	            	 }
-	            	 
+	            	 break;
 	            default:
 	                System.out.println("The server - Received message is not of the expected type.");
 	                break;

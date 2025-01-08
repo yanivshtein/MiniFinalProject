@@ -210,7 +210,7 @@ public class mysqlConnection {
 	// method that checks in the database if there is a certain borrower that borrowed the selected book
 	// using "Exist" if there is a row  that match the borrower's ID and book's name  then
 	// the method return true
-	public static boolean  checkIfBorrowerFound(String borrowerId,String bookName) throws SQLException {
+	public static Boolean  checkIfBorrowerFound(String borrowerId,String bookName) throws SQLException {
 		
 		PreparedStatement ps = conn.prepareStatement("SELECT EXISTS(SELECT * FROM activityhistory where SubscriberID=? AND BookName=? AND ActionType='Borrow')");
 		ps.setString(1, borrowerId);
@@ -222,7 +222,7 @@ public class mysqlConnection {
 		return false;
 	}
 	
-	public static boolean insertReturnBookRowInActivityHistory(String borrowerId,String bookName,int returnedLate) throws SQLException {
+	public static Boolean insertReturnBookRowInActivityHistory(String borrowerId,String bookName,int returnedLate) throws SQLException {
 		
 		int borrowerIdAsInt = Integer.parseInt(borrowerId);
 		String insertQuary = "INSERT INTO activityhistory (SubScriberID, BookName, ActionType, ActionDate,"
@@ -239,7 +239,7 @@ public class mysqlConnection {
 		return ps.execute();
 	}
 	
-	public static boolean updateSubscriberStatusToFrozen(String subscriberId,String IsFrozen) throws SQLException {
+	public static Boolean updateSubscriberStatusToFrozen(String subscriberId,String IsFrozen) throws SQLException {
 		
 		String insertQuary = "UPDATE subscriber SET subscription_status=? WHERE subscriber_id = ?";
 		PreparedStatement ps = conn.prepareStatement(insertQuary);

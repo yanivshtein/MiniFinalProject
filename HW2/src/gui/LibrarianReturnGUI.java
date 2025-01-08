@@ -1,7 +1,7 @@
 package gui;
 
 
-import java.text.SimpleDateFormat;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -143,11 +143,11 @@ public class LibrarianReturnGUI {
 		LibrarianUI.chat.returnBook_accept("EXIST", BorrowerId, BookName,false,false);
 		
 		// if there isn't any row that match, then show in label.
-		if (ChatClient.bool==false) {
-			alertMsg= new Label();
-			alertMsg.setText("The Borrow does not exist!");
-			return;
-		}
+//		if (ChatClient.bool==false) {
+//			alertMsg= new Label();
+//			alertMsg.setText("The Borrow does not exist!");
+//			return;
+//		}
 		
 		// if there is a match then select the borrow date and deadline.
 		LibrarianUI.chat.returnBook_accept("SELECT DATE",BorrowerId,BookName,false,false);
