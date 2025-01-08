@@ -1,35 +1,28 @@
 package client;
+
 import javafx.application.Application;
 
 import javafx.stage.Stage;
 
-
-import java.util.Vector;
-
-import gui.ClientGUIConnectionController;
 import gui.ClientGUILoginController;
+import gui.ReportsGUI;
+import gui.SearchBookGUIController;
 
 
-public class ClientUI extends Application {
-
-    public static String hostIp;
+public class SearchBookUI extends Application {
+    public static ClientConsole chat; //only one instance
 
     public static void main( String args[] ) throws Exception
        { 
-
-
-          launch(args);
-
-
+            launch(args);
        } // end main
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-
+         chat= new ClientConsole("localhost", 5555);
         // TODO Auto-generated method stub
 
-        ClientGUIConnectionController aFrame = new ClientGUIConnectionController(); 
+         SearchBookGUIController aFrame = new SearchBookGUIController(); 
 
         aFrame.start(primaryStage);
     }

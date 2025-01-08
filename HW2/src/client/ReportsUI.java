@@ -3,9 +3,11 @@ import javafx.application.Application;
 
 import javafx.stage.Stage;
 
-import gui.LibrarianWatchAndUpdateGUI;
+import gui.ClientGUILoginController;
+import gui.ReportsGUI;
 
-public class LibrarianUI extends Application {
+
+public class ReportsUI extends Application {
 	public static ClientConsole chat; //only one instance
 
 	public static void main( String args[] ) throws Exception
@@ -18,7 +20,7 @@ public class LibrarianUI extends Application {
 		 chat= new ClientConsole("localhost", 5555);
 		// TODO Auto-generated method stub
 						  		
-		 LibrarianWatchAndUpdateGUI aFrame = new LibrarianWatchAndUpdateGUI(); 
+		ReportsGUI aFrame = new ReportsGUI(); 
 		 
 		aFrame.start(primaryStage);
 	}
