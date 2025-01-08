@@ -8,8 +8,9 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import client.ChatClient;
+import client.ClientConsole;
 import client.ClientUI;
-import client.ReaderCardLibrariaViewUI;
+import client.LibrarianHomePageUI;
 import common.Subscriber1;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,7 +23,10 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
 
+
+
 public class LibrarianWatchAndUpdateGUI {
+	
     @FXML
     private TextField subID = null;
     @FXML
@@ -50,7 +54,7 @@ public class LibrarianWatchAndUpdateGUI {
     @FXML
     private Button SaveChangesbtt = null;
     @FXML
-    private TextField SubStatus = null;
+    private TextField SubStatus = null; //active OR frozen
     
     private  String TempStatus;
     
@@ -59,7 +63,7 @@ public class LibrarianWatchAndUpdateGUI {
     private ArrayList<String> borrowHistory;
 
     public void ViewDetBtt(ActionEvent event) throws IOException {
-        ReaderCardLibrariaViewUI.chat.accept("select", subID.getText(), "", "");
+    	LibrarianHomePageUI.chat.accept("select", subID.getText(), "", "");
         Subscriber1 sub = ChatClient.s1;
         subID.setText(String.valueOf(sub.getSubscriber_id()));
         name.setText(sub.getSubscriber_name());
@@ -68,8 +72,9 @@ public class LibrarianWatchAndUpdateGUI {
         SubStatus.setText(sub.getSub_status());
         
         
-        ReaderCardLibrariaViewUI.chat.accept("watch borrow history", subID.getText(), "", "");
+        LibrarianHomePageUI.chat.accept("watch borrow history", subID.getText(), "", "");
         borrowHistory = ChatClient.borrowHistory;
+        
 
         if (borrowHistory == null || borrowHistory.isEmpty()) {
             Bview.setText("No borrow history found.");
@@ -94,11 +99,11 @@ public class LibrarianWatchAndUpdateGUI {
         }
         for (int i = 0; i < borrowHistory.size(); i++) {
             if (borrowHistory.get(i).contains(BookName.getText())) {
-                
+            	
                 // Extract the "Date" portion
-                int dateIndex = borrowHistory.get(i).indexOf("Date: ");
+                int dateIndex = borrowHistory.get(i).indexOf("Deadline: ");
                 if (dateIndex != -1) {
-                    int startIndex = dateIndex + 6; // Length of "Date: " is 6
+                    int startIndex = dateIndex + 10; // Length of "Date: " is 10
                     int endIndex = borrowHistory.get(i).indexOf(",", startIndex);
                     
                     // If there's no comma, assume the date goes to the end of the string
@@ -124,7 +129,7 @@ public class LibrarianWatchAndUpdateGUI {
             return;
         }
 
-        ReaderCardLibrariaViewUI.chat.book_accept("set new return date", subID.getText(), BookName.getText(), OldRetDate.getText(), NewRetDate.getText() , Librarian_Name );
+        LibrarianHomePageUI.chat.book_accept("set new return date", subID.getText(), BookName.getText(), OldRetDate.getText(), NewRetDate.getText() , Librarian_Name );
 
         if (ChatClient.bool) {
             ChangesSavedPop.setContentText("Updated successfully");
@@ -134,14 +139,20 @@ public class LibrarianWatchAndUpdateGUI {
     }
 
     private boolean isLessThanTwoWeeks(String oldDateStr, String newDateStr) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        if (oldDateStr == null || newDateStr == null || oldDateStr.isEmpty() || newDateStr.isEmpty()) {
+            ChangesSavedPop.setContentText("Error: One or both date strings are null or empty.");
+            return false;
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date oldDate = dateFormat.parse(oldDateStr);
             Date newDate = dateFormat.parse(newDateStr);
 
-            long diffInMillis = Math.abs(newDate.getTime() - oldDate.getTime());
-            long diffInDays = TimeUnit.MILLISECONDS.toDays(diffInMillis);
+            // Calculate the difference in days
+            long diffInDays = TimeUnit.MILLISECONDS.toDays(Math.abs(newDate.getTime() - oldDate.getTime()));
 
+            // Return true if less than 14 days
             return diffInDays < 14;
         } catch (ParseException e) {
             ChangesSavedPop.setContentText("Error parsing dates: " + e.getMessage());
@@ -149,12 +160,4 @@ public class LibrarianWatchAndUpdateGUI {
         }
     }
 
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/gui/LibrarianWatchAndUpdateGUI.fxml"));
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/gui/LibrarianWatchAndUpdateGUI.css").toExternalForm());
-        primaryStage.setTitle("Librarian watch and update GUI");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
 }

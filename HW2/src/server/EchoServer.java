@@ -173,7 +173,7 @@ public class EchoServer extends AbstractServer
                 case 11:
                     ArrayList<String> BorrowRepDet = null;
                     try {
-                        BorrowRepDet = mysqlConnection.BringBorrowRepInfo();
+                        BorrowRepDet = mysqlConnection.BringBorrowRepInfo((String)arr.get(1) , (String)arr.get(2));
                     } catch (SQLException e) {
                         e.printStackTrace();
                         BorrowRepDet = new ArrayList<>();
@@ -208,8 +208,60 @@ public class EchoServer extends AbstractServer
                         e.printStackTrace();
                     }
                 	break;
+                case 14:
+
+                    bookName = (String) arr.get(1);
+                    Integer BookIsInTheInvatory = mysqlConnection.getBookAvailability(bookName);
+                    try {
+                        client.sendToClient(BookIsInTheInvatory);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break; 
+                case 15:
+
+                    Sub_id = (int) arr.get(1);
+                    Boolean subExist = mysqlConnection.isSubscriberExist(Sub_id);
+                    System.out.println(subExist);
+                    try {
+                        client.sendToClient(subExist);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 16:
+                    bookName = (String) arr.get(1);
+                    Boolean decreaseBook = mysqlConnection.decrementBookAvailability(bookName);
+                    try {
+                        client.sendToClient(decreaseBook);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 17:
+                	Sub_id =(int) arr.get(1);
+                    bookName = (String) arr.get(2);
+                     mysqlConnection.addActivityToHistory(Sub_id,bookName);
+                    try {
+                    	client.sendToClient(new Boolean(true));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 18:
+
+                       ArrayList<String> AllBooks = mysqlConnection.getAllBookNames();
+                       System.out.println(AllBooks+ "echoserver");
+                       try {
+                       	// Send the borrow history to the client
+                           client.sendToClient(AllBooks);
+                       } catch (IOException e) {
+                           e.printStackTrace();
+                       }
+                       break;
+                    
                 	
-                	
+                    
 
                 default:
                     System.out.println("The server - Received message is not of the expected type.");

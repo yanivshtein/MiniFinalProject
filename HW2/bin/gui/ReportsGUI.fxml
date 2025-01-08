@@ -14,9 +14,11 @@
       <Text layoutX="39.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select report type:" />
       <RadioButton fx:id="borrowRep" layoutX="170.0" layoutY="48.0" mnemonicParsing="false" onAction="#BorrowTimeRepClick" text="Borrow time report" />
       <RadioButton fx:id="statusRep" layoutX="170.0" layoutY="87.0" mnemonicParsing="false" onAction="#SubStatusRepClick" text="Subscriber status report" />
-      <Text layoutX="409.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select report month " />
-      <ComboBox fx:id="months" layoutX="576.0" layoutY="65.0" prefWidth="150.0" />
+      <Text layoutX="384.0" layoutY="106.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select report month " />
+      <ComboBox fx:id="months" layoutX="540.0" layoutY="88.0" prefWidth="150.0" />
       <TextArea fx:id="Displayarea" layoutX="43.0" layoutY="215.0" prefHeight="218.0" prefWidth="696.0" />
       <Button fx:id="Viewbtt" layoutX="324.0" layoutY="161.0" mnemonicParsing="false" onAction="#ViewBttClick" prefHeight="32.0" prefWidth="120.0" text="View report" />
+      <Text layoutX="384.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select report year " />
+      <ComboBox fx:id="years" layoutX="540.0" layoutY="49.0" prefWidth="150.0" />
    </children>
 </Pane>
