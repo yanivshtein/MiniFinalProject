@@ -50,15 +50,6 @@ public class ClientConsole implements ChatIF
    */
   public ClientConsole(String host, int port) throws IOException 
   {
-	  /*try {
-          Socket socket = new Socket();
-          socket.connect(new InetSocketAddress(host, port), 200);
-          System.out.println("Host is reachable on port " + port);
-          socket.close();
-      } catch (Exception e) {
-          System.out.println("Error: " + e.getMessage());
-          throw e;
-      }*/
     try 
     {
       client= new ChatClient(host, port, this);
