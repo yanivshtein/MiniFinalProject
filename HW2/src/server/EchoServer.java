@@ -301,16 +301,16 @@ public class EchoServer extends AbstractServer
 		          	ArrayList<Object> ar2 = new ArrayList<Object>();
 				try {
 					Boolean isExist= mysqlConnection.checkIfBorrowerFound(borrowerid, bookname);
-					ar2.add(isExist);
-					//client.sendToClient(isExist);
-					client.sendToClient(ar2);
+					//ar2.add(isExist);
+					client.sendToClient(isExist);
+					//client.sendToClient(ar2);
 				} catch (SQLException | IOException e) {
 					
 					e.printStackTrace();
 				}
 		          	break;
 		          	
-	            case 20:
+	            case 20:	// select the borrow action date and deadline and return it 
 	            	LinkedHashSet<String> Dates= new LinkedHashSet<String>();
 	            	String Borrowerid = (String)arr.get(1); //subscriber ID is in the second position of the array
 		          	String Bookname = (String)arr.get(2);
@@ -326,28 +326,28 @@ public class EchoServer extends AbstractServer
 	            case 21:
 	            	 this.subscriberID = (String)arr.get(1);
 	            	 this.bookName = (String)arr.get(2);          	 
-	            	 returnLate = (boolean) arr.get(4);
-	            	 freeze = (boolean)arr.get(5);
-	            	 boolean bookIncrement = false;
-	            	 boolean freezeSuccess = false;
-	            	 boolean insertRowToActivity = false;
+	            	 returnLate = (boolean) arr.get(3);
+	            	 freeze = (boolean)arr.get(4);
+	            	 Boolean bookIncrement = false;	// Initialized freezeSuccess to true because 
+	            	 Boolean freezeSuccess = true;	// of the AND action at sendToClient
+	            	 Boolean insertRowToActivity = false; // so if it won't happen then it will still pass.
 	            	 
 	            	 try {
-	            		 if(returnLate==false && freeze==false) {
-		            		 insertRowToActivity = mysqlConnection.insertReturnBookRowInActivityHistory(this.subscriberID, this.bookName,0);
-
-		            	 }
-	            		 if(returnLate==true) {
-		            		 insertRowToActivity = mysqlConnection.insertReturnBookRowInActivityHistory(this.subscriberID, this.bookName,1);
-
-		            	 }
+//	            		 if(returnLate==false && freeze==false) {
+//		            		 insertRowToActivity = mysqlConnection.insertReturnBookRowInActivityHistory(this.subscriberID, this.bookName,0);
+//
+//		            	 }
+//	            		 if(returnLate==true) {
+//		            		 insertRowToActivity = mysqlConnection.insertReturnBookRowInActivityHistory(this.subscriberID, this.bookName,1);
+//
+//		            	 }
 		            	 if(freeze==true){
 		            		 freezeSuccess = mysqlConnection.updateSubscriberStatusToFrozen(this.subscriberID, this.bookName);
 		            	 }
 		            	
 		            	 bookIncrement = mysqlConnection.incrimentBookAvailability(this.bookName);
 		           	 
-		            	 client.sendToClient(bookIncrement || freezeSuccess || insertRowToActivity );
+		            	 client.sendToClient(bookIncrement && freezeSuccess && insertRowToActivity );
 
 	            	 } catch (SQLException | IOException e) {
 					

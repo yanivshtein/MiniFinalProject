@@ -21,28 +21,28 @@ public class LibrarianReturnGUI {
 
 	
 	@FXML
-	TextField subscriberId=null;
+	private TextField subscriberId=null;
 	
 	@FXML
-	TextField bookName=null;
+	private TextField bookName=null;
 	
 	@FXML
-	Label bookArriveDate=null;
+	private Label bookArriveDate=null;
 	
 	@FXML
-	Label deadline=null;
+	private Label deadline=null;
 	
 	@FXML
-	Button sendButton=null;
+	private Button sendButton=null;
 	
 	@FXML
-	Button checkButton=null;
+	private Button checkButton=null;
 	
 	@FXML
-	Button exitButton=null;
+	private Button exitButton=null;
 	
 	@FXML
-	Label alertMsg = null;
+	private Label artMsg = null;
 	
 	@FXML
 	private Label successMsg = null;
@@ -62,7 +62,7 @@ public class LibrarianReturnGUI {
 			return;
 		}
 		if(successMsg!=null) {
-			successMsg=null;
+			successMsg.setText("");;
 		}
 		
 		String BorrowerId=subscriberId.getText();
@@ -136,18 +136,18 @@ public class LibrarianReturnGUI {
 		BookName=BookName.trim();
 		int index =0;
 		
-		if(alertMsg!=null)		// if the text in Label is currently visible 
-			alertMsg=null;
+		if(artMsg!=null)		// if the text in Label is currently visible 
+			artMsg.setText("");
 		
 		// check in the database if exist a borrow with the same borrower ID and book name
 		LibrarianHomePageUI.chat.returnBook_accept("EXIST", BorrowerId, BookName,false,false);
 		
 		// if there isn't any row that match, then show in label.
-//		if (ChatClient.bool==false) {
-//			alertMsg= new Label();
-//			alertMsg.setText("The Borrow does not exist!");
-//			return;
-//		}
+		if (ChatClient.bool==false) {
+			
+			artMsg.setText("The Borrow does not exist!");
+			return;
+		}
 		
 		// if there is a match then select the borrow date and deadline.
 		LibrarianHomePageUI.chat.returnBook_accept("SELECT DATE",BorrowerId,BookName,false,false);

@@ -124,9 +124,10 @@ public class ChatClient extends AbstractClient
 
 	  }
 
-//	  else if (msg instanceof ArrayList) {
-//		  bool=(Boolean) ( (ArrayList<Object>)msg).get(0);
+//	  else if (msg instanceof ArrayList<?>) {
+//		  bool=(Boolean) ( (ArrayList<Boolean>)msg).get(0);
 //		  System.out.println("Here:");
+//	  }
 //		    ArrayList<String> receivedHistory = (ArrayList<String>) msg;
 	  else if (msg instanceof ArrayList) {
 			allbooks =(ArrayList<String>) msg;  //
@@ -164,8 +165,9 @@ public class ChatClient extends AbstractClient
 			
 			
 		}
-	  else if (msg instanceof LinkedHashSet) {
-		  ActionDateAndDeadline = (LinkedHashSet<String>)msg;
+	  else if (msg instanceof LinkedHashSet<?>) {
+			  ActionDateAndDeadline = (LinkedHashSet<String>)msg;
+		  
 	  }
 	  else {
 		  Subscriber1 sub = (Subscriber1) msg;

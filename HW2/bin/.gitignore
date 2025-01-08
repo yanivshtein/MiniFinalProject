@@ -1,7 +1,3 @@
-/.DS_Store
-/client/
-/common/
 /gui/
-/logic/
-/ocsf/
 /server/
+/client/

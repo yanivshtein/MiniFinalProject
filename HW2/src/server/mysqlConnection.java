@@ -37,7 +37,7 @@ public class mysqlConnection {
         }
 
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "yaniv1234");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "!vex123S");
             System.out.println("SQL connection succeed");
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
@@ -501,15 +501,15 @@ public class mysqlConnection {
 		
 	}
 	
-	public static boolean incrimentBookAvailability(String bookName) throws SQLException {
-		PreparedStatement checkIfFull= conn.prepareStatement("SELECT totalCopys From books WHERE bookName=? AND copysAvailable>=totalCopys");
+	public static Boolean incrimentBookAvailability(String bookName) throws SQLException {
+		PreparedStatement checkIfFull= conn.prepareStatement("SELECT * From books WHERE bookName=? AND copysAvailable<totalCopys");
 		//int numOfCopiesAvailable=getBookAvailality(bookName);		//need to add to code
 		ResultSet rs;
 		checkIfFull.setString(1, bookName);
 		rs= checkIfFull.executeQuery();
 		
 		
-		if(rs.next())	{	// if there is a row that book copies available is equal or greater then total copies of the book
+		if(rs==null)	{	// if there is a row that book copies available is equal or greater then total copies of the book
 			System.err.println("there shouldn't be a book borrow in the first place");
 			return false;	// then it is an error.
 		

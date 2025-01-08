@@ -152,5 +152,17 @@ public class LibrarianGUIHomePageController {
         primaryStage.show();
 	}
 	
+	public void returnBookbttn(ActionEvent event) throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+        Stage primaryStage = new Stage();
+        Pane root = loader.load(getClass().getResource("/gui/LibrarianReturnGUI.fxml").openStream());
 
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/gui/LibrarianReturnGUI.css").toExternalForm());
+        primaryStage.setTitle("Librarian Return GUI");
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+	}
 }
