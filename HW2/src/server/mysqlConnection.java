@@ -75,10 +75,10 @@ public class mysqlConnection {
         return sub;
     }
 
-    public static Boolean searchSubId(String id, String password) {
-        String searchQuery = "SELECT 1 FROM subscriber WHERE subscriber_email = ? AND password = ?";
+    public static Boolean searchSubId(String email, String password) {
+        String searchQuery = "SELECT subscriber_id FROM subscriber WHERE subscriber_email = ? AND password = ?";
         try (PreparedStatement ps = conn.prepareStatement(searchQuery)) {
-            ps.setString(1, id);
+            ps.setString(1, email);
             ps.setString(2, password);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {

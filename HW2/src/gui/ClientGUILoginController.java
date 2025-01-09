@@ -27,6 +27,7 @@ public class ClientGUILoginController {
 
 	public static String email;
 	public static String passwordString;
+	public static String id;
 	@FXML
 	private Button exit = null;
 

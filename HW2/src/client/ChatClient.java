@@ -33,7 +33,7 @@ public class ChatClient extends AbstractClient {
 	public static ArrayList<String> FullBorrowRep;
 	public static Boolean bool, isFrozen, isAvailable, isCan, isExist;
 	public static boolean awaitResponse = false;
-	public static Integer bookAvailability=0;
+	public static Integer bookAvailability=0, id;
 	public static ArrayList<String> allbooks = new ArrayList<>();
 	// Constructors ****************************************************
 
@@ -111,6 +111,7 @@ public class ChatClient extends AbstractClient {
 			}
 			System.out.println(allbooks +"chatclient2");
 		}else if (msg instanceof Integer) {
+			id = (Integer)msg;
 			Integer bookAvailabilitytmp = (Integer)msg;
 			if(bookAvailabilitytmp.equals(0)) {
 				bookAvailability = 0;

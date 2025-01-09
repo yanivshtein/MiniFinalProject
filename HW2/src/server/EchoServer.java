@@ -54,6 +54,7 @@ public class EchoServer extends AbstractServer
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
         Subscriber1 sub = null;
         Boolean ret;
+        int id;
         
         if (msg instanceof ArrayList<?>) {
             ArrayList<Object> arr = (ArrayList<Object>) msg;
@@ -259,10 +260,7 @@ public class EchoServer extends AbstractServer
                            e.printStackTrace();
                        }
                        break;
-                    
-                	
-                    
-
+                                    	                    
                 default:
                     System.out.println("The server - Received message is not of the expected type.");
                     break;
