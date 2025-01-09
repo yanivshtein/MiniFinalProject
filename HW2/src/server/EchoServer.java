@@ -249,7 +249,6 @@ public class EchoServer extends AbstractServer
                     }
                     break;
                 case 18:
-
                        ArrayList<String> AllBooks = mysqlConnection.getAllBookNames();
                        System.out.println(AllBooks+ "echoserver");
                        try {
@@ -259,6 +258,31 @@ public class EchoServer extends AbstractServer
                            e.printStackTrace();
                        }
                        break;
+                case 19:
+                	ArrayList<String> statusRepDet = null;
+                    try {
+                    	statusRepDet = mysqlConnection.BringStatusRepInfo((String)arr.get(1) , (String)arr.get(2));
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        statusRepDet = new ArrayList<>();
+                        statusRepDet.add("Error fetching data: " + e.getMessage());
+                    }
+
+                    if (statusRepDet != null && !statusRepDet.isEmpty()) {
+                        try {
+                            client.sendToClient(statusRepDet);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            client.sendToClient("No data available or an error occurred.");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    break;
+               
                     
                 	
                     
