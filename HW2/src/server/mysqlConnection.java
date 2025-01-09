@@ -448,7 +448,7 @@ public class mysqlConnection {
                     FullBorrowRep.add(String.format(
                             "Subscriber ID: %s Book Name: %s Borrow Date: %s Return Date: __-__-____ __:__:__ Deadline: %s",
                             rs.getString("SubscriberID"), rs.getString("BookName"), rs.getString("BorrowDate"),
-                            rs.getString("Deadline")));
+                            rs.getString("deadline")));
                 }
             }
         }
@@ -480,7 +480,6 @@ public class mysqlConnection {
                 while (rs.next()) {
                     int subscriberID = rs.getInt("SubscriberID");
                     LateSubs.add(subscriberID);
-                    System.out.println(LateSubs);
                 }
             }
         } catch (SQLException e) {
