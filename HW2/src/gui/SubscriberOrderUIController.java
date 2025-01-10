@@ -1,8 +1,12 @@
 package gui;
 
 import java.io.IOException;
+import java.util.ArrayList;
+
 import client.ChatClient;
-import client.ClientUI;
+import client.SearchBookUI;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -34,18 +39,51 @@ public class SubscriberOrderUIController {
 
     @FXML
     private Button exitBtn = null;
+    
+    @FXML
+    private ListView<String> booksListView;
 
     private String bookNameGot;
-    
-    /*public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/gui/SubscriberOrderUI.fxml"));
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/gui/SubscriberOrderUI.css").toExternalForm());
-        primaryStage.setTitle("Orders");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }*/
 
+    private ObservableList<String> booksData;
+
+    public void initialize() {
+        loadBooks();
+        setupAutoComplete();
+    }
+    
+    private void loadBooks() {
+        // Request the books from the server
+        SearchBookUI.chat.acceptAllTheBooks(18);
+
+        ArrayList<String> bookNames = ChatClient.allbooks;
+        if (bookNames == null || bookNames.isEmpty()) {
+            booksData = FXCollections.observableArrayList("No books available");
+            booksListView.setItems(booksData);
+            return;
+        }
+
+        booksData = FXCollections.observableArrayList(bookNames);
+        booksListView.setItems(booksData);
+    }
+
+    private void setupAutoComplete() {
+        bookName.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.isEmpty()) {
+                booksListView.setItems(booksData);
+            } else {
+                String lowerCaseFilter = newValue.toLowerCase();
+                ObservableList<String> filteredBooks = FXCollections.observableArrayList();
+                for (String book : booksData) {
+                    if (book.toLowerCase().contains(lowerCaseFilter)) {
+                        filteredBooks.add(book);
+                    }
+                }
+                booksListView.setItems(filteredBooks);
+            }
+        });
+    }
+    
     public void getSendBtn(ActionEvent event) throws IOException {
         int subID = ChatClient.subID;
         bookNameGot = bookName.getText();

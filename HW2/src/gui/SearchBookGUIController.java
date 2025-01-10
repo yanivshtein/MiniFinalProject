@@ -48,7 +48,7 @@ public class SearchBookGUIController {
 
     private void loadBooks() {
         // Request the books from the server
-        SearchBookUI.chat.acceptAllTheBooks(18);
+    	ClientGUIConnectionController.chat.acceptAllTheBooks(18);
 
         ArrayList<String> bookNames = ChatClient.allbooks;
         if (bookNames == null || bookNames.isEmpty()) {
@@ -78,17 +78,17 @@ public class SearchBookGUIController {
         });
     }
 
-    public void start(Stage primaryStage) throws Exception {
+    /*public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/gui/SearchBookGUIController.fxml"));
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/gui/SearchBookGUIController.css").toExternalForm());
         primaryStage.setTitle("Search a book");
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
+    }*/
 
     public void searchBtn(ActionEvent event) {
-        SearchBookUI.chat.acceptSearchBook(14, bookName.getText());
+    	ClientGUIConnectionController.chat.acceptSearchBook(14, bookName.getText());
         if (ChatClient.bookAvailability == -1) {
             errorMsg.setContentText("The book is not in the library");
         } else if (ChatClient.bookAvailability == 0) {

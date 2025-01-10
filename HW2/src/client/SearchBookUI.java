@@ -24,7 +24,7 @@ public class SearchBookUI extends Application {
 
          SearchBookGUIController aFrame = new SearchBookGUIController(); 
 
-        aFrame.start(primaryStage);
+        //aFrame.start(primaryStage);
     }
 
 

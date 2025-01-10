@@ -127,8 +127,21 @@ public class ClientGUILoginController {
     	user = "Lib";
     }
     
-    public void getSearchBtn(ActionEvent event) {
-    	//TODO: add move to search for book controller
+    public void getSearchBtn(ActionEvent event) throws IOException {
+    	// Hiding primary window
+	    ((Node) event.getSource()).getScene().getWindow().hide();
+	    
+	    // Loading FXML and setting up the new stage
+	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/SearchBookGUIController.fxml"));
+	    Parent root = loader.load();
+	    
+	    Scene scene = new Scene(root);
+	    scene.getStylesheets().add(getClass().getResource("/gui/SearchBookGUIController.css").toExternalForm());
+	    
+	    Stage primaryStage = new Stage();
+	    primaryStage.setTitle("Search");
+	    primaryStage.setScene(scene);
+	    primaryStage.show();
     }
     
 	public void getExitBtn(ActionEvent event) {
