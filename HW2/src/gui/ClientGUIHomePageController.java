@@ -74,7 +74,22 @@ public class ClientGUIHomePageController {
 	    primaryStage.show();
 	}
 
-	
+	public void getOrder (ActionEvent event) throws IOException {
+		// Hiding primary window
+	    ((Node) event.getSource()).getScene().getWindow().hide();
+	    
+	    // Loading FXML and setting up the new stage
+	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/SubscriberOrderUI.fxml"));
+	    Parent root = loader.load();
+	    
+	    Scene scene = new Scene(root);
+	    scene.getStylesheets().add(getClass().getResource("/gui/SubscriberOrderUI.css").toExternalForm());
+	    
+	    Stage primaryStage = new Stage();
+	    primaryStage.setTitle("Order");
+	    primaryStage.setScene(scene);
+	    primaryStage.show();
+	}
 
 	
 	

@@ -80,20 +80,20 @@ public class mysqlConnection {
         return sub;
     }
 
-    public static Boolean searchSubId(String email, String password) {
+    public static int searchSubId(String email, String password) {
         String searchQuery = "SELECT subscriber_id FROM subscriber WHERE subscriber_email = ? AND password = ?";
         try (PreparedStatement ps = conn.prepareStatement(searchQuery)) {
             ps.setString(1, email);
             ps.setString(2, password);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return true;
+                    return rs.getInt("subscriber_id");
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return 0; //no subscriber found
     }
     
     public static Boolean searchLibId(String email, String password) {
@@ -152,7 +152,7 @@ public class mysqlConnection {
         return "notExist";
     }
 
-    public static String canAddOrder(String id, String bookName) {
+    public static String canAddOrder(int id, String bookName) {
         // Check availability first
         String availability = isAvailable(bookName);
         if (availability.equals("notExist")) {
@@ -183,7 +183,7 @@ public class mysqlConnection {
         return "available";
     }
 
-    public static void addOrder(String bookName, String id) {
+    public static void addOrder(String bookName, int id) {
         String addQuery = "INSERT INTO orders (time, bookName, subID) VALUES (?, ?, ?);";
         LocalDateTime now = LocalDateTime.now();
         Timestamp timestamp = Timestamp.valueOf(now);
@@ -191,22 +191,21 @@ public class mysqlConnection {
             PreparedStatement stmt = conn.prepareStatement(addQuery);
             stmt.setTimestamp(1, timestamp);
             stmt.setString(2, bookName);
-            stmt.setString(3, id);
+            stmt.setInt(3, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public static void addOrderToActivityHistory(String bookName, String id) {
-        String addQuery = "INSERT INTO activityhistory (SubscriberID, BookName, ActionType, ActionDate, AdditionalDetails) VALUES (?, ?, ?, ?, ?);";
+    public static void addOrderToActivityHistory(String bookName, int id) {
+        String addQuery = "INSERT INTO activityhistory (SubscriberID, BookName, ActionType, ActionDate) VALUES (?, ?, ?, ?);";
         try {
             PreparedStatement stmt = conn.prepareStatement(addQuery);
-            stmt.setString(1, id);
+            stmt.setInt(1, id);
             stmt.setString(2, bookName);
             stmt.setString(3, "Reservation");
             stmt.setString(4, LocalDateTime.now().toString());
-            stmt.setString(5, "");
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -270,11 +269,11 @@ public class mysqlConnection {
         return activityHistory;
     }
 
-    public static ArrayList<String> getBorrowHistory(String subscriberId) {
+    public static ArrayList<String> getBorrowHistory(int subscriberId) {
         ArrayList<String> borrowHistory = new ArrayList<>();
         String query = "SELECT * FROM ActivityHistory WHERE SubscriberID = ? AND ActionType = 'Borrow'";
         try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setString(1, subscriberId);
+            ps.setInt(1, subscriberId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                 	String deadline = rs.getString("deadline");
@@ -290,13 +289,13 @@ public class mysqlConnection {
         return borrowHistory;
     }
 
-    public static boolean ChangeReturnDate(String subscriberId, String BookName, String OldDate, String NewDate, String Librarian_name) { 
+    public static boolean ChangeReturnDate(int subscriberId, String BookName, String OldDate, String NewDate, String Librarian_name) { 
         String checkQuery = "SELECT additionalInfo FROM activityhistory WHERE SubscriberID = ? AND BookName = ? AND deadline = ? AND ActionType = 'Borrow'";
         String updateQuery = "UPDATE activityhistory SET deadline = ?, additionalInfo = ? WHERE SubscriberID = ? AND BookName = ? AND deadline = ? AND ActionType = 'Borrow'";
 
         try (PreparedStatement checkPs = conn.prepareStatement(checkQuery)) {
             // Set parameters for the check query
-            checkPs.setString(1, subscriberId);
+            checkPs.setInt(1, subscriberId);
             checkPs.setString(2, BookName);
             checkPs.setString(3, OldDate);
 
@@ -314,7 +313,7 @@ public class mysqlConnection {
             try (PreparedStatement updatePs = conn.prepareStatement(updateQuery)) {
                 updatePs.setString(1, NewDate);
                 updatePs.setString(2, "Extended by: " + Librarian_name + " , at: ");
-                updatePs.setString(3, subscriberId);
+                updatePs.setInt(3, subscriberId);
                 updatePs.setString(4, BookName);
                 updatePs.setString(5, OldDate);
 

@@ -3,10 +3,10 @@ package gui;
 import java.io.IOException;
 import client.ChatClient;
 import client.ClientUI;
-import client.OrderUI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -37,17 +37,17 @@ public class SubscriberOrderUIController {
 
     private String bookNameGot;
     
-    public void start(Stage primaryStage) throws Exception {
+    /*public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/gui/SubscriberOrderUI.fxml"));
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/gui/SubscriberOrderUI.css").toExternalForm());
         primaryStage.setTitle("Orders");
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
+    }*/
 
     public void getSendBtn(ActionEvent event) throws IOException {
-        String subID = ClientGUILoginController.email;
+        int subID = ChatClient.subID;
         bookNameGot = bookName.getText();
         
         if (bookNameGot.isEmpty()) {
@@ -62,7 +62,11 @@ public class SubscriberOrderUIController {
             return;
         }
         
-        ClientGUIConnectionController.chat.acceptFromOrderController(6, bookNameGot, "");
+        ClientGUIConnectionController.chat.acceptFromOrderController(6, 0, bookNameGot);
+        if (ChatClient.isExist== false) {
+        	errorMsg.setContentText("Sorry! 📚 we dont have this book in our Library");
+        	return;
+        }
         if (ChatClient.isAvailable == true) { // which means there is an available copy of the book -> cant order
             errorMsg.setContentText("Sorry! 📚 An available copy of this book already exists in the library.");
             return;
@@ -78,6 +82,23 @@ public class SubscriberOrderUIController {
         errorMsg.setContentText("Awesome! 🎉 You're all set! Your order has been successfully placed!");
     }
 
+    public void getReturnBtn(ActionEvent event) throws IOException {
+	    // Close the current window
+	    ((Node) event.getSource()).getScene().getWindow().hide();
+	    
+	    // Load the ClientGUIHomePage FXML
+	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/ClientGUIHomePage.fxml"));
+	    Parent root = loader.load();
+	    
+	    Scene scene = new Scene(root);
+	    scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIHomePage.css").toExternalForm());
+	    
+	    Stage primaryStage = new Stage();
+	    primaryStage.setTitle("Client Home Page");
+	    primaryStage.setScene(scene);
+	    primaryStage.show();
+	}
+    
     public void getExitBtn(ActionEvent event) throws IOException {
         System.exit(0);
     }

@@ -33,12 +33,11 @@ public class ChatClient extends AbstractClient {
 	public static ArrayList<String> FullBorrowRep , FullStatusRep;
 	public static Boolean bool, isFrozen, isAvailable, isCan, isExist;
 	public static boolean awaitResponse = false;
-<<<<<<< HEAD
-	public static Integer bookAvailability=0, id;
-=======
+
+	public static Integer bookAvailability=0, subID;
+
 	public static boolean connected;
-	public static Integer bookAvailability=0;
->>>>>>> main
+
 	public static ArrayList<String> allbooks = new ArrayList<>();
 
 	// Constructors ****************************************************
@@ -122,6 +121,7 @@ public class ChatClient extends AbstractClient {
 		case 3:
 		case 4:
 			bool = (Boolean)arr.get(1);
+			subID=(Integer) arr.get(2);
 			break;
 		case 5:
 			if (arr.get(1).equals("frozen")) 

@@ -155,7 +155,7 @@ public class ClientConsole implements ChatIF
     }
   }
 
-  public void acceptFromOrderController(int request, String id, String bookName) {
+  public void acceptFromOrderController(int request, int id, String bookName) {
 	  ArrayList<Object> arr = new ArrayList<>();
 	  arr.add(request);
 	  arr.add(id);
