@@ -2,8 +2,11 @@ package gui;
 
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import client.ChatClient;
 import client.ClientUI;
@@ -56,9 +59,10 @@ public class LibrarianReturnGUI {
 	
 	public void sendButton(ActionEvent event) {		// method that sends information to the controller to return the book to the library
 		
-		if(bookArriveDate ==null && deadline == null) {
+		if(bookArriveDate ==null || deadline == null) {
 			alertMessege.setContentText("Error need to check if exist borrow first");	
 		 	alertMessege.setAlertType(AlertType.ERROR);
+		 	alertMessege.show();
 			return;
 		}
 		if(successMsg!=null) {
@@ -69,52 +73,64 @@ public class LibrarianReturnGUI {
 		String BookName=bookName.getText();
 		
 		// get current time in a format of yyyy-MM-dd
-		LocalDateTime localDate=LocalDateTime.now();
-		DateTimeFormatter dfm= DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		String formattedCurrentDate = localDate.format(dfm);
+		LocalDate currentDate=LocalDate.now();
+		DateTimeFormatter dateFormatter= DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//		String formattedCurrentDate = localDate.format(dateFormatter);
 		String deadlineString= deadline.getText();
-		
-		int currentDateAsInt=0;
-		int deadlineDateAsInt=0;
-		
-		formattedCurrentDate=formattedCurrentDate.replace("-", "");
-		deadlineString= deadlineString.replace("-","");
-		System.out.println("formatted and replace local date is:"+formattedCurrentDate);
+		LocalDate deadlineDate=LocalDate.parse(deadlineString, dateFormatter);
+		Period difference = Period.between( deadlineDate,currentDate);
+		//		int currentDateAsInt=0;
+//		int deadlineDateAsInt=0;
+//		Integer totalDaysLate=0;
+//		formattedCurrentDate=formattedCurrentDate.replace("-", "");
+//		deadlineString= deadlineString.replace("-","");
+		System.out.println("formatted and replace local date is:"+currentDate);
 		System.out.println("formatted and replace deadline is:"+deadlineString);
+		
 		try {
-			currentDateAsInt = Integer.parseInt(formattedCurrentDate);
-			deadlineDateAsInt = Integer.parseInt(deadlineString);
-		} catch (NumberFormatException e) {
-//			alertMessege.setContentText("Error need to check if exist borrow first");	
-//		 	alertMessege.setAlertType(AlertType.ERROR);
-			e.getStackTrace();
-		}
+			
+			long daysLate = currentDate.toEpochDay()- deadlineDate.toEpochDay();
+
+//			currentDateAsInt = Integer.parseInt(formattedCurrentDate);
+//			deadlineDateAsInt = Integer.parseInt(deadlineString);
+			
+		 
 		
 		
-		if (currentDateAsInt<deadlineDateAsInt) {
+		
+		if (daysLate<=0) {
 			
-			LibrarianHomePageUI.chat.returnBook_accept("INSERT", BorrowerId, BookName,false,false);
+			LibrarianHomePageUI.chat.returnBook_accept("INSERT", BorrowerId, BookName,false,false,difference);
 			
 			
 		}
-		else if(currentDateAsInt-deadlineDateAsInt<7) {
-			LibrarianHomePageUI.chat.returnBook_accept("INSERT", BorrowerId, BookName,true,false);
+		else if(daysLate<7) {
+			
+			LibrarianHomePageUI.chat.returnBook_accept("INSERT", BorrowerId, BookName,true,false,difference);
 
 			
 		}
-		else if(currentDateAsInt-deadlineDateAsInt>=7) {
-			LibrarianHomePageUI.chat.returnBook_accept("INSERT", BorrowerId, BookName,true,true);
+		else if(daysLate>=7) {
+			LibrarianHomePageUI.chat.returnBook_accept("INSERT", BorrowerId, BookName,true,true,difference);
 
 			
 		}
 		if (ChatClient.bool==false) {
 			alertMessege.setContentText("Error need to check if exist borrow first");	
 		 	alertMessege.setAlertType(AlertType.ERROR);
+		 	alertMessege.show();
 			return;
 			
 		}
+		
 		else {
-			successMsg.setText("Return operation successfully finished!");
+		successMsg.setText("Return operation successfully finished!");
+		}
+		
+		}catch (DateTimeParseException e) {
+//			alertMessege.setContentText("Error need to check if exist borrow first");	
+//		 	alertMessege.setAlertType(AlertType.ERROR);
+			e.getStackTrace();
 		}
 	}
 	
@@ -140,17 +156,20 @@ public class LibrarianReturnGUI {
 			artMsg.setText("");
 		
 		// check in the database if exist a borrow with the same borrower ID and book name
-		LibrarianHomePageUI.chat.returnBook_accept("EXIST", BorrowerId, BookName,false,false);
+		LibrarianHomePageUI.chat.returnBook_accept("EXIST", BorrowerId, BookName,false,false,null);
 		
 		// if there isn't any row that match, then show in label.
 		if (ChatClient.bool==false) {
 			
+			bookArriveDate.setText("");		// set labels to show them in GUI
+			deadline.setText("");
 			artMsg.setText("The Borrow does not exist!");
+			
 			return;
 		}
 		
 		// if there is a match then select the borrow date and deadline.
-		LibrarianHomePageUI.chat.returnBook_accept("SELECT DATE",BorrowerId,BookName,false,false);
+		LibrarianHomePageUI.chat.returnBook_accept("SELECT DATE",BorrowerId,BookName,false,false,null);
 		
 		for (String date : ChatClient.ActionDateAndDeadline) {	// get action date and deadline
 			if(index ==0)

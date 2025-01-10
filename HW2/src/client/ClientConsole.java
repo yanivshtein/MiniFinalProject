@@ -6,6 +6,7 @@ package client;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -246,7 +247,7 @@ public class ClientConsole implements ChatIF
     }
   }
   
-  public void returnBook_accept(String actionType, String borrowerID,String bookName, Boolean isLate,Boolean freezeStatus) {
+  public void returnBook_accept(String actionType, String borrowerID,String bookName, Boolean isLate,Boolean freezeStatus,Period totalDaysLate) {
 	  
 	  ArrayList<Object> arr1 = new ArrayList<>();
 	  
@@ -254,25 +255,26 @@ public class ClientConsole implements ChatIF
 	  switch (actionType) {
 	case "EXIST":
 		
-		arr1.add(19);
+		arr1.add(20);
 		arr1.add(borrowerID);
 		arr1.add(bookName);
 		break;
 		
 	case "SELECT DATE":
 		
-		arr1.add(20);
+		arr1.add(21);
 		arr1.add(borrowerID);
 		arr1.add(bookName);
 		break;
 		
 	case "INSERT":
 		
-		arr1.add(21);
+		arr1.add(22);
 		arr1.add(borrowerID);
 		arr1.add(bookName);
 		arr1.add(isLate);
 		arr1.add(freezeStatus);
+		arr1.add(totalDaysLate);
 		break;
 		
 	default:

@@ -4,6 +4,7 @@ package server;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import common.Subscriber1;
@@ -436,8 +437,8 @@ public class mysqlConnection {
 	 * method that return the last borrow date and deadline of the borrow.
 	 * if found in the database
 	 */
-	public static LinkedHashSet<String>  getBorrowDateAndReturnDate(String borrowerId,String bookName) throws SQLException {
-		LinkedHashSet<String> borrowAndReturnDate = new LinkedHashSet<>();
+	public static ArrayList<Object>  getBorrowDateAndReturnDate(String borrowerId,String bookName) throws SQLException {
+		ArrayList<Object> borrowAndReturnDate = new ArrayList<>();
 		PreparedStatement ps = conn.prepareStatement("SELECT ActionDate,deadline FROM activityhistory where SubscriberID=? AND BookName=? AND ActionType='Borrow'");
 		
 		ps.setString(1, borrowerId);
@@ -469,21 +470,24 @@ public class mysqlConnection {
 		return false;
 	}
 	
-	public static Boolean insertReturnBookRowInActivityHistory(String borrowerId,String bookName,int returnedLate) throws SQLException {
+	public static Boolean insertReturnBookRowInActivityHistory(String borrowerId,String bookName,String dateDifference,Boolean isLate) throws SQLException {
 		
 		int borrowerIdAsInt = Integer.parseInt(borrowerId);
-		String insertQuary = "INSERT INTO activityhistory (SubScriberID, BookName, ActionType, ActionDate,"
-				+ "returned_late) VALUES (?,?,?,?,?)";
-		PreparedStatement ps = conn.prepareStatement(insertQuary);
+		int rowsAffected=0;
 		LocalDate actionDate = LocalDate.now();
+		String insertQuary = "INSERT INTO activityhistory (SubScriberID, BookName, ActionType, ActionDate,"
+				+ "additionalInfo) VALUES (?,?,?,?,?)";
+		PreparedStatement ps = conn.prepareStatement(insertQuary);
+		
 		ps.setInt(1,borrowerIdAsInt);
 		ps.setString(2,bookName);
 		ps.setString(3,"Return");
 		ps.setDate(4,Date.valueOf(actionDate));
-		ps.setInt(5,returnedLate);
+		ps.setString(5, dateDifference);
 		
+		rowsAffected = ps.executeUpdate();
 		
-		return ps.execute();
+		return rowsAffected>0;
 	}
 	
 	public static Boolean updateSubscriberStatusToFrozen(String subscriberId,String IsFrozen) throws SQLException {
@@ -525,4 +529,134 @@ public class mysqlConnection {
 		
 		return false;
 	}
+	
+	public static ArrayList<String> BringStatusRepInfo(String selectedMonth, String selectedYear) throws SQLException {
+        // Input validation
+        if (selectedMonth == null || selectedYear == null) {
+            throw new IllegalArgumentException("Selected month and year cannot be null.");
+        }
+
+        // Initialize list to store subscribers who are late with submissions
+        ArrayList<Integer> LateSubs = new ArrayList<>();
+
+        // First query: Find subscribers who are more than 7 days late in the selected month
+        String query1 = "SELECT SubscriberID " +
+                "FROM activityhistory " +
+                "WHERE additionalInfo LIKE '% days late' " +
+                "AND CAST(SUBSTRING_INDEX(additionalInfo, ' ', 1) AS UNSIGNED) > 7 " +
+                "AND DATE_FORMAT(ActionDate, '%Y-%m') = ?";
+        try (PreparedStatement ps = conn.prepareStatement(query1)) {
+            String selectedDate = selectedYear + "-" + selectedMonth;
+            ps.setString(1, selectedDate);
+
+            // Execute query and collect late subscriber IDs
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int subscriberID = rs.getInt("SubscriberID");
+                    LateSubs.add(subscriberID);
+                    System.out.println(LateSubs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // Initialize list to store subscribers who are on time
+        ArrayList<Integer> OnTimeSubs = new ArrayList<>();
+        
+        // Second query: Find subscribers who are NOT late (complement of late subscribers)
+        String query2 = "SELECT subscriber_id " +
+                "FROM subscriber " +
+                "WHERE subscriber_id NOT IN (" +
+                " SELECT SubscriberID " +
+                " FROM activityhistory " +
+                " WHERE additionalInfo LIKE '% days late' " +
+                " AND CAST(SUBSTRING_INDEX(additionalInfo, ' ', 1) AS UNSIGNED) > 7 " +
+                " AND DATE_FORMAT(ActionDate"
+                + ", '%Y-%m') = ?" +
+                ")";
+        try (PreparedStatement ps = conn.prepareStatement(query2)) {
+            String selectedDate = selectedYear + "-" + selectedMonth;
+            ps.setString(1, selectedDate);
+            
+            // Execute query and collect on-time subscriber IDs
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int subscriberID = rs.getInt("subscriber_id");
+                    OnTimeSubs.add(subscriberID);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // Initialize ArrayList to store the final formatted results
+        ArrayList<String> statusReport = new ArrayList<>();
+        statusReport.add("status report");
+
+        // Process late subscribers (Frozen status)
+        // Build dynamic IN clause for late subscribers query
+        String query3 = "SELECT subscriber_name, subscriber_id FROM subscriber WHERE subscriber_id IN (";
+        for (int i = 0; i < LateSubs.size(); i++) {
+            query3 += "?";
+            if (i < LateSubs.size() - 1) {
+                query3 += ", ";
+            }
+        }
+        query3 += ")";
+
+        // Execute query for late subscribers if any exist
+        if (!LateSubs.isEmpty()) {
+            try (PreparedStatement ps = conn.prepareStatement(query3)) {
+                // Set parameters for IN clause
+                for (int i = 0; i < LateSubs.size(); i++) {
+                    ps.setInt(i + 1, LateSubs.get(i));
+                }
+
+                // Process results and add formatted strings to statusReport
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        String subscriberName = rs.getString("subscriber_name");
+                        int subscriberId = rs.getInt("subscriber_id");
+                        statusReport.add(subscriberName + " (ID: " + subscriberId + ") - Frozen");
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Process on-time subscribers (Active status)
+        // Build dynamic IN clause for on-time subscribers query
+        String query4 = "SELECT subscriber_name, subscriber_id FROM subscriber WHERE subscriber_id IN (";
+        for (int i = 0; i < OnTimeSubs.size(); i++) {
+            query4 += "?";
+            if (i < OnTimeSubs.size() - 1) {
+                query4 += ", ";
+            }
+        }
+        query4 += ")";
+
+        // Execute query for on-time subscribers if any exist
+        if (!OnTimeSubs.isEmpty()) {
+            try (PreparedStatement ps = conn.prepareStatement(query4)) {
+                // Set parameters for IN clause
+                for (int i = 0; i < OnTimeSubs.size(); i++) {
+                    ps.setInt(i + 1, OnTimeSubs.get(i));
+                }
+
+                // Process results and add formatted strings to statusReport
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        String subscriberName = rs.getString("subscriber_name");
+                        int subscriberId = rs.getInt("subscriber_id");
+                        statusReport.add(subscriberName + " (ID: " + subscriberId + ") - Active");
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return statusReport;
+    }
 }
