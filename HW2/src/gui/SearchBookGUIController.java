@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -38,6 +39,18 @@ public class SearchBookGUIController {
 
     @FXML
     private ListView<String> booksListView;
+    
+    @FXML
+    private TextField author_genere = null;
+    
+    @FXML
+    private RadioButton authorName = null;
+    
+    @FXML
+    private RadioButton genere = null;
+    
+    
+    
 
     private ObservableList<String> booksData;
 
