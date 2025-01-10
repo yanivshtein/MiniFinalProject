@@ -13,6 +13,7 @@ import gui.ClientGUILoginController;
 public class ClientUI extends Application {
 
     public static String hostIp;
+    
 
     public static void main( String args[] ) throws Exception
        { 

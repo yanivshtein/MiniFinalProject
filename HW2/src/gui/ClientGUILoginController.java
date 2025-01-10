@@ -35,6 +35,9 @@ public class ClientGUILoginController {
 	private Button enter = null;
 	
 	@FXML
+	private Button search = null;
+	
+	@FXML
 	private RadioButton radio_sub = null;
 
 	@FXML
@@ -52,7 +55,7 @@ public class ClientGUILoginController {
 	@FXML
 	private DialogPane alertMsg = null;
 	
-	private String user = "";
+	private String user = "Sub";
 
 	public void start(Stage primaryStage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("/gui/ClientGUILogin.fxml"));
@@ -100,11 +103,11 @@ public class ClientGUILoginController {
                 	System.out.println("Librarian ID Found");
                     ((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
                     Stage primaryStage = new Stage();
-                    Pane root = loader.load(getClass().getResource("/gui/ClientGUIHomePage.fxml").openStream());
+                    Pane root = loader.load(getClass().getResource("/gui/LibrarianGUIHomePageController.fxml").openStream());
 
                     Scene scene = new Scene(root);
-                    scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIHomePage.css").toExternalForm());
-                    primaryStage.setTitle("Client Second GUI");
+                    scene.getStylesheets().add(getClass().getResource("/gui/LibrarianGUIHomePageController.css").toExternalForm());
+                    primaryStage.setTitle("Librarian HomePage");
 
                     primaryStage.setScene(scene);
                     primaryStage.show();
@@ -122,6 +125,10 @@ public class ClientGUILoginController {
     public void getRadioLibBtn(ActionEvent event) {
     	radio_sub.setSelected(false);
     	user = "Lib";
+    }
+    
+    public void getSearchBtn(ActionEvent event) {
+    	//TODO: add move to search for book controller
     }
     
 	public void getExitBtn(ActionEvent event) {

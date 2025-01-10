@@ -66,17 +66,45 @@ public class ReportsGUI {
                 reportBuilder.append("### Borrow Report for ").append(selectedMonth).append("/").append(selectedYear).append(" ###\n\n");
 
                 // Iterate over each entry and format it
-                int entryNumber = 1;
-                for (String reportEntry : ChatClient.FullBorrowRep) {
+                int entryNumber = 1; // Start from index 1
+                for (int i = 1; i < ChatClient.FullBorrowRep.size(); i++) {  // Start from index 1
+                    String reportEntry = ChatClient.FullBorrowRep.get(i);
                     reportBuilder.append(String.format("Entry %d:\n%s\n", entryNumber++, reportEntry));
                     reportBuilder.append("\n-------------------------------\n");  // Separator between entries
                 }
+
+
+                // Display the formatted report in the text area
+                Displayarea.setText(reportBuilder.toString());
+            }
+        }
+        else if (statusRep.isSelected()) {
+        	ReportsUI.chat.reports_accept("create status report", selectedMonth , selectedYear );
+
+            // Build a single string to display all borrow report entries
+            StringBuilder reportBuilder = new StringBuilder();
+            if (ChatClient.FullStatusRep == null || ChatClient.FullStatusRep.isEmpty()) {
+                Displayarea.setText("No information to display.");
+            } else {
+                // Add a title for the report
+                reportBuilder.append("### Status Report for ").append(selectedMonth).append("/").append(selectedYear).append(" ###\n\n");
+
+                // Iterate over each entry and format it
+                int entryNumber = 1; // Start from index 1
+                for (int i = 1; i < ChatClient.FullStatusRep.size(); i++) {  // Start from index 1
+                    String reportEntry = ChatClient.FullStatusRep.get(i);
+                    reportBuilder.append(String.format("Entry %d:\n%s\n", entryNumber++, reportEntry));
+                    reportBuilder.append("\n-------------------------------\n");  // Separator between entries
+                }
+
 
                 // Display the formatted report in the text area
                 Displayarea.setText(reportBuilder.toString());
             }
         }
     }
+    
+    
 
 
     

@@ -26,8 +26,8 @@ import javafx.scene.control.TextArea;
 
 
 public class LibrarianWatchAndUpdateGUI {
-	
-    @FXML
+
+	@FXML
     private TextField subID = null;
     @FXML
     private TextField name = null;
@@ -57,9 +57,7 @@ public class LibrarianWatchAndUpdateGUI {
     private TextField SubStatus = null; //active OR frozen
     
     private  String TempStatus;
-    
-    private String Librarian_Name = "dafi";
-    
+        
     private ArrayList<String> borrowHistory;
 
     public void ViewDetBtt(ActionEvent event) throws IOException {
@@ -129,12 +127,12 @@ public class LibrarianWatchAndUpdateGUI {
             return;
         }
 
-        LibrarianHomePageUI.chat.book_accept("set new return date", subID.getText(), BookName.getText(), OldRetDate.getText(), NewRetDate.getText() , Librarian_Name );
+        LibrarianHomePageUI.chat.book_accept("set new return date", subID.getText(), BookName.getText(), OldRetDate.getText(), NewRetDate.getText() , LibrarianGUIHomePageController.BringLibName );
 
         if (ChatClient.bool) {
             ChangesSavedPop.setContentText("Updated successfully");
         } else {
-            ChangesSavedPop.setContentText("The update failed");
+            ChangesSavedPop.setContentText("The update failed - An extension has already been made ");
         }
     }
 
