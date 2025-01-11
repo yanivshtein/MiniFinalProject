@@ -186,6 +186,11 @@ public class ClientConsole implements ChatIF
             arr1.add(selectedMonth);
             arr1.add(selectedYear);
         }
+        else {
+        	arr1.add(19);
+            arr1.add(selectedMonth);
+            arr1.add(selectedYear);
+        }
         client.handleMessageFromClientUI(arr1);
     } 
     catch (Exception ex) 
