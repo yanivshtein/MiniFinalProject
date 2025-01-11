@@ -89,7 +89,7 @@ public class EchoServer extends AbstractServer
                 	arrToSend.add(3);
                 	arrToSend.add(ret);
                     try {                   	
-                        client.sendToClient(ret);
+                        client.sendToClient(arrToSend);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -335,6 +335,22 @@ public class EchoServer extends AbstractServer
                         }
                     }
                     break;
+                	case 23:
+                	String bookNameBarCode;
+                	try {
+                		bookNameBarCode = mysqlConnection.BringBarCodeBookName((int)arr.get(1));
+                	}catch(SQLException e) {
+                		 e.printStackTrace();
+                		 bookNameBarCode = "";
+                	}
+                	arrToSend.add(23);
+                	arrToSend.add(bookNameBarCode);
+                	try {
+                        client.sendToClient(arrToSend);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
                 case 24:
                 	String canExtend = mysqlConnection.canExtend((int)arr.get(1), (String)arr.get(2));
                 	arrToSend.add(24);
@@ -345,6 +361,30 @@ public class EchoServer extends AbstractServer
 						e.printStackTrace();
 					}
 					break;
+
+                case 25:
+                    try {
+                        
+                        String message = (String) arr.get(1); 
+                        String[] parts = message.split(" ", 3);
+                        if (parts.length < 3) {
+                            System.out.println("Invalid search criteria message from client.");
+                            break;
+                        }
+                        String criteria = parts[1]; 
+                        String value = parts[2];                 
+                        ArrayList<String> foundBooks = mysqlConnection.fetchBooksByCriteria(criteria, value);                 
+                        ArrayList<Object> arrToSend1 = new ArrayList<>();
+                        arrToSend1.add(25);           
+                        arrToSend1.add(foundBooks);  
+                       
+                        client.sendToClient(arrToSend1);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+
                 default:
                     System.out.println("The server - Received message is not of the expected type.");
                     break;
