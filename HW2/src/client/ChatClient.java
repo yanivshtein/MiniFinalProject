@@ -194,7 +194,13 @@ public class ChatClient extends AbstractClient
 			bool=(Boolean) arr.get(1);
 			break;
 	
+		case 26:
+			bool=(Boolean) arr.get(1);
+			break;
+
+		
 		}
+  		
 		
 	  
 	  //**************** that is before

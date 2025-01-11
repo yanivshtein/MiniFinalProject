@@ -48,7 +48,7 @@ public class LibrarianReturnGUI {
 	private Label artMsg = null;
 	
 	@FXML
-	private Label successMsg = null;
+	private Label sendMsg = null;
 	
 	private Alert alertMessege = new Alert(AlertType.NONE);
 
@@ -65,13 +65,21 @@ public class LibrarianReturnGUI {
 		 	alertMessege.show();
 			return;
 		}
-		if(successMsg!=null) {
-			successMsg.setText("");;
+		if(sendMsg!=null) {
+			sendMsg.setText("");;
 		}
 		
 		String BorrowerId=subscriberId.getText();
 		String BookName=bookName.getText();
 		
+		// check if the book has already returned by the subscriber
+		LibrarianHomePageUI.chat.returnBook_accept("CHECK_BOOK_RETURNED", BorrowerId, BookName, null, null, null);
+		
+		// if the book already returned then show message 
+		if (ChatClient.bool==true) {
+			sendMsg.setText("Book has already returned!");
+			return;
+		}
 		// get current time in a format of yyyy-MM-dd
 		LocalDate currentDate=LocalDate.now();
 		DateTimeFormatter dateFormatter= DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -79,23 +87,13 @@ public class LibrarianReturnGUI {
 		String deadlineString= deadline.getText();
 		LocalDate deadlineDate=LocalDate.parse(deadlineString, dateFormatter);
 		Period difference = Period.between( deadlineDate,currentDate);
-		//		int currentDateAsInt=0;
-//		int deadlineDateAsInt=0;
-//		Integer totalDaysLate=0;
-//		formattedCurrentDate=formattedCurrentDate.replace("-", "");
-//		deadlineString= deadlineString.replace("-","");
+		
 		System.out.println("formatted and replace local date is:"+currentDate);
 		System.out.println("formatted and replace deadline is:"+deadlineString);
 		
 		try {
 			
 			long daysLate = currentDate.toEpochDay()- deadlineDate.toEpochDay();
-
-//			currentDateAsInt = Integer.parseInt(formattedCurrentDate);
-//			deadlineDateAsInt = Integer.parseInt(deadlineString);
-			
-		 
-		
 		
 		
 		if (daysLate<=0) {
@@ -124,7 +122,7 @@ public class LibrarianReturnGUI {
 		}
 		
 		else {
-		successMsg.setText("Return operation successfully finished!");
+		sendMsg.setText("Return operation successfully finished!");
 		}
 		
 		}catch (DateTimeParseException e) {

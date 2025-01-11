@@ -440,7 +440,24 @@ public class EchoServer extends AbstractServer
 	            	 }
 	            	 break;
 	            	 
-	            	 
+	            case 26:	// check if already returned the book
+	            	 this.subscriberID = (String)arr.get(1);
+	            	 this.bookName = (String)arr.get(2); 
+	            	 arrToSend.add(26);
+				try {
+					/*
+					 * the return Boolean of the method call in the database represents:
+					 * True: if the book was already returned by subscriber
+					 * False: the book  still didn't return.
+					 */
+					ret = mysqlConnection.checkBookAlreadyReturned(this.subscriberID, this.bookName);
+					arrToSend.add(ret);
+					client.sendToClient(arrToSend);
+				} catch (SQLException | IOException e) {
+					
+					e.printStackTrace();
+				}
+	            	break;
 	            default:
 	                System.out.println("The server - Received message is not of the expected type.");
 	                break;

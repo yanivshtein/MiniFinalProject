@@ -277,6 +277,12 @@ public class ClientConsole implements ChatIF
 		arr1.add(totalDaysLate);
 		break;
 		
+	
+	case "CHECK_BOOK_RETURNED":
+		arr1.add(26);
+		arr1.add(borrowerID);
+		arr1.add(bookName);
+		break;
 	default:
 		System.err.println("Entered default in switch case None of the above selected");
 		break;
