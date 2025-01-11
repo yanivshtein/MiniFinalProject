@@ -180,7 +180,8 @@ public class ChatClient extends AbstractClient {
 			bool=(Boolean) arr.get(1);
 			break;
 		case 18:
-			//all books
+			allbooks =(ArrayList<String>) arr.get(1);  //
+			System.out.println(allbooks +"chatclient");
 			break;
 		case 19:
 			FullStatusRep = (ArrayList<String>) arr.get(1);

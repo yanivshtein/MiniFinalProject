@@ -48,7 +48,7 @@ public class SearchBookGUIController {
 
     private void loadBooks() {
         // Request the books from the server
-        SearchBookUI.chat.acceptAllTheBooks(18);
+        ClientGUIConnectionController.chat.acceptAllTheBooks(18);
 
         ArrayList<String> bookNames = ChatClient.allbooks;
         if (bookNames == null || bookNames.isEmpty()) {

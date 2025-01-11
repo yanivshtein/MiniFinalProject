@@ -89,7 +89,7 @@ public class EchoServer extends AbstractServer
                 	arrToSend.add(3);
                 	arrToSend.add(ret);
                     try {                   	
-                        client.sendToClient(ret);
+                        client.sendToClient(arrToSend);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
