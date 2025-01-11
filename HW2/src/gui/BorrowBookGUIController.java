@@ -96,10 +96,21 @@ public class BorrowBookGUIController {
     
     
     public void BarCodeBtn(ActionEvent event) {
-    	int bookId = Integer.parseInt(barCode.getText());
-    	BorrowBookUI.chat.acceptBarCode(bookId);
+    	try {
+    		msg.setContentText("");
+    		bookName.setText("");
+    		int bookId = Integer.parseInt(barCode.getText());
+    		BorrowBookUI.chat.acceptBarCode(bookId);
+        	if(ChatClient.bookName.equals("")) {
+        		msg.setContentText("The barcode does not exist in the database");
+        	}else {
+        		bookName.setText(ChatClient.bookName);
+        	}
+    	}catch(NumberFormatException e) {
+    		System.out.println("letters were entered");
+    		msg.setContentText("The barcode does not exist in the database");
+    	}
     	
-    	bookName.setText(ChatClient.bookName);
     	
     }
 	public void getExitBtn(ActionEvent event) throws IOException {
