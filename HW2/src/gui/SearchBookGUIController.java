@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import client.ChatClient;
 import client.SearchBookUI;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,6 +16,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -49,18 +51,19 @@ public class SearchBookGUIController {
     @FXML
     private RadioButton genere = null;
     
-    
-    
 
+    
+ 
     private ObservableList<String> booksData;
 
     public void initialize() {
-        loadBooks();
+       loadBooks();
         setupAutoComplete();
+        
     }
 
     private void loadBooks() {
-        // Request the books from the server
+        
         SearchBookUI.chat.acceptAllTheBooks(18);
 
         ArrayList<String> bookNames = ChatClient.allbooks;
@@ -75,10 +78,14 @@ public class SearchBookGUIController {
     }
 
     private void setupAutoComplete() {
+
         bookName.textProperty().addListener((observable, oldValue, newValue) -> {
+        	genere.setSelected(false);
+        	authorName.setSelected(false);
             if (newValue == null || newValue.isEmpty()) {
                 booksListView.setItems(booksData);
             } else {
+               
                 String lowerCaseFilter = newValue.toLowerCase();
                 ObservableList<String> filteredBooks = FXCollections.observableArrayList();
                 for (String book : booksData) {
@@ -89,7 +96,41 @@ public class SearchBookGUIController {
                 booksListView.setItems(filteredBooks);
             }
         });
+        author_genere.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.isEmpty()) {
+                booksListView.setItems(booksData);
+            } else {
+                String criteria = "";
+                if (authorName.isSelected()) {
+                    criteria = "author";
+                } else if (genere.isSelected()) {
+                    criteria = "Genre";
+                }
+
+                if (criteria.isEmpty()) {
+                    booksListView.setItems(FXCollections.observableArrayList("Please select an author or genre"));
+                    return;
+                }           
+                SearchBookUI.chat.acceptSearchByCriteria(criteria, newValue);
+
+                    ArrayList<String> serverResponse = ChatClient.filteredBooks;
+                    ObservableList<String> filteredBooks;
+                    if (serverResponse == null || serverResponse.isEmpty()) {
+                        filteredBooks = FXCollections.observableArrayList("No books found for the given criteria");
+                    } else {
+                        filteredBooks = FXCollections.observableArrayList(serverResponse);
+                    }
+                    booksListView.setItems(filteredBooks);
+            }
+        });
     }
+    public void authorRadioButton(ActionEvent event) {
+    	genere.setSelected(false);
+    }
+    public void genreRadioButton(ActionEvent event) {
+    	authorName.setSelected(false);
+    }
+
 
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/gui/SearchBookGUIController.fxml"));

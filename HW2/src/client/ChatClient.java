@@ -6,6 +6,8 @@ package client;
 
 import ocsf.client.*;
 import common.*;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ public class ChatClient extends AbstractClient {
 	public static boolean connected;
 	public static Integer bookAvailability=0;
 	public static ArrayList<String> allbooks = new ArrayList<>();
+	public static ArrayList<String> filteredBooks = new ArrayList<>();
 
 	// Constructors ****************************************************
 
@@ -179,10 +182,24 @@ public class ChatClient extends AbstractClient {
 			bool=(Boolean) arr.get(1);
 			break;
 		case 18:
-			//all books
+			allbooks =(ArrayList<String>) arr.get(1);  //
+			System.out.println(allbooks +"chatclient");
+
 			break;
 		case 19:
 			FullStatusRep = (ArrayList<String>) arr.get(1);
+			break;
+		case 25:
+		    try {
+		        ArrayList<String> foundBooks = (ArrayList<String>) arr.get(1); 
+		        
+		        filteredBooks = foundBooks;
+
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		    break;
+
 		}
 		
 	}	

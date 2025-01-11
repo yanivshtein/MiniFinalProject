@@ -31,8 +31,8 @@
             <ListView fx:id="booksListView" layoutX="33.0" layoutY="348.0" prefHeight="200.0" prefWidth="366.0" />
             <Label layoutX="64.0" layoutY="292.0" />
             <TextField fx:id="author_genere" layoutX="75.0" layoutY="288.0" />
-            <RadioButton fx:id="authorName" layoutX="75.0" layoutY="225.0" mnemonicParsing="false" text="Name of author" />
-            <RadioButton fx:id="genere" layoutX="75.0" layoutY="250.0" mnemonicParsing="false" text="Genere of the book" />
+            <RadioButton fx:id="authorName" layoutX="75.0" layoutY="225.0" mnemonicParsing="false" onAction="#authorRadioButton" text="Name of author" />
+            <RadioButton fx:id="genere" layoutX="75.0" layoutY="250.0" mnemonicParsing="false" onAction="#genreRadioButton" text="Genere of the book" />
          </children>
       </Pane>
    </children>
