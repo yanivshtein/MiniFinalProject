@@ -58,7 +58,7 @@ public class EchoServer extends AbstractServer
         if (msg instanceof ArrayList<?>) {
             ArrayList<Object> arr = (ArrayList<Object>) msg;
             int request = (Integer) arr.get(0);
-            String subID;
+            int subID;
             String bookName;
             
             ArrayList<Object> arrToSend = new ArrayList<>();
@@ -96,9 +96,13 @@ public class EchoServer extends AbstractServer
                 	
                 	break;
                 case 4: //Search the database to check email and password for subscriber
-                    ret = mysqlConnection.searchSubId((String) arr.get(1), (String) arr.get(2));
+                    int subId = mysqlConnection.searchSubId((String) arr.get(1), (String) arr.get(2));
                     arrToSend.add(4);
-                    arrToSend.add(ret);
+                    if (subId > 0) //which means we found the subscriber
+                    	arrToSend.add(true);
+                    else
+                    	arrToSend.add(false);
+                    arrToSend.add(subId); 
                     try {
                         client.sendToClient(arrToSend);
                     } catch (IOException e) {
@@ -107,7 +111,7 @@ public class EchoServer extends AbstractServer
                     break;
 
                 case 5: // Check subscriber's status
-                    subID = (String) arr.get(1);
+                    subID =  (int) arr.get(1);
                     String retStatus = "notFrozen"; // for the example
                  // go to subscriber's DB and return the status of subID (subscriber's id)
                     arrToSend.add(5);
@@ -135,7 +139,7 @@ public class EchoServer extends AbstractServer
                     break;
 
                 case 7: // Add an order
-                    subID = (String) arr.get(1);
+                    subID = (int) arr.get(1);
                     bookName = (String) arr.get(2);
                  // go to orders table in the DB and check if can add a column (if the number of orders is less than the number of copys)
                     String canAdd = mysqlConnection.canAddOrder(subID, bookName);
@@ -149,7 +153,7 @@ public class EchoServer extends AbstractServer
                     break;
 
                 case 8: //watch activity history
-                    subID = (String)arr.get(1); //subscriber ID is in the second position of the array
+                    subID = (int)arr.get(1); //subscriber ID is in the second position of the array
                  // Retrieve the borrow history for the given subscriber ID
                     ArrayList<String> borrowHistory = mysqlConnection.getBorrowHistory(subID);
                     arrToSend.add(8);
@@ -176,7 +180,7 @@ public class EchoServer extends AbstractServer
 
                 case 10:
                 	// Extract parameters from the array
-                    subID = (String) arr.get(1);
+                    subID = (int) arr.get(1);
                     bookName = (String) arr.get(2);
                     String OldDate = (String) arr.get(3);
                     String NewDate = (String) arr.get(4);
@@ -215,6 +219,17 @@ public class EchoServer extends AbstractServer
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                    }
+                    break;
+                case 12:
+                	ArrayList<String> borrowedBooks = mysqlConnection.getBorrowedBooks((int)arr.get(1));
+                    arrToSend.add(12);
+                    arrToSend.add(borrowedBooks);
+                    try {
+                    	// Send the borrow history to the client
+                        client.sendToClient(arrToSend);
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                     break;
                 case 13:
@@ -293,6 +308,7 @@ public class EchoServer extends AbstractServer
                            e.printStackTrace();
                        }
                        break;
+
                 case 19:
                 	ArrayList<String> statusRepDet = null;
                     try {
@@ -319,11 +335,16 @@ public class EchoServer extends AbstractServer
                         }
                     }
                     break;
-               
-                    
-                	
-                    
-
+                case 24:
+                	String canExtend = mysqlConnection.canExtend((int)arr.get(1), (String)arr.get(2));
+                	arrToSend.add(24);
+                	arrToSend.add(canExtend);
+					try {
+						client.sendToClient(arrToSend);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					break;
                 default:
                     System.out.println("The server - Received message is not of the expected type.");
                     break;
