@@ -50,10 +50,10 @@ public class SubscriberOrderUIController {
 
     private ObservableList<String> booksData;
 
-    /*public void initialize() {
+    public void initialize() {
         loadBooks();
         setupAutoComplete();
-    }*/
+    }
     
     private void loadBooks() {
         // Request the books from the server
