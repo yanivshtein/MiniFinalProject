@@ -63,10 +63,7 @@ public class SearchBookGUIController {
     }
 
     private void loadBooks() {
-
-        
         SearchBookUI.chat.acceptAllTheBooks(18);
-
         ArrayList<String> bookNames = ChatClient.allbooks;
         if (bookNames == null || bookNames.isEmpty()) {
             booksData = FXCollections.observableArrayList("No books available");
