@@ -221,6 +221,17 @@ public class EchoServer extends AbstractServer
                         }
                     }
                     break;
+                case 12:
+                	ArrayList<String> borrowedBooks = mysqlConnection.getBorrowedBooks((int)arr.get(1));
+                    arrToSend.add(12);
+                    arrToSend.add(borrowedBooks);
+                    try {
+                    	// Send the borrow history to the client
+                        client.sendToClient(arrToSend);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
                 case 13:
                 	int Sub_id = (int)arr.get(1); 
                 	String subName = (String)arr.get(2);
@@ -323,7 +334,17 @@ public class EchoServer extends AbstractServer
                             e.printStackTrace();
                         }
                     }
-                    break;                                                  	                   
+                    break;
+                case 24:
+                	String canExtend = mysqlConnection.canExtend((int)arr.get(1), (String)arr.get(2));
+                	arrToSend.add(24);
+                	arrToSend.add(canExtend);
+					try {
+						client.sendToClient(arrToSend);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					break;
                 default:
                     System.out.println("The server - Received message is not of the expected type.");
                     break;

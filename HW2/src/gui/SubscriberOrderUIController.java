@@ -30,6 +30,9 @@ public class SubscriberOrderUIController {
 
     @FXML
     private DialogPane errorMsg = null;
+    
+    @FXML
+    private DialogPane errorMsg2 = null;
 
     @FXML
     private Button sendOrderBtn = null;
@@ -47,14 +50,14 @@ public class SubscriberOrderUIController {
 
     private ObservableList<String> booksData;
 
-    public void initialize() {
+    /*public void initialize() {
         loadBooks();
         setupAutoComplete();
-    }
+    }*/
     
     private void loadBooks() {
         // Request the books from the server
-        SearchBookUI.chat.acceptAllTheBooks(18);
+    	ClientGUIConnectionController.chat.acceptAllTheBooks(18);
 
         ArrayList<String> bookNames = ChatClient.allbooks;
         if (bookNames == null || bookNames.isEmpty()) {
@@ -94,24 +97,25 @@ public class SubscriberOrderUIController {
         }
         
         // check if subscriber's status is frozen
-        ClientGUIConnectionController.chat.acceptFromOrderController(5, subID, "");
+        ClientGUIConnectionController.chat.acceptFromController(5, subID, "");
         if (ChatClient.isFrozen == true) {
             errorMsg.setContentText("Uh-oh! 😬 Your account is FROZEN!");
             return;
         }
         
-        ClientGUIConnectionController.chat.acceptFromOrderController(6, 0, bookNameGot);
+        ClientGUIConnectionController.chat.acceptFromController(6, 0, bookNameGot);
         if (ChatClient.isExist== false) {
         	errorMsg.setContentText("Sorry! 📚 we dont have this book in our Library");
         	return;
         }
         if (ChatClient.isAvailable == true) { // which means there is an available copy of the book -> cant order
-            errorMsg.setContentText("Sorry! 📚 An available copy of this book already exists in the library.");
+            errorMsg.setContentText("Yey! 📚 An available copy of this book already exists in the library.");
+            errorMsg2.setContentText("Go borrow it!");
             return;
         }
         
         // add column in the Orders table in the DB and in the activityhistory
-        ClientGUIConnectionController.chat.acceptFromOrderController(7, subID, bookNameGot);
+        ClientGUIConnectionController.chat.acceptFromController(7, subID, bookNameGot);
         // check if the number of copies of the book already been ordered
         if (ChatClient.isCan == false) {
             errorMsg.setContentText("Whoops! 😅 The number of orders and copies are equal, so you can't place another order.");

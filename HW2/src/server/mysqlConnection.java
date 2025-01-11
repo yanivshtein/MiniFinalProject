@@ -3,6 +3,7 @@ package server;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -211,6 +212,66 @@ public class mysqlConnection {
             e.printStackTrace();
         }
     }
+    
+    public static String canExtend(int id, String bookName) {
+    	String query = "SELECT deadline FROM activityhistory WHERE SubscriberID = ? AND BookName = ? AND ActionType = 'Borrow';";   
+    	try {
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, id);
+            stmt.setString(2, bookName);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                	Date deadlineFromDB = rs.getDate("deadline");
+                    LocalDate deadline = deadlineFromDB.toLocalDate();                
+                    LocalDate today = LocalDate.now();// Get today's date
+                    long daysDifference = ChronoUnit.DAYS.between(today, deadline); // Calculate the difference in days
+                    if (daysDifference > 7) 
+                    	return "more than 7";      
+                }                                        
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    	boolean orderExists = orderExists(bookName); //check if there is an order for this book
+    	if (orderExists ==true)
+    		return "order exists";
+    	addExtension(id, bookName);
+    	//need to send a message to the librarian
+    	return "can extend";
+    }
+    
+    private static boolean orderExists (String bookName) {
+    	String query = "SELECT COUNT(*) AS count FROM orders WHERE bookName = ?;";
+    	try {
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, bookName);
+            try (ResultSet rs = stmt.executeQuery()) {
+                rs.next();
+                int count = rs.getInt("count");
+                if ((count != 0))
+                    return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    	return false;
+    }
+    
+    //this method updates the Borrow's deadline in more 7 days
+    private static void addExtension(int id, String bookName) {
+    	String addQuery = "UPDATE activityhistory SET additionalInfo = ?, deadline = DATE_ADD(deadline, INTERVAL 7 DAY)"
+    			+ " WHERE SubscriberID = ? AND bookName = ? AND ActionType = 'Borrow';";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(addQuery);
+            stmt.setString(1, "autoExtended");
+            stmt.setInt(2, id);
+            stmt.setString(3, bookName);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
     //add addSubcriber
     public static void addSubscriber(int subId, String subName, String phone, String email,String status , String password) {
         String insertQuery = "INSERT INTO subscriber (subscriber_id, subscriber_name, subscriber_phone_number, subscriber_email, subscription_status, password) VALUES (?, ?, ?, ?, ?, ?);";
@@ -395,6 +456,25 @@ public class mysqlConnection {
         }
         
         return bookNames;
+    }
+    
+    public static ArrayList<String> getBorrowedBooks(int id) {
+    	System.out.println(id);
+    	ArrayList<String> borrowedBooks = new ArrayList<>();
+        String query = "SELECT BookName FROM activityhistory WHERE SubscriberID = ? AND ActionType = 'Borrow'";
+        
+        try (PreparedStatement ps = conn.prepareStatement(query)){
+        	ps.setInt(1, id);
+        	ResultSet rs = ps.executeQuery();
+             while (rs.next()) {
+                 String name = rs.getString("BookName");
+                 borrowedBooks.add(name);
+             }
+        } catch (SQLException e) {
+        	e.printStackTrace();
+        }
+        System.out.println(borrowedBooks);
+        return borrowedBooks;
     }
 
 

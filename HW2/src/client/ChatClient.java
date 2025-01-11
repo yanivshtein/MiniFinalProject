@@ -31,7 +31,7 @@ public class ChatClient extends AbstractClient {
 	public static ArrayList<String> activityHistory;
 	public static ArrayList<String> borrowHistory;
 	public static ArrayList<String> FullBorrowRep , FullStatusRep;
-	public static Boolean bool, isFrozen, isAvailable, isCan, isExist;
+	public static Boolean bool, isFrozen, isAvailable, isCan, isExist, isSeven, orderExists;
 	public static boolean awaitResponse = false;
 
 	public static Integer bookAvailability=0, subID;
@@ -39,6 +39,7 @@ public class ChatClient extends AbstractClient {
 	public static boolean connected;
 
 	public static ArrayList<String> allbooks = new ArrayList<>();
+	public static ArrayList<String> borrowedBooks = new ArrayList<>();
 
 	// Constructors ****************************************************
 
@@ -97,6 +98,7 @@ public class ChatClient extends AbstractClient {
 		awaitResponse = false;
 		int request;
 		isExist = true;
+		isSeven = true;
 		ArrayList<Object> arr = null;
 		if (msg instanceof ArrayList<?>) {
 			arr = (ArrayList<Object>) msg;
@@ -155,6 +157,9 @@ public class ChatClient extends AbstractClient {
 		case 11:
 			FullBorrowRep = (ArrayList<String>) arr.get(1);
 			break;
+		case 12:
+			borrowedBooks = (ArrayList<String>) arr.get(1);
+			break;
 		case 13:
 			bool=(Boolean) arr.get(1);
 			break;
@@ -183,11 +188,20 @@ public class ChatClient extends AbstractClient {
 			bool=(Boolean) arr.get(1);
 			break;
 		case 18:
-			//all books
+			allbooks =(ArrayList<String>) msg;
 			break;
 		case 19:
 			FullStatusRep = (ArrayList<String>) arr.get(1);
+			break;
+		case 24:
+			if (arr.get(1).equals("more than 7")) 
+				isSeven=false;
+			else if (arr.get(1).equals("order exists"))
+				orderExists=true;
+			else 
+				orderExists=false;
 		}
+			
 		
 	}	
 		/*
