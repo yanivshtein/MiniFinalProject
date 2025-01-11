@@ -78,6 +78,7 @@ public class EchoServer extends AbstractServer
                     sub = mysqlConnection.select((String) arr.get(1));
                     arrToSend.add(2);
                 	arrToSend.add(sub);
+                	System.out.println(sub.getSubscriber_name());
                     try {                   	
                         client.sendToClient(arrToSend); // sent to the client
                     } catch (IOException e) {
@@ -169,8 +170,8 @@ public class EchoServer extends AbstractServer
                 case 9:
                 	subEmail = (String)arr.get(3);
                     ArrayList<String> activityHistory = mysqlConnection.getActivityHistory(subEmail);
-                    arr.add(9);
-                    arr.add(activityHistory);
+                    arrToSend.add(9);
+                    arrToSend.add(activityHistory);
                     try {
                         client.sendToClient(arrToSend);
                     } catch (IOException e) {
