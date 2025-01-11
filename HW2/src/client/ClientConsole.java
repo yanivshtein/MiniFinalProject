@@ -175,6 +175,14 @@ public class ClientConsole implements ChatIF
 	  arr.add(id);
 	  client.handleMessageFromClientUI(arr);		  
   }
+  
+  public void acceptBarCode(int id) {
+	  ArrayList<Object> arr = new ArrayList<>();
+	  arr.add(23);
+	  arr.add(id);
+	  client.handleMessageFromClientUI(arr);	
+  }
+  
   public void reports_accept(String str, String selectedMonth , String selectedYear) 
   {
     try

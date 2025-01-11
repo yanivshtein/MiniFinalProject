@@ -36,6 +36,7 @@ public class ChatClient extends AbstractClient {
 	public static boolean connected;
 	public static Integer bookAvailability=0;
 	public static ArrayList<String> allbooks = new ArrayList<>();
+	public static String bookName;
 
 	// Constructors ****************************************************
 
@@ -183,6 +184,10 @@ public class ChatClient extends AbstractClient {
 			break;
 		case 19:
 			FullStatusRep = (ArrayList<String>) arr.get(1);
+			break;
+		case 23:
+			bookName = (String) arr.get(1);
+			break;
 		}
 		
 	}	

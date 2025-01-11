@@ -22,6 +22,9 @@ public class BorrowBookGUIController {
 	@FXML
 	private TextField id = null;
 	
+	@FXML
+	private TextField barCode = null;
+	
     @FXML
     private DialogPane msg = null;
     
@@ -36,6 +39,9 @@ public class BorrowBookGUIController {
 	
 	@FXML
 	private Button return1 = null;
+	
+	@FXML
+	private Button barcode = null;
 
 	
 	
@@ -87,6 +93,15 @@ public class BorrowBookGUIController {
         primaryStage.setScene(scene);
         primaryStage.show();
 	}
+    
+    
+    public void BarCodeBtn(ActionEvent event) {
+    	int bookId = Integer.parseInt(barCode.getText());
+    	BorrowBookUI.chat.acceptBarCode(bookId);
+    	
+    	bookName.setText(ChatClient.bookName);
+    	
+    }
 	public void getExitBtn(ActionEvent event) throws IOException {
 		System.out.println("Exit client");
 		System.exit(0);
