@@ -39,7 +39,9 @@ public class mysqlConnection {
         }
 
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "!vex123S");
+
+
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "Sheli123");
             System.out.println("SQL connection succeed");
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
@@ -96,6 +98,7 @@ public class mysqlConnection {
         }
         return 0; //no subscriber found
     }
+
     
     public static Boolean searchLibId(String email, String password) {
         String searchQuery = "SELECT 1 FROM librarian WHERE librarian_email = ? AND librarian_password = ?";
@@ -457,6 +460,7 @@ public class mysqlConnection {
         
         return bookNames;
     }
+
     
     public static ArrayList<String> getBorrowedBooks(int id) {
     	System.out.println(id);
@@ -475,6 +479,21 @@ public class mysqlConnection {
         }
         System.out.println(borrowedBooks);
         return borrowedBooks;
+    }
+    public static ArrayList<String> fetchBooksByCriteria(String criteria, String value) {
+        String query = "SELECT bookName FROM books WHERE " + criteria + " LIKE ?";
+        ArrayList<String> books = new ArrayList<>();
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, "%" + value + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                books.add(rs.getString("bookName"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return books;
+
     }
 
 
@@ -665,5 +684,28 @@ public class mysqlConnection {
         }
         return statusReport;
     }
+    
+    
+    public static String BringBarCodeBookName(int bookId) throws SQLException {
+    	String bookName = "";
+         String query = "SELECT bookName FROM books WHERE BookID = ?";
+         try (PreparedStatement ps = conn.prepareStatement(query)){
+        		 ps.setInt(1, bookId);
+              ResultSet rs = ps.executeQuery();
+             while (rs.next()) {
+                 String name = rs.getString("bookName");
+                 bookName = name;
+             }
+         } catch (SQLException e) {
+             e.printStackTrace();
+         }
+         
+         return bookName;
+    	
+    }
+    
+    
+    
+    
 
 }
