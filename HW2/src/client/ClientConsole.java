@@ -283,8 +283,9 @@ public class ClientConsole implements ChatIF
 		arr1.add(borrowerID);
 		arr1.add(bookName);
 		break;
+		
 	default:
-		System.err.println("Entered default in switch case None of the above selected");
+		System.err.println("returnBook_accept:Entered default in switch case None of the above selected!");
 		break;
 	}
 	 

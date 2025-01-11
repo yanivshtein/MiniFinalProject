@@ -19,6 +19,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.util.Duration;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 
 public class LibrarianReturnGUI {
 
@@ -77,7 +80,9 @@ public class LibrarianReturnGUI {
 		
 		// if the book already returned then show message 
 		if (ChatClient.bool==true) {
-			sendMsg.setText("Book has already returned!");
+			//sendMsg.setText("Book has already returned!");
+			showLabelTextForDuration(sendMsg, "Book has already returned!", 3000); // Show text for 3 seconds
+
 			return;
 		}
 		// get current time in a format of yyyy-MM-dd
@@ -122,9 +127,9 @@ public class LibrarianReturnGUI {
 		}
 		
 		else {
-		sendMsg.setText("Return operation successfully finished!");
+			showLabelTextForDuration(sendMsg, "Return operation successfully finished!", 3000); // Show text for 3 seconds
 		}
-		
+
 		}catch (DateTimeParseException e) {
 //			alertMessege.setContentText("Error need to check if exist borrow first");	
 //		 	alertMessege.setAlertType(AlertType.ERROR);
@@ -132,7 +137,14 @@ public class LibrarianReturnGUI {
 		}
 	}
 	
-	
+	public void showLabelTextForDuration(Label label, String text , int durationInMillis) {
+		
+		label.setText(text);
+		
+		Timeline timeline= new Timeline(new KeyFrame(Duration.millis(durationInMillis),event -> label.setText("")));
+		timeline.setCycleCount(1);
+		timeline.play();
+	}
 	public void checkBttn(ActionEvent event) {		// method that get information from the data the controller to return the book to the library
 		
 		
@@ -162,7 +174,8 @@ public class LibrarianReturnGUI {
 			bookArriveDate.setText("");		// set labels to show them in GUI
 			deadline.setText("");
 			artMsg.setText("The Borrow does not exist!");
-			
+			showLabelTextForDuration(sendMsg, "The Borrow does not exist!", 3000); // Show text for 3 seconds
+
 			return;
 		}
 		
