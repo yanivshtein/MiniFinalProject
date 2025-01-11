@@ -39,6 +39,8 @@ public class ChatClient extends AbstractClient {
 	public static Integer bookAvailability=0;
 	public static ArrayList<String> allbooks = new ArrayList<>();
 	public static ArrayList<String> filteredBooks = new ArrayList<>();
+	public static String bookName;
+
 
 	// Constructors ****************************************************
 
@@ -189,6 +191,10 @@ public class ChatClient extends AbstractClient {
 		case 19:
 			FullStatusRep = (ArrayList<String>) arr.get(1);
 			break;
+		case 23:
+			bookName = (String) arr.get(1);
+			break;
+	
 		case 25:
 		    try {
 		        ArrayList<String> foundBooks = (ArrayList<String>) arr.get(1); 
@@ -199,6 +205,7 @@ public class ChatClient extends AbstractClient {
 		        e.printStackTrace();
 		    }
 		    break;
+
 
 		}
 		

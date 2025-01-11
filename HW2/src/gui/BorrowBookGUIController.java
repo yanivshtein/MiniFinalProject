@@ -22,6 +22,9 @@ public class BorrowBookGUIController {
 	@FXML
 	private TextField id = null;
 	
+	@FXML
+	private TextField barCode = null;
+	
     @FXML
     private DialogPane msg = null;
     
@@ -36,6 +39,9 @@ public class BorrowBookGUIController {
 	
 	@FXML
 	private Button return1 = null;
+	
+	@FXML
+	private Button barcode = null;
 
 	
 	
@@ -87,6 +93,26 @@ public class BorrowBookGUIController {
         primaryStage.setScene(scene);
         primaryStage.show();
 	}
+    
+    
+    public void BarCodeBtn(ActionEvent event) {
+    	try {
+    		msg.setContentText("");
+    		bookName.setText("");
+    		int bookId = Integer.parseInt(barCode.getText());
+    		BorrowBookUI.chat.acceptBarCode(bookId);
+        	if(ChatClient.bookName.equals("")) {
+        		msg.setContentText("The barcode does not exist in the database");
+        	}else {
+        		bookName.setText(ChatClient.bookName);
+        	}
+    	}catch(NumberFormatException e) {
+    		System.out.println("letters were entered");
+    		msg.setContentText("The barcode does not exist in the database");
+    	}
+    	
+    	
+    }
 	public void getExitBtn(ActionEvent event) throws IOException {
 		System.out.println("Exit client");
 		System.exit(0);

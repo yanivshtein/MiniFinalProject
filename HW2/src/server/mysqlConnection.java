@@ -38,6 +38,7 @@ public class mysqlConnection {
         }
 
         try {
+
             conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "Sheli123");
             System.out.println("SQL connection succeed");
         } catch (SQLException ex) {
@@ -600,5 +601,28 @@ public class mysqlConnection {
         }
         return statusReport;
     }
+    
+    
+    public static String BringBarCodeBookName(int bookId) throws SQLException {
+    	String bookName = "";
+         String query = "SELECT bookName FROM books WHERE BookID = ?";
+         try (PreparedStatement ps = conn.prepareStatement(query)){
+        		 ps.setInt(1, bookId);
+              ResultSet rs = ps.executeQuery();
+             while (rs.next()) {
+                 String name = rs.getString("bookName");
+                 bookName = name;
+             }
+         } catch (SQLException e) {
+             e.printStackTrace();
+         }
+         
+         return bookName;
+    	
+    }
+    
+    
+    
+    
 
 }

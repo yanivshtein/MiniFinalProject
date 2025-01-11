@@ -319,6 +319,22 @@ public class EchoServer extends AbstractServer
                         }
                     }
                     break;
+                case 23:
+                	String bookNameBarCode;
+                	try {
+                		bookNameBarCode = mysqlConnection.BringBarCodeBookName((int)arr.get(1));
+                	}catch(SQLException e) {
+                		 e.printStackTrace();
+                		 bookNameBarCode = "";
+                	}
+                	arrToSend.add(23);
+                	arrToSend.add(bookNameBarCode);
+                	try {
+                        client.sendToClient(arrToSend);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
                 case 25:
                     try {
                         
