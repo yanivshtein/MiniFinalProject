@@ -19,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
 
@@ -183,4 +184,25 @@ public class LibrarianWatchAndUpdateGUI {
     }
 
 
+
+	
+	public void returnBookBtt(ActionEvent event) throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+
+		//((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+		Stage primaryStage = new Stage();
+		Pane root = loader.load(getClass().getResource("/gui/LibrarianReturnGUI.fxml").openStream());
+
+		Scene scene = new Scene(root);
+		scene.getStylesheets().add(getClass().getResource("/gui/LibrarianReturnGUI.css").toExternalForm());
+		primaryStage.setTitle("Librarian Return GUI");
+
+		primaryStage.setScene(scene);
+		primaryStage.show();
+		
+	}
+
+
+
 }
+	
