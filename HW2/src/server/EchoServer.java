@@ -181,7 +181,7 @@ public class EchoServer extends AbstractServer
 
                 case 10:
                 	// Extract parameters from the array
-                    subID = (int) arr.get(1);
+                    subID = Integer.parseInt((String)arr.get(1));
                     bookName = (String) arr.get(2);
                     String OldDate = (String) arr.get(3);
                     String NewDate = (String) arr.get(4);

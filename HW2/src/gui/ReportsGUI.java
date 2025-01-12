@@ -3,7 +3,6 @@ package gui;
 import java.io.IOException;
 
 import client.ChatClient;
-import client.ReportsUI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,6 +26,8 @@ public class ReportsGUI {
     private TextArea Displayarea = null;
     @FXML
     private Button Viewbtt = null;
+    @FXML
+    private Button ReturnBtn = null;
     @FXML
     private ComboBox<String> years = null;  // Specify type String for ComboBox
 
@@ -55,7 +56,7 @@ public class ReportsGUI {
 
         if (borrowRep.isSelected()) {
             // Send a request to create a borrow report
-            ReportsUI.chat.reports_accept("create borrow report", selectedMonth , selectedYear );
+        	ClientGUIConnectionController.chat.reports_accept("create borrow report", selectedMonth , selectedYear );
 
             // Build a single string to display all borrow report entries
             StringBuilder reportBuilder = new StringBuilder();
@@ -79,7 +80,7 @@ public class ReportsGUI {
             }
         }
         else if (statusRep.isSelected()) {
-        	ReportsUI.chat.reports_accept("create status report", selectedMonth , selectedYear );
+        	ClientGUIConnectionController.chat.reports_accept("create status report", selectedMonth , selectedYear );
 
             // Build a single string to display all borrow report entries
             StringBuilder reportBuilder = new StringBuilder();
@@ -145,6 +146,29 @@ public class ReportsGUI {
 
         // If the month name is not valid, return an error string or throw an exception
         return "Invalid month";  // Invalid month name
+    }
+    
+    public void ReturnButton(ActionEvent event) throws IOException {
+        // Get the current stage from the event source
+        Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+
+        // Load the FXML file for the new page
+        Parent root = FXMLLoader.load(getClass().getResource("/gui/LibrarianGUIHomePageController.fxml"));
+
+        // Create a new scene and apply the stylesheet
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/gui/LibrarianGUIHomePageController.css").toExternalForm());
+
+        // Create a new stage for the new page
+        Stage newStage = new Stage();
+        newStage.setTitle("Librarian Watch and Update GUI");
+        newStage.setScene(scene);
+
+        // Hide the current stage
+        currentStage.hide();
+
+        // Show the new stage
+        newStage.show();
     }
 
 

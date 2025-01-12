@@ -524,7 +524,7 @@ public class mysqlConnection {
                     
                     // Add the information to the list, including the late status
                     FullBorrowRep.add(String.format(
-                            "Subscriber ID: %s Book Name: %s Borrow Date: %s Return Date: %s Deadline: %s Status: %s",
+                            "Subscriber ID: %s , Book Name: %s , Borrow Date: %s , Return Date: %s , Deadline: %s , Status: %s",
                             rs.getString("SubscriberID"), rs.getString("BookName"), rs.getString("BorrowDate"),
                             rs.getString("ReturnDate"), rs.getString("Deadline"), lateStatus));
                 }
@@ -548,7 +548,7 @@ public class mysqlConnection {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     FullBorrowRep.add(String.format(
-                            "Subscriber ID: %s Book Name: %s Borrow Date: %s Return Date: __-__-____ __:__:__ Deadline: %s",
+                            "Subscriber ID: %s , Book Name: %s , Borrow Date: %s , Return Date: __-__-____ __:__:__  , Deadline: %s",
                             rs.getString("SubscriberID"), rs.getString("BookName"), rs.getString("BorrowDate"),
                             rs.getString("deadline")));
                 }

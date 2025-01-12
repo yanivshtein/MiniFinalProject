@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 import client.ChatClient;
 import client.ClientConsole;
 import client.ClientUI;
-import client.LibrarianHomePageUI;
 import common.Subscriber1;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -55,6 +54,8 @@ public class LibrarianWatchAndUpdateGUI {
     private Button SaveChangesbtt = null;
     @FXML
     private TextField SubStatus = null; //active OR frozen
+    @FXML
+    private Button RetButton = null;
     
     private  String TempStatus;
         
@@ -157,5 +158,29 @@ public class LibrarianWatchAndUpdateGUI {
             return false;
         }
     }
+    
+    public void ReturnButton(ActionEvent event) throws IOException {
+        // Get the current stage from the event source
+        Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+
+        // Load the FXML file for the new page
+        Parent root = FXMLLoader.load(getClass().getResource("/gui/LibrarianGUIHomePageController.fxml"));
+
+        // Create a new scene and apply the stylesheet
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/gui/LibrarianGUIHomePageController.css").toExternalForm());
+
+        // Create a new stage for the new page
+        Stage newStage = new Stage();
+        newStage.setTitle("Librarian Watch and Update GUI");
+        newStage.setScene(scene);
+
+        // Hide the current stage
+        currentStage.hide();
+
+        // Show the new stage
+        newStage.show();
+    }
+
 
 }
