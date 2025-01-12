@@ -154,7 +154,7 @@ public class EchoServer extends AbstractServer
                     break;
 
                 case 8: //watch activity history
-                    subID = (int)arr.get(1); //subscriber ID is in the second position of the array
+                    subID = Integer.parseInt((String)arr.get(1)); //subscriber ID is in the second position of the array
                  // Retrieve the borrow history for the given subscriber ID
                     ArrayList<String> borrowHistory = mysqlConnection.getBorrowHistory(subID);
                     arrToSend.add(8);

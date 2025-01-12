@@ -211,7 +211,7 @@ public class ChatClient extends AbstractClient {
 				orderExists=true;
 			else 
 				orderExists=false;
-
+			break;
 		case 25:
 		    try {
 		        ArrayList<String> foundBooks = (ArrayList<String>) arr.get(1); 
