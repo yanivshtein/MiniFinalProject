@@ -10,7 +10,6 @@ import java.time.format.DateTimeParseException;
 
 import client.ChatClient;
 import client.ClientUI;
-import client.LibrarianHomePageUI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -76,7 +75,7 @@ public class LibrarianReturnGUI {
 		String BookName=bookName.getText();
 		
 		// check if the book has already returned by the subscriber
-		LibrarianHomePageUI.chat.returnBook_accept("CHECK_BOOK_RETURNED", BorrowerId, BookName, null, null, null);
+		ClientGUIConnectionController.chat.returnBook_accept("CHECK_BOOK_RETURNED", BorrowerId, BookName, null, null, null);
 		
 		// if the book already returned then show message 
 		if (ChatClient.bool==true) {
@@ -103,18 +102,18 @@ public class LibrarianReturnGUI {
 		
 		if (daysLate<=0) {
 			
-			LibrarianHomePageUI.chat.returnBook_accept("INSERT", BorrowerId, BookName,false,false,difference);
+			ClientGUIConnectionController.chat.returnBook_accept("INSERT", BorrowerId, BookName,false,false,difference);
 			
 			
 		}
 		else if(daysLate<7) {
 			
-			LibrarianHomePageUI.chat.returnBook_accept("INSERT", BorrowerId, BookName,true,false,difference);
+			ClientGUIConnectionController.chat.returnBook_accept("INSERT", BorrowerId, BookName,true,false,difference);
 
 			
 		}
 		else if(daysLate>=7) {
-			LibrarianHomePageUI.chat.returnBook_accept("INSERT", BorrowerId, BookName,true,true,difference);
+			ClientGUIConnectionController.chat.returnBook_accept("INSERT", BorrowerId, BookName,true,true,difference);
 
 			
 		}
@@ -166,7 +165,7 @@ public class LibrarianReturnGUI {
 			artMsg.setText("");
 		
 		// check in the database if exist a borrow with the same borrower ID and book name
-		LibrarianHomePageUI.chat.returnBook_accept("EXIST", BorrowerId, BookName,false,false,null);
+		ClientGUIConnectionController.chat.returnBook_accept("EXIST", BorrowerId, BookName,false,false,null);
 		
 		// if there isn't any row that match, then show in label.
 		if (ChatClient.bool==false) {
@@ -180,9 +179,9 @@ public class LibrarianReturnGUI {
 		}
 		
 		// if there is a match then select the borrow date and deadline.
-		LibrarianHomePageUI.chat.returnBook_accept("SELECT DATE",BorrowerId,BookName,false,false,null);
+		ClientGUIConnectionController.chat.returnBook_accept("SELECT DATE",BorrowerId,BookName,false,false,null);
 		
-		for (String date : ChatClient.ActionDateAndDeadline) {	// get action date and deadline
+		for (String date : ChatClient.ClientGUIConnectionController) {	// get action date and deadline
 			if(index ==0)
 				actionDate = date;
 			else if(index ==1)
