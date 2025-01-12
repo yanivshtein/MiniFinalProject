@@ -1,7 +1,5 @@
 package gui;
 
-
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -181,7 +179,7 @@ public class LibrarianReturnGUI {
 		// if there is a match then select the borrow date and deadline.
 		ClientGUIConnectionController.chat.returnBook_accept("SELECT DATE",BorrowerId,BookName,false,false,null);
 		
-		for (String date : ChatClient.ClientGUIConnectionController) {	// get action date and deadline
+		for (String date : ChatClient.ActionDateAndDeadline) {	// get action date and deadline
 			if(index ==0)
 				actionDate = date;
 			else if(index ==1)

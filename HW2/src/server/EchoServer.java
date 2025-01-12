@@ -3,6 +3,7 @@ package server;
 import java.io.*;
 import java.net.ServerSocket;
 import java.sql.SQLException;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,8 @@ public class EchoServer extends AbstractServer
 	mysqlConnection instance;
     private List<ConnectionListener> listeners = new ArrayList<>();
 	private String subEmail;
+	private String subscriberID;
+	private String bookName;
      
     public interface ConnectionListener {
         void onClientConnected(ClientInfo c);
@@ -62,7 +65,9 @@ public class EchoServer extends AbstractServer
             String bookName;
             
             ArrayList<Object> arrToSend = new ArrayList<>();
-            switch (request) { //go to DB controller based on the request
+            boolean returnLate;
+			boolean freeze;
+			switch (request) { //go to DB controller based on the request
                 case 1: // UPDATE
                     mysqlConnection.update((String) arr.get(1), (String) arr.get(2), (String) arr.get(3));
                     arrToSend.add(1);
@@ -336,6 +341,89 @@ public class EchoServer extends AbstractServer
                         }
                     }
                     break;
+                case 20:	// search if exist borrower in the DB
+	            	String borrowerid = (String)arr.get(1); //subscriber ID is in the second position of the array
+		          	String bookname = (String)arr.get(2);
+		  
+				try {
+					Boolean isExist= mysqlConnection.checkIfBorrowerFound(borrowerid, bookname);
+					arrToSend.add(20);
+					//ar2.add(isExist);
+					arrToSend.add(isExist);
+					client.sendToClient(arrToSend);
+					//client.sendToClient(ar2);
+				} catch (SQLException | IOException e) {
+					
+					e.printStackTrace();
+				}
+		          	break;
+                case 21:	// select the borrow action date and deadline and return it 
+	            	 
+	            	String Borrowerid = (String)arr.get(1); //subscriber ID is in the second position of the array
+		          	String Bookname = (String)arr.get(2);
+		          	arrToSend.add(21);
+				try {
+					arrToSend.add(mysqlConnection.getBorrowDateAndReturnDate(Borrowerid, Bookname));
+					
+					client.sendToClient(arrToSend);
+				} catch (SQLException | IOException e) {
+					
+					e.printStackTrace();
+				}
+				 break;
+                case 22:
+	            	 this.subscriberID = (String)arr.get(1);
+	            	 this.bookName = (String)arr.get(2);          	 
+	            	 returnLate = (boolean) arr.get(3);
+	            	 freeze = (boolean)arr.get(4);
+	            	 StringBuilder lateDifference = new StringBuilder();
+	            	 if (arr.get(5)!=null) {
+	            		 Period dateDifference=(Period) arr.get(5);
+	            		 int totalDays=dateDifference.getDays();
+	            		 int totalMonths=dateDifference.getMonths();
+	            		 int totalYears= dateDifference.getYears();
+	         		
+	            		 if(totalYears>0) {
+	            			 lateDifference.append(totalYears+" Years,");
+	            		 }
+	            		 if(totalMonths>0)
+	            			 lateDifference.append(totalMonths+" Months, ");
+	         		
+	            		 if(totalDays>0)
+	            			 lateDifference.append(totalDays + " Days");
+	            		 
+	            		 if(returnLate)
+	            			 lateDifference.append(" Late");
+	            	 }
+	            	 
+	         		Boolean bookIncrement = false;	// Initialized freezeSuccess to true because 
+	            	 Boolean freezeSuccess = true;	// of the AND action at sendToClient
+	            	 Boolean insertRowToActivity = false; // so if it won't happen then it will still pass.
+	            	 arrToSend.add(22);
+	            	 try {
+	            		 if(returnLate==false && freeze==false) {
+		            		 insertRowToActivity = mysqlConnection.insertReturnBookRowInActivityHistory(this.subscriberID, this.bookName,"Returned on time",returnLate);
+
+		            	 }
+	            		 if(returnLate==true) {
+		            		 insertRowToActivity = mysqlConnection.insertReturnBookRowInActivityHistory(this.subscriberID, this.bookName,lateDifference.toString(),returnLate);
+
+		            	 }
+		            	 if(freeze==true){
+		            		 freezeSuccess = mysqlConnection.updateSubscriberStatusToFrozen(this.subscriberID,"Frozen");
+		            	 }
+		            	
+		            	 bookIncrement = mysqlConnection.incrimentBookAvailability(this.bookName);
+		            	 arrToSend.add(bookIncrement && freezeSuccess && insertRowToActivity);
+		            	 client.sendToClient(arrToSend );
+
+	            	 } catch (IOException e) {
+	            		 e.printStackTrace();
+	            	 } catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	            	 break;
                 	case 23:
                 	String bookNameBarCode;
                 	try {
@@ -385,6 +473,24 @@ public class EchoServer extends AbstractServer
                         e.printStackTrace();
                     }
                     break;
+                case 26:	// check if already returned the book
+	            	 this.subscriberID = (String)arr.get(1);
+	            	 this.bookName = (String)arr.get(2); 
+	            	 arrToSend.add(26);
+				try {
+					/*
+					 * the return Boolean of the method call in the database represents:
+					 * True: if the book was already returned by subscriber
+					 * False: the book  still didn't return.
+					 */
+					ret = mysqlConnection.checkBookAlreadyReturned(this.subscriberID, this.bookName);
+					arrToSend.add(ret);
+					client.sendToClient(arrToSend);
+				} catch (SQLException | IOException e) {
+					
+					e.printStackTrace();
+				}
+	            	break;
 
                 default:
                     System.out.println("The server - Received message is not of the expected type.");

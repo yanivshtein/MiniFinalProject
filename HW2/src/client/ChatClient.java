@@ -35,7 +35,7 @@ public class ChatClient extends AbstractClient {
 	public static ArrayList<String> FullBorrowRep , FullStatusRep;
 	public static Boolean bool, isFrozen, isAvailable, isCan, isExist, isSeven, orderExists;
 	public static boolean awaitResponse = false;
-
+	public static ArrayList<String> ActionDateAndDeadline;
 	public static Integer bookAvailability=0, subID;
 
 	public static boolean connected;
@@ -201,6 +201,15 @@ public class ChatClient extends AbstractClient {
 		case 19:
 			FullStatusRep = (ArrayList<String>) arr.get(1);
 			break;
+		case 20:
+			bool=(Boolean) arr.get(1);
+			break;
+		case 21:
+			 ActionDateAndDeadline = (ArrayList<String>)arr.get(1);
+			break;
+		case 22:
+			  bool=(Boolean) arr.get(1);
+			break;
 		case 23:
 			bookName = (String) arr.get(1);
 			break;
@@ -222,6 +231,9 @@ public class ChatClient extends AbstractClient {
 		        e.printStackTrace();
 		    }
 		    break;
+		case 26:
+			 bool=(Boolean) arr.get(1);
+			break;
 
 		}
 			

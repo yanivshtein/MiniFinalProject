@@ -16,7 +16,7 @@
       <Label fx:id="librarianName" layoutX="131.0" layoutY="53.0" text="Label" />
       <Button fx:id="addSub" layoutX="41.0" layoutY="140.0" mnemonicParsing="false" onAction="#getAddSubBtn" prefHeight="25.0" prefWidth="151.0" text="Add subscriber" />
       <Button fx:id="borrowBook" layoutX="41.0" layoutY="215.0" mnemonicParsing="false" onAction="#BorrowingBookBtn" prefHeight="25.0" prefWidth="151.0" text="Borrowing a book" />
-      <Button fx:id="returnBook" layoutX="258.0" layoutY="215.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="151.0" text="Return a book" />
+      <Button fx:id="returnBook" layoutX="258.0" layoutY="215.0" mnemonicParsing="false" onAction="#returnBookbttn" prefHeight="25.0" prefWidth="151.0" text="Return a book" />
       <Button fx:id="searchBook" layoutX="258.0" layoutY="140.0" mnemonicParsing="false" onAction="#SearchBookBtn" prefHeight="25.0" prefWidth="151.0" text="Search a book" />
       <Button fx:id="readerDetails" layoutX="41.0" layoutY="289.0" mnemonicParsing="false" onAction="#getLibrarianWatchAndUpdateBtn" prefHeight="65.0" prefWidth="151.0" text="Watch reader card&#10;&#10;manual extension" />
       <Button fx:id="LogOut" layoutX="305.0" layoutY="385.0" mnemonicParsing="false" onAction="#getLogOutBtn" text="Log out" />

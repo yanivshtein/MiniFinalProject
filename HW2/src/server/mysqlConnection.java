@@ -705,9 +705,125 @@ public class mysqlConnection {
          return bookName;
     	
     }
+
+    public static ArrayList<Object>  getBorrowDateAndReturnDate(String borrowerId,String bookName) throws SQLException {
+        ArrayList<Object> borrowAndReturnDate = new ArrayList<>();
+        PreparedStatement ps = conn.prepareStatement("SELECT ActionDate,deadline FROM activityhistory where SubscriberID=? AND BookName=? AND ActionType='Borrow'");
+        
+        ps.setString(1, borrowerId);
+        ps.setString(2, bookName);
+        
+        ResultSet resultSet = ps.executeQuery();
+        if( resultSet.last()) {
+            borrowAndReturnDate.add(resultSet.getString(1));
+            borrowAndReturnDate.add(resultSet.getString(2));
+            return borrowAndReturnDate;
+        }
+        return null;
+
+        
+    }
     
-    
-    
-    
+    // method that checks in the database if there is a certain borrower that borrowed the selected book
+    // using "Exist" if there is a row  that match the borrower's ID and book's name  then
+    // the method return true
+    public static Boolean  checkIfBorrowerFound(String borrowerId,String bookName) throws SQLException {
+        
+        PreparedStatement ps = conn.prepareStatement("SELECT EXISTS(SELECT * FROM activityhistory where SubscriberID=? AND BookName=? AND ActionType='Borrow')");
+        ps.setString(1, borrowerId);
+        ps.setString(2, bookName);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getBoolean(1); // Retrieve the result from the first column
+        }
+        return false;
+    }
+
+    public static Boolean checkBookAlreadyReturned(String borrowerId,String bookName) throws SQLException {
+
+        String query=" SELECT "
+                + "COUNT(CASE WHEN ActionType ='Borrow' THEN 1 END) AS borrow_count,"
+                + "COUNT(CASE WHEN ActionType = 'Return' THEN 1 END) AS return_count "
+                + "FROM activityhistory WHERE SubscriberID=? AND BookName=? " ;
+
+        int countBorrowed = 0;
+        int countReturned = 0;
+
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, borrowerId);
+            ps.setString(2, bookName);
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+
+                if (rs.next()) {
+                    countBorrowed = rs.getInt("borrow_count");
+                    countReturned = rs.getInt("return_count");
+                }
+
+                // Return true if the book has been returned (when borrowed and returned count are the same)
+                return countBorrowed == countReturned;
+            }
+        }
+    }
+
+    public static Boolean insertReturnBookRowInActivityHistory(String borrowerId,String bookName,String dateDifference,Boolean isLate) throws SQLException {
+
+        int borrowerIdAsInt = Integer.parseInt(borrowerId);
+        int rowsAffected=0;
+        LocalDate actionDate = LocalDate.now();
+        String insertQuary = "INSERT INTO activityhistory (SubScriberID, BookName, ActionType, ActionDate,"
+                + "additionalInfo) VALUES (?,?,?,?,?)";
+        PreparedStatement ps = conn.prepareStatement(insertQuary);
+
+        ps.setInt(1,borrowerIdAsInt);
+        ps.setString(2,bookName);
+        ps.setString(3,"Return");
+        ps.setDate(4,Date.valueOf(actionDate));
+        ps.setString(5, dateDifference);
+
+        rowsAffected = ps.executeUpdate();
+
+        return rowsAffected>0;
+    }
+
+	public static Boolean updateSubscriberStatusToFrozen(String subscriberId,String IsFrozen) throws SQLException {
+
+        String insertQuary = "UPDATE subscriber SET subscription_status=? WHERE subscriber_id = ?";
+        PreparedStatement ps = conn.prepareStatement(insertQuary);
+
+        ps.setString(1, IsFrozen);
+        ps.setString(2, subscriberId);
+
+        if(ps.executeUpdate()==1)
+            return true;
+
+        return false;
+
+    }
+	public static Boolean incrimentBookAvailability(String bookName) throws SQLException {
+        PreparedStatement checkIfFull= conn.prepareStatement("SELECT * From books WHERE bookName=? AND copysAvailable<totalCopys");
+        //int numOfCopiesAvailable=getBookAvailality(bookName);        //need to add to code
+        ResultSet rs;
+        checkIfFull.setString(1, bookName);
+        rs= checkIfFull.executeQuery();
+
+
+        if(rs==null)    {    // if there is a row that book copies available is equal or greater then total copies of the book
+            System.err.println("there shouldn't be a book borrow in the first place");
+            return false;    // then it is an error.
+
+        }
+
+
+        String insertQuary = "UPDATE books SET copysAvailable=copysAvailable + 1 WHERE bookName = ?";
+        PreparedStatement ps = conn.prepareStatement(insertQuary);
+        ps.setString(1, bookName);
+
+        if(ps.executeUpdate()==1)
+            return true;
+
+        return false;
+    }
 
 }
