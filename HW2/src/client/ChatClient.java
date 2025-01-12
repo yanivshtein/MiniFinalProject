@@ -126,6 +126,8 @@ public class ChatClient extends AbstractClient {
 			}
 			break;
 		case 3:
+			bool = (Boolean)arr.get(1);
+			break;
 		case 4:
 			bool = (Boolean)arr.get(1);
 			subID=(Integer) arr.get(2);
