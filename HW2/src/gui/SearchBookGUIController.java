@@ -63,7 +63,7 @@ public class SearchBookGUIController {
     }
 
     private void loadBooks() {
-        SearchBookUI.chat.acceptAllTheBooks(18);
+        ClientGUIConnectionController.chat.acceptAllTheBooks(18);
         ArrayList<String> bookNames = ChatClient.allbooks;
         if (bookNames == null || bookNames.isEmpty()) {
             booksData = FXCollections.observableArrayList("No books available");
@@ -109,7 +109,7 @@ public class SearchBookGUIController {
                     booksListView.setItems(FXCollections.observableArrayList("Please select an author or genre"));
                     return;
                 }           
-                SearchBookUI.chat.acceptSearchByCriteria(criteria, newValue);
+                ClientGUIConnectionController.chat.acceptSearchByCriteria(criteria, newValue);
 
                     ArrayList<String> serverResponse = ChatClient.filteredBooks;
                     ObservableList<String> filteredBooks;
