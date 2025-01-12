@@ -61,7 +61,7 @@ public class LibrarianWatchAndUpdateGUI {
     private ArrayList<String> borrowHistory;
 
     public void ViewDetBtt(ActionEvent event) throws IOException {
-    	LibrarianHomePageUI.chat.accept("select", subID.getText(), "", "");
+    	ClientGUIConnectionController.chat.accept("select", subID.getText(), "", "");
         Subscriber1 sub = ChatClient.s1;
         subID.setText(String.valueOf(sub.getSubscriber_id()));
         name.setText(sub.getSubscriber_name());
@@ -70,7 +70,7 @@ public class LibrarianWatchAndUpdateGUI {
         SubStatus.setText(sub.getSub_status());
         
         
-        LibrarianHomePageUI.chat.accept("watch borrow history", subID.getText(), "", "");
+        ClientGUIConnectionController.chat.accept("watch borrow history", subID.getText(), "", "");
         borrowHistory = ChatClient.borrowHistory;
         
 
@@ -127,7 +127,7 @@ public class LibrarianWatchAndUpdateGUI {
             return;
         }
 
-        LibrarianHomePageUI.chat.book_accept("set new return date", subID.getText(), BookName.getText(), OldRetDate.getText(), NewRetDate.getText() , LibrarianGUIHomePageController.BringLibName );
+        ClientGUIConnectionController.chat.book_accept("set new return date", subID.getText(), BookName.getText(), OldRetDate.getText(), NewRetDate.getText() , LibrarianGUIHomePageController.BringLibName );
 
         if (ChatClient.bool) {
             ChangesSavedPop.setContentText("Updated successfully");
