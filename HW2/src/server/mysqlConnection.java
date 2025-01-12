@@ -41,7 +41,7 @@ public class mysqlConnection {
         try {
 
 
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "!vex123S");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "Aa123456");
 
             System.out.println("SQL connection succeed");
         } catch (SQLException ex) {
@@ -65,9 +65,10 @@ public class mysqlConnection {
 
     public static Subscriber1 select(String id) {
         Subscriber1 sub = null;
-        String selectQuery = "SELECT * FROM subscriber WHERE subscriber_id = " + id;
+        String selectQuery = "SELECT * FROM subscriber WHERE subscriber_id = ?"; // Use a placeholder (?) for the parameter
         try {
             PreparedStatement ps = conn.prepareStatement(selectQuery);
+            ps.setString(1, id); // Safely set the parameter value
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 int sub_id = rs.getInt("subscriber_id");
@@ -76,13 +77,14 @@ public class mysqlConnection {
                 String email = rs.getString("subscriber_email");
                 String status = rs.getString("Subscription_status");
                 String password = rs.getString("password");
-                sub = new Subscriber1(sub_id, sub_name, phone, email, status,password);
+                sub = new Subscriber1(sub_id, sub_name, phone, email, status, password);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return sub;
     }
+
 
     public static int searchSubId(String email, String password) {
         String searchQuery = "SELECT subscriber_id FROM subscriber WHERE subscriber_email = ? AND password = ?";

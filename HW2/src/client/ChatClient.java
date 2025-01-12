@@ -123,6 +123,7 @@ public class ChatClient extends AbstractClient {
 				s1.setSubscriber_email(sub.getSubscriber_email());
 				s1.setSub_status(sub.getSub_status());
 				s1.setPassword(sub.getPassword());
+				System.out.println(s1.getSubscriber_name());
 			}
 			break;
 		case 3:
