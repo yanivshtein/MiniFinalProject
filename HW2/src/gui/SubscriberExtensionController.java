@@ -27,7 +27,7 @@ public class SubscriberExtensionController {
 	 
 	 @FXML
     public void initialize() {
-		 ClientGUIConnectionController.chat.acceptFromController(12, ChatClient.s1.getSubscriber_id(), "");
+		 ClientGUIConnectionController.chat.acceptFromController(12, ChatClient.sub1.getSubscriber_id(), "");
         // Simulate fetching book titles from the database
         ArrayList<String> books = ChatClient.borrowedBooks;
         System.out.println(books);
@@ -48,7 +48,7 @@ public class SubscriberExtensionController {
 	  }
 	 
 	 public void getExtendBtn (ActionEvent event) throws IOException {
-		 int subID = ChatClient.s1.getSubscriber_id();
+		 int subID = ChatClient.sub1.getSubscriber_id();
 		 if (selectedBook==null) {
 	            msg.setContentText("Oops! 😞 You must press on a book name.");
 	            return;
@@ -70,11 +70,11 @@ public class SubscriberExtensionController {
 		    ((Node) event.getSource()).getScene().getWindow().hide();
 		    
 		    // Load the ClientGUIHomePage FXML
-		    FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/ClientGUIHomePage.fxml"));
+		    FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/ClientGUIHomePageController.fxml"));
 		    Parent root = loader.load();
 		    
 		    Scene scene = new Scene(root);
-		    scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIHomePage.css").toExternalForm());
+		    scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIHomePageController.css").toExternalForm());
 		    
 		    Stage primaryStage = new Stage();
 		    primaryStage.setTitle("Client Home Page");

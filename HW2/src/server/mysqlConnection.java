@@ -826,6 +826,21 @@ public class mysqlConnection {
         return false;
     }
 	
+	public static String checkIsFrozen(int id) {
+		String status = null;
+		String query = "SELECT subscription_status FROM subscriber WHERE subscriber_id = ?;";
+		try {
+			PreparedStatement stmt = conn.prepareStatement(query);
+			stmt.setInt(1, id);
+            ResultSet resultSet = stmt.executeQuery();
+            resultSet.next();
+            status = resultSet.getString("subscription_status");            
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return status;
+	}
+	
 	//UPDATE arrivalTime in orders table of the oldest time for the given bookName and add a message to messages table
 	public static boolean addArrivalTimeToOrders(String bookName) {
 		int subID = 0;

@@ -118,8 +118,7 @@ public class EchoServer extends AbstractServer
 
                 case 5: // Check subscriber's status
                     subID =  (int) arr.get(1);
-                    String retStatus = "notFrozen"; // for the example
-                 // go to subscriber's DB and return the status of subID (subscriber's id)
+                    String retStatus = mysqlConnection.checkIsFrozen(subID);
                     arrToSend.add(5);
                     arrToSend.add(retStatus);
                     try {
