@@ -27,7 +27,7 @@ public class SubscriberExtensionController {
 	 
 	 @FXML
     public void initialize() {
-		 ClientGUIConnectionController.chat.acceptFromController(12, ChatClient.subID, "");
+		 ClientGUIConnectionController.chat.acceptFromController(12, ChatClient.s1.getSubscriber_id(), "");
         // Simulate fetching book titles from the database
         ArrayList<String> books = ChatClient.borrowedBooks;
         System.out.println(books);
@@ -48,7 +48,7 @@ public class SubscriberExtensionController {
 	  }
 	 
 	 public void getExtendBtn (ActionEvent event) throws IOException {
-		 int subID = ChatClient.subID;
+		 int subID = ChatClient.s1.getSubscriber_id();
 		 if (selectedBook==null) {
 	            msg.setContentText("Oops! 😞 You must press on a book name.");
 	            return;

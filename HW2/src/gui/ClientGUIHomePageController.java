@@ -127,7 +127,7 @@ public class ClientGUIHomePageController {
 	    primaryStage.setTitle("Extension");
 	    primaryStage.setScene(scene);
 	    primaryStage.show();
-	}
+	}		
 
 	public void getLogOutBtn(ActionEvent event) throws IOException{
 		ChatClient.sub1 = null;

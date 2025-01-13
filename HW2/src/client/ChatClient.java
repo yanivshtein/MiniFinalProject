@@ -39,7 +39,7 @@ public class ChatClient extends AbstractClient {
 	public static Integer bookAvailability=0, subID;
 
 	public static boolean connected;
-
+	public static ArrayList<String> orders = new ArrayList<>();
 	public static ArrayList<String> allbooks = new ArrayList<>();
 	public static ArrayList<String> borrowedBooks = new ArrayList<>();
 	public static ArrayList<String> filteredBooks = new ArrayList<>();
@@ -234,7 +234,11 @@ public class ChatClient extends AbstractClient {
 		case 26:
 			 bool=(Boolean) arr.get(1);
 			break;
-
+		case 27:
+			orders = (ArrayList<String>) arr.get(1);
+			break;
+		case 28:
+			break;
 		}
 			
 		
