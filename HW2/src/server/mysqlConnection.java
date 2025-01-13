@@ -42,7 +42,7 @@ public class mysqlConnection {
         try {
 
 
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "Sheli123");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "Aa123456");
 
             System.out.println("SQL connection succeed");
         } catch (SQLException ex) {
@@ -406,6 +406,18 @@ public class mysqlConnection {
     }
 
     public static boolean ChangeReturnDate(int subscriberId, String BookName, String OldDate, String NewDate, String Librarian_name) { 
+    	String CheckOrderQuery = "SELECT * FROM orders WHERE bookName = ?";
+    	try (PreparedStatement ps = conn.prepareStatement(CheckOrderQuery)) {
+    		ps.setString(1,BookName);
+    		try (ResultSet rs = ps.executeQuery()) {
+    			if (rs.next()) {
+    				return false;
+    			}
+    		}
+    	} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
         String checkQuery = "SELECT additionalInfo FROM activityhistory WHERE SubscriberID = ? AND BookName = ? AND deadline = ? AND ActionType = 'Borrow'";
         String updateQuery = "UPDATE activityhistory SET deadline = ?, additionalInfo = ? WHERE SubscriberID = ? AND BookName = ? AND deadline = ? AND ActionType = 'Borrow'";
 
