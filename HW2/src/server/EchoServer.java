@@ -7,6 +7,7 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
+import common.Librarian;
 import common.Subscriber1;
 import gui.ServerGUI;
 import javafx.stage.Stage;
@@ -57,6 +58,7 @@ public class EchoServer extends AbstractServer
     protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
         Subscriber1 sub = null;
         Boolean ret;
+        Librarian lib;
         
         if (msg instanceof ArrayList<?>) {
             ArrayList<Object> arr = (ArrayList<Object>) msg;
@@ -91,9 +93,9 @@ public class EchoServer extends AbstractServer
                     }
                     break;
                 case 3: //Search the database to check email and password for librarian
-                	ret = mysqlConnection.searchLibId((String) arr.get(1), (String) arr.get(2));
+                	lib = mysqlConnection.searchLibId((String) arr.get(1), (String) arr.get(2));
                 	arrToSend.add(3);
-                	arrToSend.add(ret);
+                	arrToSend.add(lib);
                     try {                   	
                         client.sendToClient(arrToSend);
                     } catch (IOException e) {
@@ -102,13 +104,9 @@ public class EchoServer extends AbstractServer
                 	
                 	break;
                 case 4: //Search the database to check email and password for subscriber
-                    int subId = mysqlConnection.searchSubId((String) arr.get(1), (String) arr.get(2));
+                    sub = mysqlConnection.searchSubId((String) arr.get(1), (String) arr.get(2));
                     arrToSend.add(4);
-                    if (subId > 0) //which means we found the subscriber
-                    	arrToSend.add(true);
-                    else
-                    	arrToSend.add(false);
-                    arrToSend.add(subId); 
+                    arrToSend.add(sub); 
                     try {
                         client.sendToClient(arrToSend);
                     } catch (IOException e) {

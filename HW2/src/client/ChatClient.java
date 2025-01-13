@@ -44,7 +44,8 @@ public class ChatClient extends AbstractClient {
 	public static ArrayList<String> borrowedBooks = new ArrayList<>();
 	public static ArrayList<String> filteredBooks = new ArrayList<>();
 	public static String bookName;
-
+	public static Subscriber1 sub1;
+	public static Librarian lib;
 
 	// Constructors ****************************************************
 
@@ -127,11 +128,10 @@ public class ChatClient extends AbstractClient {
 			}
 			break;
 		case 3:
-			bool = (Boolean)arr.get(1);
+			lib = (Librarian)arr.get(1);
 			break;
 		case 4:
-			bool = (Boolean)arr.get(1);
-			subID=(Integer) arr.get(2);
+			sub1 = (Subscriber1)arr.get(1);
 			break;
 		case 5:
 			if (arr.get(1).equals("frozen")) 

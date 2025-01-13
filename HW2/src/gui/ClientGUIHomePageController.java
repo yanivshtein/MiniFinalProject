@@ -2,6 +2,7 @@ package gui;
 
 import java.io.IOException;
 
+import client.ChatClient;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,7 +28,7 @@ public class ClientGUIHomePageController {
 	
 	@FXML
 	private void initialize() {
-		subName.setText(ClientGUILoginController.email);
+		subName.setText(ChatClient.sub1.getSubscriber_name());
 	}
 	
 	

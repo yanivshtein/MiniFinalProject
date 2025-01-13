@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import common.Librarian;
 import common.Subscriber1;
 
 public class mysqlConnection {
@@ -41,7 +42,7 @@ public class mysqlConnection {
         try {
 
 
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "Aa123456");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "yaniv1234");
 
             System.out.println("SQL connection succeed");
         } catch (SQLException ex) {
@@ -86,37 +87,49 @@ public class mysqlConnection {
     }
 
 
-    public static int searchSubId(String email, String password) {
-        String searchQuery = "SELECT subscriber_id FROM subscriber WHERE subscriber_email = ? AND password = ?";
+    public static Subscriber1 searchSubId(String email, String password) {
+    	Subscriber1 sub = null;
+        String searchQuery = "SELECT * FROM subscriber WHERE subscriber_email = ? AND password = ?";
         try (PreparedStatement ps = conn.prepareStatement(searchQuery)) {
             ps.setString(1, email);
             ps.setString(2, password);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt("subscriber_id");
+                	 int sub_id = rs.getInt("subscriber_id");
+                     String sub_name = rs.getString("subscriber_name");
+                     String phone = rs.getString("subscriber_phone_number");
+                     String email1 = rs.getString("subscriber_email");
+                     String status = rs.getString("Subscription_status");
+                     String password1 = rs.getString("password");
+                     sub = new Subscriber1(sub_id, sub_name, phone, email1, status, password1);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0; //no subscriber found
+        return sub; //no subscriber found
     }
 
     
-    public static Boolean searchLibId(String email, String password) {
-        String searchQuery = "SELECT 1 FROM librarian WHERE librarian_email = ? AND librarian_password = ?";
+    public static Librarian searchLibId(String email, String password) {
+    	Librarian lib = null;
+        String searchQuery = "SELECT * FROM librarian WHERE librarian_email = ? AND librarian_password = ?";
         try (PreparedStatement ps = conn.prepareStatement(searchQuery)) {
             ps.setString(1, email);
             ps.setString(2, password);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return true;
+                	 String lib_id = String.valueOf(rs.getInt("librarian_id"));
+                     String lib_name = rs.getString("librarian_name");
+                     String email1 = rs.getString("librarian_email");
+                     String password1 = rs.getString("librarian_password");
+                     lib = new Librarian(lib_id, lib_name, email1, password1);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return lib;
     }
     public static Integer getBookAvailability(String bookName) {
         String query = "SELECT copysAvailable FROM books WHERE bookName = ?";

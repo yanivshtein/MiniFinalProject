@@ -57,7 +57,7 @@ public class LibrarianGUIHomePageController {
 	
 	@FXML
 	private void initialize() {
-		librarianName.setText("Elena");
+		librarianName.setText(ChatClient.lib.getLibrarian_name());
 		BringLibName = librarianName.getText();
 
 	}
