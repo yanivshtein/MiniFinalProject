@@ -33,14 +33,19 @@ public class ChatClient extends AbstractClient {
 	public static ArrayList<String> activityHistory;
 	public static ArrayList<String> borrowHistory;
 	public static ArrayList<String> FullBorrowRep , FullStatusRep;
-	public static Boolean bool, isFrozen, isAvailable, isCan, isExist;
+	public static Boolean bool, isFrozen, isAvailable, isCan, isExist, isSeven, orderExists;
 	public static boolean awaitResponse = false;
+	public static ArrayList<String> ActionDateAndDeadline;
+	public static Integer bookAvailability=0, subID;
+
 	public static boolean connected;
-	public static Integer bookAvailability=0;
+
 	public static ArrayList<String> allbooks = new ArrayList<>();
+	public static ArrayList<String> borrowedBooks = new ArrayList<>();
 	public static ArrayList<String> filteredBooks = new ArrayList<>();
 	public static String bookName;
-
+	public static Subscriber1 sub1;
+	public static Librarian lib;
 
 	// Constructors ****************************************************
 
@@ -99,6 +104,7 @@ public class ChatClient extends AbstractClient {
 		awaitResponse = false;
 		int request;
 		isExist = true;
+		isSeven = true;
 		ArrayList<Object> arr = null;
 		if (msg instanceof ArrayList<?>) {
 			arr = (ArrayList<Object>) msg;
@@ -118,11 +124,14 @@ public class ChatClient extends AbstractClient {
 				s1.setSubscriber_email(sub.getSubscriber_email());
 				s1.setSub_status(sub.getSub_status());
 				s1.setPassword(sub.getPassword());
+				System.out.println(s1.getSubscriber_name());
 			}
 			break;
 		case 3:
+			lib = (Librarian)arr.get(1);
+			break;
 		case 4:
-			bool = (Boolean)arr.get(1);
+			sub1 = (Subscriber1)arr.get(1);
 			break;
 		case 5:
 			if (arr.get(1).equals("frozen")) 
@@ -156,6 +165,9 @@ public class ChatClient extends AbstractClient {
 		case 11:
 			FullBorrowRep = (ArrayList<String>) arr.get(1);
 			break;
+		case 12:
+			borrowedBooks = (ArrayList<String>) arr.get(1);
+			break;
 		case 13:
 			bool=(Boolean) arr.get(1);
 			break;
@@ -185,15 +197,30 @@ public class ChatClient extends AbstractClient {
 			break;
 		case 18:
 			allbooks =(ArrayList<String>) arr.get(1);  
-
 			break;
 		case 19:
 			FullStatusRep = (ArrayList<String>) arr.get(1);
 			break;
+		case 20:
+			bool=(Boolean) arr.get(1);
+			break;
+		case 21:
+			 ActionDateAndDeadline = (ArrayList<String>)arr.get(1);
+			break;
+		case 22:
+			  bool=(Boolean) arr.get(1);
+			break;
 		case 23:
 			bookName = (String) arr.get(1);
 			break;
-	
+		case 24:
+			if (arr.get(1).equals("more than 7")) 
+				isSeven=false;
+			else if (arr.get(1).equals("order exists"))
+				orderExists=true;
+			else 
+				orderExists=false;
+			break;
 		case 25:
 		    try {
 		        ArrayList<String> foundBooks = (ArrayList<String>) arr.get(1); 
@@ -204,9 +231,12 @@ public class ChatClient extends AbstractClient {
 		        e.printStackTrace();
 		    }
 		    break;
-
+		case 26:
+			 bool=(Boolean) arr.get(1);
+			break;
 
 		}
+			
 		
 	}	
 		/*
@@ -263,6 +293,7 @@ public class ChatClient extends AbstractClient {
 			}
 			System.out.println(allbooks +"chatclient2");
 		}else if (msg instanceof Integer) {
+			id = (Integer)msg;
 			Integer bookAvailabilitytmp = (Integer)msg;
 			if(bookAvailabilitytmp.equals(0)) {
 				bookAvailability = 0;

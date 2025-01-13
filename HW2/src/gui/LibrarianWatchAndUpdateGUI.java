@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 import client.ChatClient;
 import client.ClientConsole;
 import client.ClientUI;
-import client.LibrarianHomePageUI;
 import common.Subscriber1;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
 
@@ -55,13 +55,15 @@ public class LibrarianWatchAndUpdateGUI {
     private Button SaveChangesbtt = null;
     @FXML
     private TextField SubStatus = null; //active OR frozen
+    @FXML
+    private Button RetButton = null;
     
     private  String TempStatus;
         
     private ArrayList<String> borrowHistory;
 
     public void ViewDetBtt(ActionEvent event) throws IOException {
-    	LibrarianHomePageUI.chat.accept("select", subID.getText(), "", "");
+    	ClientGUIConnectionController.chat.accept("select", subID.getText(), "", "");
         Subscriber1 sub = ChatClient.s1;
         subID.setText(String.valueOf(sub.getSubscriber_id()));
         name.setText(sub.getSubscriber_name());
@@ -70,7 +72,7 @@ public class LibrarianWatchAndUpdateGUI {
         SubStatus.setText(sub.getSub_status());
         
         
-        LibrarianHomePageUI.chat.accept("watch borrow history", subID.getText(), "", "");
+        ClientGUIConnectionController.chat.accept("watch borrow history", subID.getText(), "", "");
         borrowHistory = ChatClient.borrowHistory;
         
 
@@ -127,7 +129,7 @@ public class LibrarianWatchAndUpdateGUI {
             return;
         }
 
-        LibrarianHomePageUI.chat.book_accept("set new return date", subID.getText(), BookName.getText(), OldRetDate.getText(), NewRetDate.getText() , LibrarianGUIHomePageController.BringLibName );
+        ClientGUIConnectionController.chat.book_accept("set new return date", subID.getText(), BookName.getText(), OldRetDate.getText(), NewRetDate.getText() , LibrarianGUIHomePageController.BringLibName );
 
         if (ChatClient.bool) {
             ChangesSavedPop.setContentText("Updated successfully");
@@ -157,5 +159,50 @@ public class LibrarianWatchAndUpdateGUI {
             return false;
         }
     }
+    
+    public void ReturnButton(ActionEvent event) throws IOException {
+        // Get the current stage from the event source
+        Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+
+        // Load the FXML file for the new page
+        Parent root = FXMLLoader.load(getClass().getResource("/gui/LibrarianGUIHomePageController.fxml"));
+
+        // Create a new scene and apply the stylesheet
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/gui/LibrarianGUIHomePageController.css").toExternalForm());
+
+        // Create a new stage for the new page
+        Stage newStage = new Stage();
+        newStage.setTitle("Librarian Watch and Update GUI");
+        newStage.setScene(scene);
+
+        // Hide the current stage
+        currentStage.hide();
+
+        // Show the new stage
+        newStage.show();
+    }
+
+
+
+	
+	public void returnBookBtt(ActionEvent event) throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+
+		//((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+		Stage primaryStage = new Stage();
+		Pane root = loader.load(getClass().getResource("/gui/LibrarianReturnGUI.fxml").openStream());
+
+		Scene scene = new Scene(root);
+		scene.getStylesheets().add(getClass().getResource("/gui/LibrarianReturnGUI.css").toExternalForm());
+		primaryStage.setTitle("Librarian Return GUI");
+
+		primaryStage.setScene(scene);
+		primaryStage.show();
+		
+	}
+
+
 
 }
+	

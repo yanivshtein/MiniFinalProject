@@ -31,5 +31,6 @@
       <Button fx:id="SaveChangesbtt" layoutX="663.0" layoutY="216.0" mnemonicParsing="false" onAction="#SaveChangBtt" prefHeight="25.0" prefWidth="105.0" text="save changes" />
       <Text layoutX="40.0" layoutY="276.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Subscription status:" />
       <TextField fx:id="SubStatus" layoutX="154.0" layoutY="260.0" prefHeight="25.0" prefWidth="139.0" />
+      <Button fx:id="RetButton" layoutX="608.0" layoutY="575.0" mnemonicParsing="false" onAction="#ReturnButton" prefHeight="25.0" prefWidth="223.0" text="Return to the previous page" />
    </children>
 </Pane>

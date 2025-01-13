@@ -2,6 +2,7 @@ package gui;
 
 import java.io.IOException;
 
+import client.ChatClient;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,8 +27,11 @@ public class ClientGUIHomePageController {
 	private Label subName = null;
 	
 	@FXML
+	private Button LogOut = null;
+	
+	@FXML
 	private void initialize() {
-		subName.setText(ClientGUILoginController.email);
+		subName.setText(ChatClient.sub1.getSubscriber_name());
 	}
 	
 	
@@ -73,10 +77,72 @@ public class ClientGUIHomePageController {
 	    primaryStage.setScene(scene);
 	    primaryStage.show();
 	}
-
 	
+	public void getSearch (ActionEvent event) throws IOException {
+		// Hiding primary window
+	    ((Node) event.getSource()).getScene().getWindow().hide();
+	    
+	    // Loading FXML and setting up the new stage
+	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/SearchBookGUIController.fxml"));
+	    Parent root = loader.load();
+	    
+	    Scene scene = new Scene(root);
+	    scene.getStylesheets().add(getClass().getResource("/gui/SearchBookGUIController.css").toExternalForm());
+	    
+	    Stage primaryStage = new Stage();
+	    primaryStage.setTitle("Search");
+	    primaryStage.setScene(scene);
+	    primaryStage.show();
+	}
 
+	public void getOrder (ActionEvent event) throws IOException {
+		// Hiding primary window
+	    ((Node) event.getSource()).getScene().getWindow().hide();
+	    
+	    // Loading FXML and setting up the new stage
+	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/SubscriberOrderUI.fxml"));
+	    Parent root = loader.load();
+	    
+	    Scene scene = new Scene(root);
+	    scene.getStylesheets().add(getClass().getResource("/gui/SubscriberOrderUI.css").toExternalForm());
+	    
+	    Stage primaryStage = new Stage();
+	    primaryStage.setTitle("Order");
+	    primaryStage.setScene(scene);
+	    primaryStage.show();
+	}
 	
+	public void getExtension (ActionEvent event) throws IOException {
+		// Hiding primary window
+	    ((Node) event.getSource()).getScene().getWindow().hide();
+	    
+	    // Loading FXML and setting up the new stage
+	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/SubscriberExtension.fxml"));
+	    Parent root = loader.load();
+	    
+	    Scene scene = new Scene(root);
+	    scene.getStylesheets().add(getClass().getResource("/gui/SubscriberExtension.css").toExternalForm());
+	    
+	    Stage primaryStage = new Stage();
+	    primaryStage.setTitle("Extension");
+	    primaryStage.setScene(scene);
+	    primaryStage.show();
+	}
+
+	public void getLogOutBtn(ActionEvent event) throws IOException{
+		ChatClient.sub1 = null;
+		FXMLLoader loader = new FXMLLoader();
+		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+        Stage primaryStage = new Stage();
+        Pane root = loader.load(getClass().getResource("/gui/ClientGUILogin.fxml").openStream());
+
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/gui/ClientGUILogin.css").toExternalForm());
+        primaryStage.setTitle("Login");
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+	}
 	
 	public void getExitBtn(ActionEvent event) {
 		System.out.println("exit");
