@@ -42,7 +42,7 @@ public class mysqlConnection {
         try {
 
 
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "yaniv1234");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "Sheli123");
 
             System.out.println("SQL connection succeed");
         } catch (SQLException ex) {
@@ -150,6 +150,42 @@ public class mysqlConnection {
             return -2; 
         }
     }
+    public static String getNearestReturnDate(String bookName) {
+        // Use the correct column name (BookName) for querying the database
+        String query = "SELECT deadline FROM activityhistory WHERE BookName = ? ORDER BY deadline ASC LIMIT 1";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, bookName);  // Set the book name in the query
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    // Return the nearest return date
+                    return rs.getString("deadline");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null; // Return null if no result is found or an error occurs
+    }
+    public static String getSubscriptionStatus(int subscriberId) {
+        // Query to check the subscription status of the subscriber by subscriber ID
+        String query = "SELECT subscription_status FROM subscriber WHERE subscriber_id = ?";
+        
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, subscriberId);  // Set the subscriber ID in the query
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    // Return the subscription status of the subscriber
+                    return rs.getString("subscription_status");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return null; // Return null if no result is found or if there is an error
+    }
+
 
 
     public static String isAvailable(String bookName) {

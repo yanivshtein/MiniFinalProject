@@ -37,7 +37,8 @@ public class ChatClient extends AbstractClient {
 	public static boolean awaitResponse = false;
 	public static ArrayList<String> ActionDateAndDeadline;
 	public static Integer bookAvailability=0, subID;
-
+	public static String deadlineDate="";
+	public static String statusSub="";
 	public static boolean connected;
 
 	public static ArrayList<String> allbooks = new ArrayList<>();
@@ -132,6 +133,7 @@ public class ChatClient extends AbstractClient {
 			break;
 		case 4:
 			sub1 = (Subscriber1)arr.get(1);
+			
 			break;
 		case 5:
 			if (arr.get(1).equals("frozen")) 
@@ -173,8 +175,10 @@ public class ChatClient extends AbstractClient {
 			break;
 		case 14:
 			Integer bookAvailabilitytmp = (Integer)arr.get(1);
+			
 			if(bookAvailabilitytmp.equals(0)) {
 				bookAvailability = 0;
+				deadlineDate=(String)arr.get(2);
 			}
 			else if(bookAvailabilitytmp.equals(-1)) {
 				bookAvailability =-1;
@@ -188,6 +192,7 @@ public class ChatClient extends AbstractClient {
 			break;
 		case 15:
 			bool=(Boolean) arr.get(1);
+			statusSub =(String)arr.get(2);
 			break;
 		case 16:
 			bool=(Boolean) arr.get(1);

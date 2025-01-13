@@ -256,8 +256,10 @@ public class EchoServer extends AbstractServer
 
                     bookName = (String) arr.get(1);
                     Integer BookIsInTheInvatory = mysqlConnection.getBookAvailability(bookName);
+                    String deadlineDate =mysqlConnection.getNearestReturnDate(bookName);
                     arrToSend.add(14);
                     arrToSend.add(BookIsInTheInvatory);
+                    arrToSend.add(deadlineDate);
                     try {
                         client.sendToClient(arrToSend);
                     } catch (IOException e) {
@@ -268,9 +270,10 @@ public class EchoServer extends AbstractServer
 
                     Sub_id = (int) arr.get(1);
                     Boolean subExist = mysqlConnection.isSubscriberExist(Sub_id);
-                    System.out.println(subExist);
+                    String statusSub = mysqlConnection.getSubscriptionStatus(Sub_id);
                     arrToSend.add(15);
                     arrToSend.add(subExist);
+                    arrToSend.add(statusSub);
                     try {
                         client.sendToClient(arrToSend);
                     } catch (IOException e) {
