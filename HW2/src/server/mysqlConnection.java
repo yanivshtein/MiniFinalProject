@@ -609,7 +609,7 @@ public class mysqlConnection {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     FullBorrowRep.add(String.format(
-                            "Subscriber ID: %s , Book Name: %s , Borrow Date: %s , Return Date: __-__-____ __:__:__  , Deadline: %s",
+                            "Subscriber ID: %s , Book Name: %s , Borrow Date: %s , Return Date: __-__-____ __ , Deadline: %s , Status: Not returned yet",
                             rs.getString("SubscriberID"), rs.getString("BookName"), rs.getString("BorrowDate"),
                             rs.getString("deadline")));
                 }
@@ -706,7 +706,7 @@ public class mysqlConnection {
                     while (rs.next()) {
                         String subscriberName = rs.getString("subscriber_name");
                         int subscriberId = rs.getInt("subscriber_id");
-                        statusReport.add(subscriberName + " (ID: " + subscriberId + ") - Frozen");
+                        statusReport.add("Subscriber name: " + subscriberName + " , ID: " + subscriberId + " , Status: Frozen");
                     }
                 }
             } catch (SQLException e) {
@@ -738,7 +738,7 @@ public class mysqlConnection {
                     while (rs.next()) {
                         String subscriberName = rs.getString("subscriber_name");
                         int subscriberId = rs.getInt("subscriber_id");
-                        statusReport.add(subscriberName + " (ID: " + subscriberId + ") - Active");
+                        statusReport.add("Subscriber name: " + subscriberName + " , ID: " + subscriberId + " , Status: Active");
                     }
                 }
             } catch (SQLException e) {
