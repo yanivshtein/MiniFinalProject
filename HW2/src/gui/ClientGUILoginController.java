@@ -7,6 +7,7 @@ import java.net.Socket;
 import client.ChatClient;
 import client.ClientConsole;
 import client.ClientUI;
+import common.Librarian;
 import common.Subscriber1;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,6 +29,8 @@ public class ClientGUILoginController {
 	public static String email;
 	public static String passwordString;
 	public static String id;
+	
+	
 	@FXML
 	private Button exit = null;
 
@@ -79,16 +82,16 @@ public class ClientGUILoginController {
         } else {
         	if(user.equals("Sub")) {
         		ClientGUIConnectionController.chat.acceptLogin("searchSub", email,passwordString);
-        		if (ChatClient.bool==false) {
+        		if (ChatClient.sub1 == null) {
                     alertMsg.setContentText("The ID does not exist!");
                 }else {
                 	System.out.println("Subscriber ID Found");
                     ((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
                     Stage primaryStage = new Stage();
-                    Pane root = loader.load(getClass().getResource("/gui/ClientGUIHomePage.fxml").openStream());
+                    Pane root = loader.load(getClass().getResource("/gui/ClientGUIHomePageController.fxml").openStream());
 
                     Scene scene = new Scene(root);
-                    scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIHomePage.css").toExternalForm());
+                    scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIHomePageController.css").toExternalForm());
                     primaryStage.setTitle("Client Second GUI");
 
                     primaryStage.setScene(scene);
@@ -97,7 +100,7 @@ public class ClientGUILoginController {
         	}
         	else if(user.equals("Lib")) {
         		ClientGUIConnectionController.chat.acceptLogin("searchLib", email, passwordString);
-        		if (ChatClient.bool==false) {
+        		if (ChatClient.lib == null) {
                     alertMsg.setContentText("The ID does not exist!");
                 }else {
                 	System.out.println("Librarian ID Found");

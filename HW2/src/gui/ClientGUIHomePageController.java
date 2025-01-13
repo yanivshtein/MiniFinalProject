@@ -2,6 +2,7 @@ package gui;
 
 import java.io.IOException;
 
+import client.ChatClient;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,8 +27,11 @@ public class ClientGUIHomePageController {
 	private Label subName = null;
 	
 	@FXML
+	private Button LogOut = null;
+	
+	@FXML
 	private void initialize() {
-		subName.setText(ClientGUILoginController.email);
+		subName.setText(ChatClient.sub1.getSubscriber_name());
 	}
 	
 	
@@ -125,7 +129,20 @@ public class ClientGUIHomePageController {
 	    primaryStage.show();
 	}
 
-	
+	public void getLogOutBtn(ActionEvent event) throws IOException{
+		ChatClient.sub1 = null;
+		FXMLLoader loader = new FXMLLoader();
+		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+        Stage primaryStage = new Stage();
+        Pane root = loader.load(getClass().getResource("/gui/ClientGUILogin.fxml").openStream());
+
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/gui/ClientGUILogin.css").toExternalForm());
+        primaryStage.setTitle("Login");
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+	}
 	
 	public void getExitBtn(ActionEvent event) {
 		System.out.println("exit");

@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="514.0" prefWidth="486.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LibrarianGUIHomePageController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="514.0" prefWidth="486.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LibrarianGUIHomePageController">
    <children>
       <Label layoutX="32.0" layoutY="44.0" prefHeight="35.0" prefWidth="74.0" text="Hello">
          <font>
@@ -14,12 +14,13 @@
          </font></Label>
    <Text layoutX="39.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" />
       <Label fx:id="librarianName" layoutX="131.0" layoutY="53.0" text="Label" />
-      <Button fx:id="addSub" layoutX="32.0" layoutY="165.0" mnemonicParsing="false" onAction="#getAddSubBtn" prefHeight="25.0" prefWidth="151.0" text="Add subscriber" />
-      <Button fx:id="borrowBook" layoutX="32.0" layoutY="227.0" mnemonicParsing="false" onAction="#BorrowingBookBtn" prefHeight="25.0" prefWidth="151.0" text="Borrowing a book" />
-      <Button fx:id="returnBook" layoutX="244.0" layoutY="227.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="151.0" text="Return a book" />
-      <Button fx:id="searchBook" layoutX="244.0" layoutY="165.0" mnemonicParsing="false" onAction="#SearchBookBtn" prefHeight="25.0" prefWidth="151.0" text="Search a book" />
-      <Button fx:id="readerDetails" layoutX="145.0" layoutY="290.0" mnemonicParsing="false" onAction="#getLibrarianWatchAndUpdateBtn" text="Watch reader card details" />
-      <Button fx:id="LogOut" layoutX="305.0" layoutY="347.0" mnemonicParsing="false" onAction="#getLogOutBtn" text="Log out" />
-      <Button fx:id="exit" layoutX="59.0" layoutY="347.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="25.0" prefWidth="57.0" text="Exit" />
+      <Button fx:id="addSub" layoutX="41.0" layoutY="140.0" mnemonicParsing="false" onAction="#getAddSubBtn" prefHeight="25.0" prefWidth="151.0" text="Add subscriber" />
+      <Button fx:id="borrowBook" layoutX="41.0" layoutY="215.0" mnemonicParsing="false" onAction="#BorrowingBookBtn" prefHeight="25.0" prefWidth="151.0" text="Borrowing a book" />
+      <Button fx:id="returnBook" layoutX="258.0" layoutY="215.0" mnemonicParsing="false" onAction="#returnBookbttn" prefHeight="25.0" prefWidth="151.0" text="Return a book" />
+      <Button fx:id="searchBook" layoutX="258.0" layoutY="140.0" mnemonicParsing="false" onAction="#SearchBookBtn" prefHeight="25.0" prefWidth="151.0" text="Search a book" />
+      <Button fx:id="readerDetails" layoutX="41.0" layoutY="289.0" mnemonicParsing="false" onAction="#getLibrarianWatchAndUpdateBtn" prefHeight="65.0" prefWidth="151.0" text="Watch reader card&#10;&#10;manual extension" />
+      <Button fx:id="LogOut" layoutX="305.0" layoutY="385.0" mnemonicParsing="false" onAction="#getLogOutBtn" text="Log out" />
+      <Button fx:id="exit" layoutX="88.0" layoutY="385.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="25.0" prefWidth="57.0" text="Exit" />
+      <Button fx:id="GetReports" layoutX="258.0" layoutY="289.0" mnemonicParsing="false" onAction="#getReportsGUIBtn" prefHeight="25.0" prefWidth="151.0" text="Viewing reports" />
    </children>
 </Pane>

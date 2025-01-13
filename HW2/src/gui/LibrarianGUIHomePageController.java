@@ -41,6 +41,9 @@ public class LibrarianGUIHomePageController {
 	private Button returnBook = null;
 	
 	@FXML
+	private Button GetReports = null;
+	
+	@FXML
 	private Button searchBook = null;
 	
 	@FXML
@@ -54,7 +57,7 @@ public class LibrarianGUIHomePageController {
 	
 	@FXML
 	private void initialize() {
-		librarianName.setText("Elena");
+		librarianName.setText(ChatClient.lib.getLibrarian_name());
 		BringLibName = librarianName.getText();
 
 	}
@@ -73,6 +76,7 @@ public class LibrarianGUIHomePageController {
         primaryStage.show();
     }
 	public void getLogOutBtn(ActionEvent event) throws IOException{
+		ChatClient.lib = null;
 		FXMLLoader loader = new FXMLLoader();
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
         Stage primaryStage = new Stage();
@@ -142,6 +146,36 @@ public class LibrarianGUIHomePageController {
 	        // Optionally, display an error message to the user here
 	    }
 	}
+	
+	public void getReportsGUIBtn(ActionEvent event) throws IOException {
+	    try {
+	        // Hide the current window
+	        ((Node) event.getSource()).getScene().getWindow().hide();
+
+	        // Load the ReportsGUI FXML
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/ReportsGUI.fxml"));
+	        Parent root = loader.load();
+
+	        // Set up the new stage
+	        Stage primaryStage = new Stage();
+	        Scene scene = new Scene(root);
+
+	        // Apply stylesheets
+	        scene.getStylesheets().add(getClass().getResource("/gui/ReportsGUI.css").toExternalForm());
+
+	        // Configure the stage
+	        primaryStage.setTitle("Reports GUI");
+	        primaryStage.setScene(scene);
+
+	        // Show the stage
+	        primaryStage.show();
+	    } catch (IOException e) {
+	        System.err.println("Error: Could not load ReportsGUI FXML file");
+	        e.printStackTrace();
+	        // Optionally, display an error message to the user
+	    }
+	}
+
 
 	public void getAddSubBtn(ActionEvent event) throws IOException{
 		FXMLLoader loader = new FXMLLoader();
@@ -157,5 +191,19 @@ public class LibrarianGUIHomePageController {
         primaryStage.show();
 	}
 	
+	public void returnBookbttn(ActionEvent event) throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+        Stage primaryStage = new Stage();
+        Pane root = loader.load(getClass().getResource("/gui/LibrarianReturnGUI.fxml").openStream());
 
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/gui/LibrarianReturnGUI.css").toExternalForm());
+        primaryStage.setTitle("Librarian Return GUI");
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+	}
+	
+	
 }
