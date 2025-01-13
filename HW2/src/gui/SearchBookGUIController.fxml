@@ -14,7 +14,7 @@
 <AnchorPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SearchBookGUIController">
    <children>
       <Accordion />
-      <Pane fx:id="nameOfTheBook" prefHeight="618.0" prefWidth="612.0">
+      <Pane fx:id="nameOfTheBook" prefHeight="618.0" prefWidth="818.0">
          <children>
             <DialogPane fx:id="serverRun" layoutX="189.0" layoutY="23.0" />
             <Label layoutX="89.0" layoutY="36.0" text="Search a book:">
@@ -23,11 +23,11 @@
                </font>
             </Label>
             <Label layoutX="62.0" layoutY="126.0" text="Name of the book:" />
-            <TextField fx:id="bookName" layoutX="189.0" layoutY="122.0" />
+            <TextField fx:id="bookName" layoutX="189.0" layoutY="122.0" prefHeight="25.0" prefWidth="217.0" />
             <Button fx:id="return1" layoutX="56.0" layoutY="572.0" mnemonicParsing="false" onAction="#getReturnBtn" text="Return" />
             <Button fx:id="exit" layoutX="538.0" layoutY="559.0" mnemonicParsing="false" onAction="#getExitBtn" text="Exit" />
-            <Button fx:id="search" layoutX="389.0" layoutY="122.0" mnemonicParsing="false" onAction="#searchBtn" text="Search" />
-            <DialogPane fx:id="errorMsg" layoutX="63.0" layoutY="171.0" prefHeight="54.0" prefWidth="475.0" />
+            <Button fx:id="search" layoutX="424.0" layoutY="122.0" mnemonicParsing="false" onAction="#searchBtn" text="Search" />
+            <DialogPane fx:id="errorMsg" layoutX="18.0" layoutY="171.0" prefHeight="54.0" prefWidth="790.0" />
             <ListView fx:id="booksListView" layoutX="33.0" layoutY="348.0" prefHeight="200.0" prefWidth="366.0" />
             <Label layoutX="64.0" layoutY="292.0" />
             <TextField fx:id="author_genere" layoutX="75.0" layoutY="288.0" />

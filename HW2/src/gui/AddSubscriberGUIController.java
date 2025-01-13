@@ -60,9 +60,9 @@ public class AddSubscriberGUIController {
     }
     
     public void saveBtn(ActionEvent event)  {
-    	String status="1";
+    	String status="active";
     	int randomId = ThreadLocalRandom.current().nextInt(1, 100000);
-    	AddSubscriberUI.chat.acceptAddSubscriber(randomId,name.getText(),phoneNumber.getText() ,email.getText(),status,password.getText());
+    	ClientGUIConnectionController.chat.acceptAddSubscriber(randomId,name.getText(),phoneNumber.getText() ,email.getText(),status,password.getText());
         afterUpdate.setContentText("Added");
         
     }

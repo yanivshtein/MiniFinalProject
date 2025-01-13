@@ -56,6 +56,14 @@ public class SearchBookGUIController {
 	public void initialize() {
 		loadBooks();
 		setupAutoComplete();
+	
+	    booksListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+	        if (newValue != null) {
+	           
+	            bookName.setText(newValue);
+	            booksListView.getSelectionModel().clearSelection();
+	        }
+	    });
 
 	}
 
@@ -142,7 +150,7 @@ public class SearchBookGUIController {
 		if (ChatClient.bookAvailability == -1) {
 			errorMsg.setContentText("The book is not in the library");
 		} else if (ChatClient.bookAvailability == 0) {
-			errorMsg.setContentText("The book is in the library but currently out of stock");
+			errorMsg.setContentText("The book is in the library but currently out of stock, estimated return date is:"+ChatClient.deadlineDate);
 		} else if (ChatClient.bookAvailability > 0) {
 			errorMsg.setContentText("The book is available. Copies left: " + ChatClient.bookAvailability);
 		} else {

@@ -56,13 +56,17 @@ public class BorrowBookGUIController {
     public void borrowBtn(ActionEvent event)  {
     	 int subscriberId = Integer.parseInt(id.getText());
 
-    	BorrowBookUI.chat.acceptBorrowBook(subscriberId);
-    	BorrowBookUI.chat.acceptSearchBook(14,bookName.getText());
+    	 ClientGUIConnectionController.chat.acceptBorrowBook(subscriberId);
+    	 ClientGUIConnectionController.chat.acceptSearchBook(14,bookName.getText());
     	if(ChatClient.bool==false) {
     		msg.setContentText("Subscriber doesn't exist");
     	}
     	else {
-        	if(ChatClient.bookAvailability== -1) {
+    		if(ChatClient.statusSub.equals("frozen")){
+    			msg.setContentText("The subscription is frozen, it is not possible to make the borrowing");
+    		}
+    		
+    	    else if(ChatClient.bookAvailability== -1) {
         		msg.setContentText("The book is not in the library");
         	}
         	else if(ChatClient.bookAvailability == 0) {
@@ -100,7 +104,7 @@ public class BorrowBookGUIController {
     		msg.setContentText("");
     		bookName.setText("");
     		int bookId = Integer.parseInt(barCode.getText());
-    		BorrowBookUI.chat.acceptBarCode(bookId);
+    		ClientGUIConnectionController.chat.acceptBarCode(bookId);
         	if(ChatClient.bookName.equals("")) {
         		msg.setContentText("The barcode does not exist in the database");
         	}else {
