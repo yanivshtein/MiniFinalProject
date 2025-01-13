@@ -12,12 +12,12 @@
          <font>
             <Font size="24.0" />
          </font></Label>
-   <Text layoutX="39.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Text layoutX="39.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" />
       <Label fx:id="librarianName" layoutX="131.0" layoutY="53.0" text="Label" />
       <Button fx:id="addSub" layoutX="32.0" layoutY="165.0" mnemonicParsing="false" onAction="#getAddSubBtn" prefHeight="25.0" prefWidth="151.0" text="Add subscriber" />
-      <Button fx:id="borrowBook" layoutX="32.0" layoutY="227.0" mnemonicParsing="false" onAction="#BorrowingBookBtn" prefHeight="25.0" prefWidth="151.0" text="Borrowing a book" />
+      <Button fx:id="borrowBook" layoutX="32.0" layoutY="227.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="151.0" text="Borrowing a book" />
       <Button fx:id="returnBook" layoutX="244.0" layoutY="227.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="151.0" text="Return a book" />
-      <Button fx:id="searchBook" layoutX="244.0" layoutY="165.0" mnemonicParsing="false" onAction="#SearchBookBtn" prefHeight="25.0" prefWidth="151.0" text="Search a book" />
+      <Button fx:id="searchBook" layoutX="244.0" layoutY="165.0" mnemonicParsing="false" onAction="#getSearchBookBtn" prefHeight="25.0" prefWidth="151.0" text="Search a book" />
       <Button fx:id="readerDetails" layoutX="145.0" layoutY="290.0" mnemonicParsing="false" onAction="#getLibrarianWatchAndUpdateBtn" text="Watch reader card details" />
       <Button fx:id="LogOut" layoutX="305.0" layoutY="347.0" mnemonicParsing="false" onAction="#getLogOutBtn" text="Log out" />
       <Button fx:id="exit" layoutX="59.0" layoutY="347.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="25.0" prefWidth="57.0" text="Exit" />
