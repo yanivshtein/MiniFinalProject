@@ -937,5 +937,22 @@ public class mysqlConnection {
         }    	
     	deleteOrders(ordersToDelete); //call the method to delete the non taken orders from the DB
 	}
+	
+	public static ArrayList<String> subscriberMessages(int subID) {
+		ArrayList<String> messages = new ArrayList<>();
+        String query = "SELECT note FROM messages WHERE subID = ?;";
+        
+        try (PreparedStatement ps = conn.prepareStatement(query)){
+        	ps.setInt(1, subID);
+        	ResultSet rs = ps.executeQuery();
+             while (rs.next()) {
+                 String message = rs.getString("note");
+                 messages.add(message);
+             }
+        } catch (SQLException e) {
+        	e.printStackTrace();
+        }
+        return messages;
+	}
 
 }

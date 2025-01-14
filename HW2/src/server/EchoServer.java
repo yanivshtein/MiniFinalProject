@@ -512,6 +512,16 @@ public class EchoServer extends AbstractServer
                 		e.printStackTrace();
                 	}
                 	break;
+                case 29:
+                	ArrayList<String> subMessages = mysqlConnection.subscriberMessages((int) arr.get(1));
+                	arrToSend.add(29);
+                	arrToSend.add(subMessages);
+                	try {
+                		client.sendToClient(arrToSend);
+                	} catch (IOException e) {
+                		e.printStackTrace();
+                	}
+                	break;
                 default:
                     System.out.println("The server - Received message is not of the expected type.");
                     break;

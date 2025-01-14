@@ -18,6 +18,7 @@ import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 public class SubscriberOrderUIController {
@@ -47,18 +48,29 @@ public class SubscriberOrderUIController {
     private ListView<String> booksListView;
 
     private String bookNameGot;
-
+    private String selectedBook;
+    int subID = ChatClient.sub1.getSubscriber_id();
     private ObservableList<String> booksData;
 
     public void initialize() {
         loadBooks();
         setupAutoComplete();
+        booksListView.setOnMouseClicked(event -> handleDoubleClick(event));
     }
     
-    private void loadBooks() {
+    private void handleDoubleClick(MouseEvent event) {
+    	errorMsg2.setContentText("");
+        if (event.getClickCount() == 2) {
+            selectedBook = booksListView.getSelectionModel().getSelectedItem();
+            if (selectedBook != null) {            	
+            	errorMsg.setContentText("You have selected the Book: " + selectedBook + ", press 'Send Order' to send");
+            }
+        }
+  }
+    
+    private void loadBooks() {    	
         // Request the books from the server
     	ClientGUIConnectionController.chat.acceptAllTheBooks(18);
-
         ArrayList<String> bookNames = ChatClient.allbooks;
         if (bookNames == null || bookNames.isEmpty()) {
             booksData = FXCollections.observableArrayList("No books available");
@@ -88,11 +100,12 @@ public class SubscriberOrderUIController {
     }
     
     public void getSendBtn(ActionEvent event) throws IOException {
-    	errorMsg2.setContentText("");
-        int subID = ChatClient.sub1.getSubscriber_id();
-        bookNameGot = bookName.getText();
-        
-        if (bookNameGot.isEmpty()) {
+    	errorMsg2.setContentText(""); 
+    	if (!bookName.getText().isEmpty())
+    		bookNameGot = bookName.getText();
+        else
+        	bookNameGot = selectedBook;     
+        if (bookNameGot==null || bookNameGot.isEmpty()) {
             errorMsg.setContentText("Oops! 😞 You must enter a book name.");
             return;
         }

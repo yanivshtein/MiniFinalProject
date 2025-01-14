@@ -43,6 +43,7 @@ public class ChatClient extends AbstractClient {
 	public static ArrayList<String> allbooks = new ArrayList<>();
 	public static ArrayList<String> borrowedBooks = new ArrayList<>();
 	public static ArrayList<String> filteredBooks = new ArrayList<>();
+	public static ArrayList<String> subMessages = new ArrayList<>();
 	public static String bookName;
 	public static Subscriber1 sub1;
 	public static Librarian lib;
@@ -238,6 +239,9 @@ public class ChatClient extends AbstractClient {
 			orders = (ArrayList<String>) arr.get(1);
 			break;
 		case 28:
+			break;
+		case 29:
+			subMessages = (ArrayList<String>) arr.get(1);
 			break;
 		}
 			
