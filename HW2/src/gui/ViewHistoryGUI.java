@@ -66,11 +66,11 @@ public class ViewHistoryGUI {
 	    ((Node) event.getSource()).getScene().getWindow().hide();
 	    
 	    // Load the ClientGUIHomePage FXML
-	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/ClientGUIHomePage.fxml"));
+	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/ClientGUIHomePageController.fxml"));
 	    Parent root = loader.load();
 	    
 	    Scene scene = new Scene(root);
-	    scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIHomePage.css").toExternalForm());
+	    scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIHomePageController.css").toExternalForm());
 	    
 	    Stage primaryStage = new Stage();
 	    primaryStage.setTitle("Client Home Page");

@@ -173,6 +173,20 @@ public class SearchBookGUIController {
 	}
 
 	public void getReturnBtn(ActionEvent event) throws IOException {
+		if (ChatClient.lib ==null && ChatClient.sub1==null) {
+			FXMLLoader loader = new FXMLLoader();
+			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+			Stage primaryStage = new Stage();
+			Pane root = loader.load(getClass().getResource("/gui/ClientGUILogin.fxml").openStream());
+
+			Scene scene = new Scene(root);
+			scene.getStylesheets()
+					.add(getClass().getResource("/gui/ClientGUILogin.css").toExternalForm());
+			primaryStage.setTitle("Login");
+
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		}
 		if (ChatClient.lib != null) {
 			FXMLLoader loader = new FXMLLoader();
 			((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
