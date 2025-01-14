@@ -128,6 +128,23 @@ public class ClientGUIHomePageController {
 	    primaryStage.setScene(scene);
 	    primaryStage.show();
 	}
+	
+	public void getSubMessages (ActionEvent event) throws IOException {
+		// Hiding primary window
+	    ((Node) event.getSource()).getScene().getWindow().hide();
+	    
+	    // Loading FXML and setting up the new stage
+	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/SubscriberMessages.fxml"));
+	    Parent root = loader.load();
+	    
+	    Scene scene = new Scene(root);
+	    //scene.getStylesheets().add(getClass().getResource("/gui/SubscriberMessages.css").toExternalForm());
+	    
+	    Stage primaryStage = new Stage();
+	    primaryStage.setTitle("My Messages");
+	    primaryStage.setScene(scene);
+	    primaryStage.show();
+	}		
 
 	public void getLogOutBtn(ActionEvent event) throws IOException{
 		ChatClient.sub1 = null;
