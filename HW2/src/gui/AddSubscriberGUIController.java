@@ -3,7 +3,6 @@ package gui;
 import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
 
-import client.AddSubscriberUI;
 import client.ChatClient;
 import common.Subscriber1;
 import javafx.event.ActionEvent;

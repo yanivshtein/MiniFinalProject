@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import client.ChatClient;
-import client.SearchBookUI;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -58,13 +58,21 @@ public class SearchBookGUIController {
 		setupAutoComplete();
 	
 	    booksListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-	        if (newValue != null) {
-	           
-	            bookName.setText(newValue);
-	            booksListView.getSelectionModel().clearSelection();
+	        if (newValue != null) {  
+	            bookName.setText(newValue);            
 	        }
 	    });
-
+	   
+	    bookName.setOnKeyPressed(event -> {
+	        switch (event.getCode()) {
+	            case BACK_SPACE:
+	            case DELETE:
+	            	booksListView.getSelectionModel().clearSelection();
+	                break;
+	            default:
+	                break;
+	        }
+	    });
 	}
 
 	private void loadBooks() {
@@ -97,6 +105,7 @@ public class SearchBookGUIController {
 					}
 				}
 				booksListView.setItems(filteredBooks);
+				
 			}
 		});
 		author_genere.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -152,7 +161,7 @@ public class SearchBookGUIController {
 		} else if (ChatClient.bookAvailability == 0) {
 			errorMsg.setContentText("The book is in the library but currently out of stock, estimated return date is:"+ChatClient.deadlineDate);
 		} else if (ChatClient.bookAvailability > 0) {
-			errorMsg.setContentText("The book is available. Copies left: " + ChatClient.bookAvailability);
+			errorMsg.setContentText("The book is available on shelf A. Copies left: " + ChatClient.bookAvailability);
 		} else {
 			errorMsg.setContentText("ERROR");
 		}

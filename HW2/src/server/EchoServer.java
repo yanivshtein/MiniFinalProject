@@ -305,7 +305,6 @@ public class EchoServer extends AbstractServer
                     break;
                 case 18:
                        ArrayList<String> AllBooks = mysqlConnection.getAllBookNames();
-                       System.out.println(AllBooks+ "echoserver");
                        arrToSend.add(18);
                        arrToSend.add(AllBooks);
                        try {

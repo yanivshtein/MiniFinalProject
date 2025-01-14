@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import client.ChatClient;
-import client.SearchBookUI;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

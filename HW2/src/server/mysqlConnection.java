@@ -151,8 +151,8 @@ public class mysqlConnection {
         }
     }
     public static String getNearestReturnDate(String bookName) {
-        // Use the correct column name (BookName) for querying the database
-        String query = "SELECT deadline FROM activityhistory WHERE BookName = ? ORDER BY deadline ASC LIMIT 1";
+        // Query to select the nearest return date for a borrowed book
+        String query = "SELECT deadline FROM activityhistory WHERE BookName = ? AND ActionType = 'Borrow' ORDER BY deadline ASC LIMIT 1";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, bookName);  // Set the book name in the query
             try (ResultSet rs = stmt.executeQuery()) {

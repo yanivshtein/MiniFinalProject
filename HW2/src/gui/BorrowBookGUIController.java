@@ -1,10 +1,9 @@
 package gui;
 
+import java.awt.Label;
 import java.io.IOException;
-
-import client.BorrowBookUI;
+import java.util.List;
 import client.ChatClient;
-import client.SearchBookUI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +11,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -53,6 +55,8 @@ public class BorrowBookGUIController {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+    
+
     public void borrowBtn(ActionEvent event)  {
     	 int subscriberId = Integer.parseInt(id.getText());
 
@@ -73,8 +77,8 @@ public class BorrowBookGUIController {
         		msg.setContentText("The book is in the library but currently out of stock");
         	}
         	else if(ChatClient.bookAvailability >0) {
-            	BorrowBookUI.chat.acceptSearchBook(16,bookName.getText());
-            	BorrowBookUI.chat.acceptAddToActivityHistoryController(17,subscriberId,bookName.getText());
+        		ClientGUIConnectionController.chat.acceptSearchBook(16,bookName.getText());
+        		ClientGUIConnectionController.chat.acceptAddToActivityHistoryController(17,subscriberId,bookName.getText());
         		msg.setContentText("The book is available. Copies left: " + (ChatClient.bookAvailability-1) );
         	}
         	else {
