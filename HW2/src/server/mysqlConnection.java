@@ -3,6 +3,7 @@ package server;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -418,6 +419,11 @@ public class mysqlConnection {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+    	
+    	LocalDateTime now = LocalDateTime.now();
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    	String formattedDate = now.format(formatter);
+    	
         String checkQuery = "SELECT additionalInfo FROM activityhistory WHERE SubscriberID = ? AND BookName = ? AND deadline = ? AND ActionType = 'Borrow'";
         String updateQuery = "UPDATE activityhistory SET deadline = ?, additionalInfo = ? WHERE SubscriberID = ? AND BookName = ? AND deadline = ? AND ActionType = 'Borrow'";
 
@@ -440,7 +446,7 @@ public class mysqlConnection {
             // Proceed with the update query if no entry exists in additionalInfo
             try (PreparedStatement updatePs = conn.prepareStatement(updateQuery)) {
                 updatePs.setString(1, NewDate);
-                updatePs.setString(2, "Extended by: " + Librarian_name + " , at: ");
+                updatePs.setString(2, "Extended by: " + Librarian_name + " , at: " + formattedDate );
                 updatePs.setInt(3, subscriberId);
                 updatePs.setString(4, BookName);
                 updatePs.setString(5, OldDate);
