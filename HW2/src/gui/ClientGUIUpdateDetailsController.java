@@ -85,10 +85,10 @@ public class ClientGUIUpdateDetailsController {
 		
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
         Stage primaryStage = new Stage();
-        Pane root = loader.load(getClass().getResource("/gui/ClientGUIHomePage.fxml").openStream());
+        Pane root = loader.load(getClass().getResource("/gui/ClientGUIHomePageController.fxml").openStream());
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIHomePage.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIHomePageController.css").toExternalForm());
         primaryStage.setTitle("Home page");
 
         primaryStage.setScene(scene);
