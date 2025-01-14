@@ -44,7 +44,7 @@ public class mysqlConnection {
 
 
 
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "!vex123S");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "Aa123456");
 
 
             System.out.println("SQL connection succeed");
