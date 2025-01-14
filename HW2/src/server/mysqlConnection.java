@@ -53,6 +53,7 @@ public class mysqlConnection {
 		}
 	}
 
+
 	public void update(String id, String p_number, String email) {
 		String updateQuery = "UPDATE subscriber SET subscriber_phone_number = ?, subscriber_email = ? WHERE subscriber_id = ?";
 		try (PreparedStatement ps = conn.prepareStatement(updateQuery)) {
@@ -64,6 +65,8 @@ public class mysqlConnection {
 			e.printStackTrace();
 		}
 	}
+
+          
 
 	public Subscriber1 select(String id) {
 		Subscriber1 sub = null;
