@@ -19,7 +19,7 @@ import ocsf.server.*;
 public class EchoServer extends AbstractServer 
 {
 	
-	mysqlConnection instance;
+	mysqlConnection SQLinstance;
     private List<ConnectionListener> listeners = new ArrayList<>();
 	private String subEmail;
 	private String subscriberID;
@@ -43,7 +43,7 @@ public class EchoServer extends AbstractServer
     public EchoServer(int port) 
     {
         super(port);
-        instance = mysqlConnection.getInstance();
+        SQLinstance = mysqlConnection.getInstance();
     }
 
     protected void serverStarted()
@@ -73,7 +73,7 @@ public class EchoServer extends AbstractServer
 			boolean freeze;
 			switch (request) { //go to DB controller based on the request
                 case 1: // UPDATE
-                    mysqlConnection.update((String) arr.get(1), (String) arr.get(2), (String) arr.get(3));
+                    SQLinstance.update((String) arr.get(1), (String) arr.get(2), (String) arr.get(3));
                     arrToSend.add(1);
                 	arrToSend.add(new Subscriber1());
                     try {                   	
@@ -84,7 +84,7 @@ public class EchoServer extends AbstractServer
                     break;
 
                 case 2: // SELECT
-                    sub = mysqlConnection.select((String) arr.get(1));
+                    sub = SQLinstance.select((String) arr.get(1));
                     arrToSend.add(2);
                 	arrToSend.add(sub);
                 	System.out.println(sub.getSubscriber_name());
@@ -95,7 +95,7 @@ public class EchoServer extends AbstractServer
                     }
                     break;
                 case 3: //Search the database to check email and password for librarian
-                	lib = mysqlConnection.searchLibId((String) arr.get(1), (String) arr.get(2));
+                	lib = SQLinstance.searchLibId((String) arr.get(1), (String) arr.get(2));
                 	arrToSend.add(3);
                 	arrToSend.add(lib);
                     try {                   	
@@ -106,7 +106,7 @@ public class EchoServer extends AbstractServer
                 	
                 	break;
                 case 4: //Search the database to check email and password for subscriber
-                    sub = mysqlConnection.searchSubId((String) arr.get(1), (String) arr.get(2));
+                    sub = SQLinstance.searchSubId((String) arr.get(1), (String) arr.get(2));
                     arrToSend.add(4);
                     arrToSend.add(sub); 
                     try {
@@ -118,7 +118,7 @@ public class EchoServer extends AbstractServer
 
                 case 5: // Check subscriber's status
                     subID =  (int) arr.get(1);
-                    String retStatus = mysqlConnection.checkIsFrozen(subID);
+                    String retStatus = SQLinstance.checkIsFrozen(subID);
                     arrToSend.add(5);
                     arrToSend.add(retStatus);
                     try {
@@ -133,7 +133,7 @@ public class EchoServer extends AbstractServer
                     //retAvailability will have 'exist' if book even exists, or 'available' if can get a copy of it
                     // go to book's DB and check if there is a book like this, if yes check if there is an available copy
 	                // also put the number of total copys in its variable
-                    String retAvailability = mysqlConnection.isAvailable(bookName); 
+                    String retAvailability = SQLinstance.isAvailable(bookName); 
                     arrToSend.add(6);
                     arrToSend.add(retAvailability);
                     try {
@@ -147,7 +147,7 @@ public class EchoServer extends AbstractServer
                     subID = (int) arr.get(1);
                     bookName = (String) arr.get(2);
                  // go to orders table in the DB and check if can add a column (if the number of orders is less than the number of copys)
-                    String canAdd = mysqlConnection.canAddOrder(subID, bookName);
+                    String canAdd = SQLinstance.canAddOrder(subID, bookName);
                     arrToSend.add(7);
                     arrToSend.add(canAdd);
                     try {
@@ -160,7 +160,7 @@ public class EchoServer extends AbstractServer
                 case 8: //watch activity history
                     subID = Integer.parseInt((String)arr.get(1)); //subscriber ID is in the second position of the array
                  // Retrieve the borrow history for the given subscriber ID
-                    ArrayList<String> borrowHistory = mysqlConnection.getBorrowHistory(subID);
+                    ArrayList<String> borrowHistory = SQLinstance.getBorrowHistory(subID);
                     arrToSend.add(8);
                     arrToSend.add(borrowHistory);
                     try {
@@ -173,7 +173,7 @@ public class EchoServer extends AbstractServer
 
                 case 9:
                 	subEmail = (String)arr.get(3);
-                    ArrayList<String> activityHistory = mysqlConnection.getActivityHistory(subEmail);
+                    ArrayList<String> activityHistory = SQLinstance.getActivityHistory(subEmail);
                     arrToSend.add(9);
                     arrToSend.add(activityHistory);
                     try {
@@ -190,7 +190,7 @@ public class EchoServer extends AbstractServer
                     String OldDate = (String) arr.get(3);
                     String NewDate = (String) arr.get(4);
                     String Librarian_name = (String) arr.get(5);
-                    boolean updateDate = mysqlConnection.ChangeReturnDate(subID, bookName, OldDate, NewDate, Librarian_name);
+                    boolean updateDate = SQLinstance.ChangeReturnDate(subID, bookName, OldDate, NewDate, Librarian_name);
                     arrToSend.add(10);
                     arrToSend.add(updateDate);
                     try {
@@ -203,7 +203,7 @@ public class EchoServer extends AbstractServer
                 case 11:
                     ArrayList<String> BorrowRepDet = null;
                     try {
-                        BorrowRepDet = mysqlConnection.BringBorrowRepInfo((String)arr.get(1) , (String)arr.get(2));
+                        BorrowRepDet = SQLinstance.BringBorrowRepInfo((String)arr.get(1) , (String)arr.get(2));
                     } catch (SQLException e) {
                         e.printStackTrace();
                         BorrowRepDet = new ArrayList<>();
@@ -227,7 +227,7 @@ public class EchoServer extends AbstractServer
                     }
                     break;
                 case 12:
-                	ArrayList<String> borrowedBooks = mysqlConnection.getBorrowedBooks((int)arr.get(1));
+                	ArrayList<String> borrowedBooks = SQLinstance.getBorrowedBooks((int)arr.get(1));
                     arrToSend.add(12);
                     arrToSend.add(borrowedBooks);
                     try {
@@ -244,7 +244,7 @@ public class EchoServer extends AbstractServer
                 	String subEmail =(String)arr.get(4);
                 	String subStatus =(String)arr.get(5);
                 	String subPassword = (String)arr.get(6);
-                	mysqlConnection.addSubscriber(Sub_id,subName,subPhone,subEmail,subStatus,subPassword); 
+                	SQLinstance.addSubscriber(Sub_id,subName,subPhone,subEmail,subStatus,subPassword); 
                 	arrToSend.add(13);
                 	arrToSend.add(new Boolean(true));
                 	try {
@@ -256,8 +256,8 @@ public class EchoServer extends AbstractServer
                 case 14:
 
                     bookName = (String) arr.get(1);
-                    Integer BookIsInTheInvatory = mysqlConnection.getBookAvailability(bookName);
-                    String deadlineDate =mysqlConnection.getNearestReturnDate(bookName);
+                    Integer BookIsInTheInvatory = SQLinstance.getBookAvailability(bookName);
+                    String deadlineDate =SQLinstance.getNearestReturnDate(bookName);
                     arrToSend.add(14);
                     arrToSend.add(BookIsInTheInvatory);
                     arrToSend.add(deadlineDate);
@@ -270,8 +270,8 @@ public class EchoServer extends AbstractServer
                 case 15:
 
                     Sub_id = (int) arr.get(1);
-                    Boolean subExist = mysqlConnection.isSubscriberExist(Sub_id);
-                    String statusSub = mysqlConnection.getSubscriptionStatus(Sub_id);
+                    Boolean subExist = SQLinstance.isSubscriberExist(Sub_id);
+                    String statusSub = SQLinstance.getSubscriptionStatus(Sub_id);
                     arrToSend.add(15);
                     arrToSend.add(subExist);
                     arrToSend.add(statusSub);
@@ -283,7 +283,7 @@ public class EchoServer extends AbstractServer
                     break;
                 case 16:
                     bookName = (String) arr.get(1);
-                    Boolean decreaseBook = mysqlConnection.decrementBookAvailability(bookName);
+                    Boolean decreaseBook = SQLinstance.decrementBookAvailability(bookName);
                     arrToSend.add(16);
                     arrToSend.add(decreaseBook);
                     try {
@@ -295,7 +295,7 @@ public class EchoServer extends AbstractServer
                 case 17:
                 	Sub_id =(int) arr.get(1);
                     bookName = (String) arr.get(2);
-                    mysqlConnection.addActivityToHistory(Sub_id,bookName);
+                    SQLinstance.addActivityToHistory(Sub_id,bookName);
                     arrToSend.add(17);
                     arrToSend.add(new Boolean(true));
                     try {
@@ -305,7 +305,7 @@ public class EchoServer extends AbstractServer
                     }
                     break;
                 case 18:
-                       ArrayList<String> AllBooks = mysqlConnection.getAllBookNames();
+                       ArrayList<String> AllBooks = SQLinstance.getAllBookNames();
                        arrToSend.add(18);
                        arrToSend.add(AllBooks);
                        try {
@@ -319,7 +319,7 @@ public class EchoServer extends AbstractServer
                 case 19:
                 	ArrayList<String> statusRepDet = null;
                     try {
-                    	statusRepDet = mysqlConnection.BringStatusRepInfo((String)arr.get(1) , (String)arr.get(2));
+                    	statusRepDet = SQLinstance.BringStatusRepInfo((String)arr.get(1) , (String)arr.get(2));
                     } catch (SQLException e) {
                         e.printStackTrace();
                         statusRepDet = new ArrayList<>();
@@ -347,7 +347,7 @@ public class EchoServer extends AbstractServer
 		          	String bookname = (String)arr.get(2);
 		  
 				try {
-					Boolean isExist= mysqlConnection.checkIfBorrowerFound(borrowerid, bookname);
+					Boolean isExist= SQLinstance.checkIfBorrowerFound(borrowerid, bookname);
 					arrToSend.add(20);
 					//ar2.add(isExist);
 					arrToSend.add(isExist);
@@ -364,7 +364,7 @@ public class EchoServer extends AbstractServer
 		          	String Bookname = (String)arr.get(2);
 		          	arrToSend.add(21);
 				try {
-					arrToSend.add(mysqlConnection.getBorrowDateAndReturnDate(Borrowerid, Bookname));
+					arrToSend.add(SQLinstance.getBorrowDateAndReturnDate(Borrowerid, Bookname));
 					
 					client.sendToClient(arrToSend);
 				} catch (SQLException | IOException e) {
@@ -396,25 +396,25 @@ public class EchoServer extends AbstractServer
 	            		 if(returnLate)
 	            			 lateDifference.append(" Late");
 	            	 }
-	            	 boolean orderExists = mysqlConnection.addArrivalTimeToOrders(this.bookName); //add the arrival time to orders table	           	 
+	            	 boolean orderExists = SQLinstance.addArrivalTimeToOrders(this.bookName); //add the arrival time to orders table	           	 
 	         		 Boolean bookIncrement = false;	// Initialized freezeSuccess to true because 
 	            	 Boolean freezeSuccess = true;	// of the AND action at sendToClient
 	            	 Boolean insertRowToActivity = false; // so if it won't happen then it will still pass.
 	            	 arrToSend.add(22);
 	            	 try {
 	            		 if(returnLate==false && freeze==false) {
-		            		 insertRowToActivity = mysqlConnection.insertReturnBookRowInActivityHistory(this.subscriberID, this.bookName,"Returned on time",returnLate);
+		            		 insertRowToActivity = SQLinstance.insertReturnBookRowInActivityHistory(this.subscriberID, this.bookName,"Returned on time",returnLate);
 
 		            	 }
 	            		 if(returnLate==true) {
-		            		 insertRowToActivity = mysqlConnection.insertReturnBookRowInActivityHistory(this.subscriberID, this.bookName,lateDifference.toString(),returnLate);
+		            		 insertRowToActivity = SQLinstance.insertReturnBookRowInActivityHistory(this.subscriberID, this.bookName,lateDifference.toString(),returnLate);
 
 		            	 }
 		            	 if(freeze==true){
-		            		 freezeSuccess = mysqlConnection.updateSubscriberStatusToFrozen(this.subscriberID,"Frozen");
+		            		 freezeSuccess = SQLinstance.updateSubscriberStatusToFrozen(this.subscriberID,"Frozen");
 		            	 }
 		            	 if (orderExists == false) { //which means no one has ordered this book then we can add the copy to the inventory
-		            		 bookIncrement = mysqlConnection.incrimentBookAvailability(this.bookName);
+		            		 bookIncrement = SQLinstance.incrimentBookAvailability(this.bookName);
 		            	 }		            	
 		            	 arrToSend.add(bookIncrement && freezeSuccess && insertRowToActivity);
 		            	 client.sendToClient(arrToSend );
@@ -429,7 +429,7 @@ public class EchoServer extends AbstractServer
                 case 23:
                 	String bookNameBarCode;
                 	try {
-                		bookNameBarCode = mysqlConnection.BringBarCodeBookName((int)arr.get(1));
+                		bookNameBarCode = SQLinstance.BringBarCodeBookName((int)arr.get(1));
                 	}catch(SQLException e) {
                 		 e.printStackTrace();
                 		 bookNameBarCode = "";
@@ -443,7 +443,7 @@ public class EchoServer extends AbstractServer
                     }
                     break;
                 case 24:
-                	String canExtend = mysqlConnection.canExtend((int)arr.get(1), (String)arr.get(2));
+                	String canExtend = SQLinstance.canExtend((int)arr.get(1), (String)arr.get(2));
                 	arrToSend.add(24);
                 	arrToSend.add(canExtend);
 					try {
@@ -464,7 +464,7 @@ public class EchoServer extends AbstractServer
                         }
                         String criteria = parts[1]; 
                         String value = parts[2];                 
-                        ArrayList<String> foundBooks = mysqlConnection.fetchBooksByCriteria(criteria, value);                 
+                        ArrayList<String> foundBooks = SQLinstance.fetchBooksByCriteria(criteria, value);                 
                         ArrayList<Object> arrToSend1 = new ArrayList<>();
                         arrToSend1.add(25);           
                         arrToSend1.add(foundBooks);  
@@ -485,7 +485,7 @@ public class EchoServer extends AbstractServer
 					 * True: if the book was already returned by subscriber
 					 * False: the book  still didn't return.
 					 */
-					ret = mysqlConnection.checkBookAlreadyReturned(this.subscriberID, this.bookName);
+					ret = SQLinstance.checkBookAlreadyReturned(this.subscriberID, this.bookName);
 					arrToSend.add(ret);
 					client.sendToClient(arrToSend);
 				} catch (SQLException | IOException e) {
@@ -494,7 +494,7 @@ public class EchoServer extends AbstractServer
 				}
 	            	break;
                 case 27: //return ArrayList of ordered books of a subscriber
-                	ArrayList<String> orders = mysqlConnection.getOrdersOfSubscriber((int)arr.get(1));
+                	ArrayList<String> orders = SQLinstance.getOrdersOfSubscriber((int)arr.get(1));
                 	arrToSend.add(27);
                 	arrToSend.add(orders);
                 	try {
@@ -506,7 +506,7 @@ public class EchoServer extends AbstractServer
                 case 28: //delete the order after it has been taken by the subscriber
                 	Map <Integer, String> ordersToDelete = new HashMap<>();	
                 	ordersToDelete.put((int)arr.get(1), (String)arr.get(2));
-                	mysqlConnection.deleteOrders(ordersToDelete);
+                	SQLinstance.deleteOrders(ordersToDelete);
                 	arrToSend.add(28);
                 	try {
                 		client.sendToClient(arrToSend);
@@ -515,7 +515,7 @@ public class EchoServer extends AbstractServer
                 	}
                 	break;
                 case 29:
-                	ArrayList<String> subMessages = mysqlConnection.subscriberMessages((int) arr.get(1));
+                	ArrayList<String> subMessages = SQLinstance.subscriberMessages((int) arr.get(1));
                 	arrToSend.add(29);
                 	arrToSend.add(subMessages);
                 	try {
@@ -565,6 +565,6 @@ public class EchoServer extends AbstractServer
    public void time() {
 	 //go to DB and update subscribers that it has been 2 days since their order arrived
 	 //also, delete the tuples in 'orders' table
-   	 mysqlConnection.timeDidntTakeOrder();   	 
+   	 SQLinstance.timeDidntTakeOrder();   	 
    }
 }
