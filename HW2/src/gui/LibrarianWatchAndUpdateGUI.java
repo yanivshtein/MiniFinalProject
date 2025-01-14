@@ -124,21 +124,21 @@ public class LibrarianWatchAndUpdateGUI {
     	if (TempStatus.equals("frozen")) {
     		return;
     	}
-        if (!isLessThanTwoWeeks(OldRetDate.getText(), NewRetDate.getText())) {
-            ChangesSavedPop.setContentText("Invalid New Date! - must be less than 2 weeks!");
+        if (!DateValidation(OldRetDate.getText(), NewRetDate.getText())) {
+            ChangesSavedPop.setContentText("Invalid New Date! - Must be both after the old date and within 2 weeks!");
             return;
         }
-
+            
         ClientGUIConnectionController.chat.book_accept("set new return date", subID.getText(), BookName.getText(), OldRetDate.getText(), NewRetDate.getText() , LibrarianGUIHomePageController.BringLibName );
 
         if (ChatClient.bool) {
             ChangesSavedPop.setContentText("Updated successfully");
         } else {
-            ChangesSavedPop.setContentText("The update failed - An extension has already been made ");
+            ChangesSavedPop.setContentText("Update failed - Book already extended or reserved by another user");
         }
     }
 
-    private boolean isLessThanTwoWeeks(String oldDateStr, String newDateStr) {
+    private boolean DateValidation(String oldDateStr, String newDateStr) {
         if (oldDateStr == null || newDateStr == null || oldDateStr.isEmpty() || newDateStr.isEmpty()) {
             ChangesSavedPop.setContentText("Error: One or both date strings are null or empty.");
             return false;
@@ -152,13 +152,14 @@ public class LibrarianWatchAndUpdateGUI {
             // Calculate the difference in days
             long diffInDays = TimeUnit.MILLISECONDS.toDays(Math.abs(newDate.getTime() - oldDate.getTime()));
 
-            // Return true if less than 14 days
-            return diffInDays < 14;
+            // Check if new date is after old date AND within 14 days
+            return diffInDays < 14 && newDate.after(oldDate);
         } catch (ParseException e) {
             ChangesSavedPop.setContentText("Error parsing dates: " + e.getMessage());
             return false;
         }
     }
+   
     
     public void ReturnButton(ActionEvent event) throws IOException {
         // Get the current stage from the event source

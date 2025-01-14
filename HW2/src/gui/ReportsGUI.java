@@ -67,22 +67,33 @@ public class ReportsGUI {
                 reportBuilder.append("### Borrow Report for ").append(selectedMonth).append("/").append(selectedYear).append(" ###\n\n");
 
                 // Iterate over each entry and format it
-                int entryNumber = 1; // Start from index 1
-                for (int i = 1; i < ChatClient.FullBorrowRep.size(); i++) {  // Start from index 1
-                    String reportEntry = ChatClient.FullBorrowRep.get(i);
-                    reportBuilder.append(String.format("Entry %d:\n%s\n", entryNumber++, reportEntry));
-                    reportBuilder.append("\n-------------------------------\n");  // Separator between entries
-                }
+             // First create headers with proper spacing
+                reportBuilder.append(String.format("%-20s %-25s %-18s %-18s %-15s %-13s\n",
+                    "Subscriber ID", "Book Name", "Borrow Date", "Return Date", "Deadline", "Status"));
+                reportBuilder.append("-".repeat(110) + "\n"); // Separator line after headers
 
+                // Format each row with aligned columns
+                for (int i = 1; i < ChatClient.FullBorrowRep.size(); i++) {
+                    String[] parts = ChatClient.FullBorrowRep.get(i).split(" , ");
+                    String subId = parts[0].substring(parts[0].indexOf(":") + 2);
+                    String bookName = parts[1].substring(parts[1].indexOf(":") + 2);
+                    String borrowDate = parts[2].substring(parts[2].indexOf(":") + 2);
+                    String returnDate = parts[3].substring(parts[3].indexOf(":") + 2);
+                    String deadline = parts[4].substring(parts[4].indexOf(":") + 2);
+                    String status = parts[5].substring(parts[5].indexOf(":") + 2);
+                    
+                    reportBuilder.append(String.format("%-20s %-30s %-18s %-17s %-15s %-15s\n",
+                        subId, bookName, borrowDate, returnDate, deadline, status));
+                }
 
                 // Display the formatted report in the text area
                 Displayarea.setText(reportBuilder.toString());
             }
         }
         else if (statusRep.isSelected()) {
-        	ClientGUIConnectionController.chat.reports_accept("create status report", selectedMonth , selectedYear );
+            ClientGUIConnectionController.chat.reports_accept("create status report", selectedMonth, selectedYear);
 
-            // Build a single string to display all borrow report entries
+            // Build a single string to display all status report entries
             StringBuilder reportBuilder = new StringBuilder();
             if (ChatClient.FullStatusRep == null || ChatClient.FullStatusRep.isEmpty()) {
                 Displayarea.setText("No information to display.");
@@ -90,19 +101,28 @@ public class ReportsGUI {
                 // Add a title for the report
                 reportBuilder.append("### Status Report for ").append(selectedMonth).append("/").append(selectedYear).append(" ###\n\n");
 
-                // Iterate over each entry and format it
-                int entryNumber = 1; // Start from index 1
-                for (int i = 1; i < ChatClient.FullStatusRep.size(); i++) {  // Start from index 1
-                    String reportEntry = ChatClient.FullStatusRep.get(i);
-                    reportBuilder.append(String.format("Entry %d:\n%s\n", entryNumber++, reportEntry));
-                    reportBuilder.append("\n-------------------------------\n");  // Separator between entries
-                }
+                // Create headers with proper spacing
+                reportBuilder.append(String.format("%-25s %-15s %-15s\n", "Subscriber Name", "ID", "Status"));
+                reportBuilder.append("-".repeat(55) + "\n"); // Separator line after headers
 
+                // Format each row with aligned columns
+                for (int i = 1; i < ChatClient.FullStatusRep.size(); i++) {  // Note change to i < FullStatusRep.size()
+                    // Parse the entry string to extract the subscriber's name, ID, and status
+                    String[] parts = ChatClient.FullStatusRep.get(i).split(" , ");
+                    String name = parts[0].substring(parts[0].indexOf(":") + 2).trim();  // Trim to avoid leading/trailing spaces
+                    String id = parts[1].substring(parts[1].indexOf(":") + 2).trim();
+                    String status = parts[2].substring(parts[2].indexOf(":") + 2).trim();
+
+                    // Append the formatted row to the report with padding to ensure columns remain aligned
+                    reportBuilder.append(String.format("%-25s %-15s %-15s\n", name, id, status));
+                }
 
                 // Display the formatted report in the text area
                 Displayarea.setText(reportBuilder.toString());
             }
         }
+
+
     }
     
     

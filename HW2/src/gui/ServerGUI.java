@@ -52,7 +52,7 @@ public class ServerGUI {
         String port = "5555"; // Default port
         serverRun.setContentText("Server is listening...");
         EchoServer sv = ServerUI.runServer(port);
-
+        
         // Add listener for connection events
         sv.addConnectionListener(new EchoServer.ConnectionListener() {
             @Override
@@ -60,7 +60,7 @@ public class ServerGUI {
                 ip.setText(clientInfo.getIpAddress());
                 hostName.setText(clientInfo.getHostName());
                 connStatus.setText("Connected");
-                System.out.println("Connection established: IP = " + clientInfo.getIpAddress() + ", Host = " + clientInfo.getHostName());
+                System.out.println("Connection established: IP = " + clientInfo.getIpAddress() + ", Host = " + clientInfo.getHostName());                
             }
 
             @Override
@@ -71,6 +71,8 @@ public class ServerGUI {
                 System.out.println("Connection lost: IP = " + clientInfo.getIpAddress() + ", Host = " + clientInfo.getHostName());
             }
         });
+        sv.time(); // call the method time in sv (Echo Server) to check all the actions that use time
+        
     }
     
     public void getCloseBtn(ActionEvent event) {

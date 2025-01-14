@@ -3,6 +3,7 @@ package server;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +43,9 @@ public class mysqlConnection {
         try {
 
 
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "Sheli123");
+
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root", "!vex123S");
+
 
             System.out.println("SQL connection succeed");
         } catch (SQLException ex) {
@@ -406,6 +409,23 @@ public class mysqlConnection {
     }
 
     public static boolean ChangeReturnDate(int subscriberId, String BookName, String OldDate, String NewDate, String Librarian_name) { 
+    	String CheckOrderQuery = "SELECT * FROM orders WHERE bookName = ?";
+    	try (PreparedStatement ps = conn.prepareStatement(CheckOrderQuery)) {
+    		ps.setString(1,BookName);
+    		try (ResultSet rs = ps.executeQuery()) {
+    			if (rs.next()) {
+    				return false;
+    			}
+    		}
+    	} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+    	
+    	LocalDateTime now = LocalDateTime.now();
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    	String formattedDate = now.format(formatter);
+    	
         String checkQuery = "SELECT additionalInfo FROM activityhistory WHERE SubscriberID = ? AND BookName = ? AND deadline = ? AND ActionType = 'Borrow'";
         String updateQuery = "UPDATE activityhistory SET deadline = ?, additionalInfo = ? WHERE SubscriberID = ? AND BookName = ? AND deadline = ? AND ActionType = 'Borrow'";
 
@@ -428,7 +448,7 @@ public class mysqlConnection {
             // Proceed with the update query if no entry exists in additionalInfo
             try (PreparedStatement updatePs = conn.prepareStatement(updateQuery)) {
                 updatePs.setString(1, NewDate);
-                updatePs.setString(2, "Extended by: " + Librarian_name + " , at: ");
+                updatePs.setString(2, "Extended by: " + Librarian_name + " , at: " + formattedDate );
                 updatePs.setInt(3, subscriberId);
                 updatePs.setString(4, BookName);
                 updatePs.setString(5, OldDate);
@@ -597,7 +617,7 @@ public class mysqlConnection {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     FullBorrowRep.add(String.format(
-                            "Subscriber ID: %s , Book Name: %s , Borrow Date: %s , Return Date: __-__-____ __:__:__  , Deadline: %s",
+                            "Subscriber ID: %s , Book Name: %s , Borrow Date: %s , Return Date: __-__-____ __ , Deadline: %s , Status: Not returned yet",
                             rs.getString("SubscriberID"), rs.getString("BookName"), rs.getString("BorrowDate"),
                             rs.getString("deadline")));
                 }
@@ -694,7 +714,7 @@ public class mysqlConnection {
                     while (rs.next()) {
                         String subscriberName = rs.getString("subscriber_name");
                         int subscriberId = rs.getInt("subscriber_id");
-                        statusReport.add(subscriberName + " (ID: " + subscriberId + ") - Frozen");
+                        statusReport.add("Subscriber name: " + subscriberName + " , ID: " + subscriberId + " , Status: Frozen");
                     }
                 }
             } catch (SQLException e) {
@@ -726,7 +746,7 @@ public class mysqlConnection {
                     while (rs.next()) {
                         String subscriberName = rs.getString("subscriber_name");
                         int subscriberId = rs.getInt("subscriber_id");
-                        statusReport.add(subscriberName + " (ID: " + subscriberId + ") - Active");
+                        statusReport.add("Subscriber name: " + subscriberName + " , ID: " + subscriberId + " , Status: Active");
                     }
                 }
             } catch (SQLException e) {
@@ -850,21 +870,8 @@ public class mysqlConnection {
         return false;
 
     }
-	public static Boolean incrimentBookAvailability(String bookName) throws SQLException {
-        PreparedStatement checkIfFull= conn.prepareStatement("SELECT * From books WHERE bookName=? AND copysAvailable<totalCopys");
-        //int numOfCopiesAvailable=getBookAvailality(bookName);        //need to add to code
-        ResultSet rs;
-        checkIfFull.setString(1, bookName);
-        rs= checkIfFull.executeQuery();
-
-
-        if(rs==null)    {    // if there is a row that book copies available is equal or greater then total copies of the book
-            System.err.println("there shouldn't be a book borrow in the first place");
-            return false;    // then it is an error.
-
-        }
-
-
+	
+	public static Boolean incrimentBookAvailability(String bookName) throws SQLException {        
         String insertQuary = "UPDATE books SET copysAvailable=copysAvailable + 1 WHERE bookName = ?";
         PreparedStatement ps = conn.prepareStatement(insertQuary);
         ps.setString(1, bookName);
@@ -874,5 +881,134 @@ public class mysqlConnection {
 
         return false;
     }
+	
+	public static String checkIsFrozen(int id) {
+		String status = null;
+		String query = "SELECT subscription_status FROM subscriber WHERE subscriber_id = ?;";
+		try {
+			PreparedStatement stmt = conn.prepareStatement(query);
+			stmt.setInt(1, id);
+            ResultSet resultSet = stmt.executeQuery();
+            resultSet.next();
+            status = resultSet.getString("subscription_status");            
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return status;
+	}
+	
+	//UPDATE arrivalTime in orders table of the oldest time for the given bookName and add a message to messages table
+	public static boolean addArrivalTimeToOrders(String bookName) {
+		int subID = 0;
+		String query = "SELECT subID FROM orders WHERE bookName = ? AND time = "
+				+ "(SELECT MIN(time) FROM orders WHERE bookName = ?);";
+		String updateQuery = "UPDATE orders SET arrivalTime = CURDATE() WHERE subID = ?;";
+		try {
+			PreparedStatement stmt = conn.prepareStatement(query);
+			stmt.setString(1, bookName);
+            stmt.setString(2, bookName);
+            ResultSet resultSet = stmt.executeQuery();
+            if (resultSet.next())
+            	subID = resultSet.getInt("subID");
+            else
+            	return false; // no one has ordered this book
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		try {
+			PreparedStatement updateStmt = conn.prepareStatement(updateQuery);
+			updateStmt.setInt(1, subID);
+			updateStmt.executeUpdate();
+        } catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		addArrivedMessage(subID, bookName); //add an arrived message in 'messages' table
+		return true;
+	}
+	
+	public static void addArrivedMessage(int subID, String bookName) {
+		String query = "INSERT INTO messages (subID, note) VALUES (?, ?);";
+		try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, subID); 
+            ps.setString(2, "Your order of the book: " + bookName + " has arrived! Please take it in less than two days");            
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace(); 
+        }		
+	}
+	
+	public static ArrayList<String> getOrdersOfSubscriber(int id) {
+		ArrayList<String> orders = new ArrayList<>();
+		String query = "SELECT bookName FROM orders WHERE subID = ? and arrivalTime IS NOT NULL;";
+		try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                	String bookName = rs.getString("bookName");                	
+                    orders.add(bookName);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+		return orders;
+	}
+	
+	//method to DELETE statement for each order that has been canceled
+	public static void deleteOrders(Map<Integer, String> ordersToDelete) {
+		String deleteQuery = "DELETE FROM orders WHERE subID = ? AND bookName = ?;";
+		 try (PreparedStatement deleteStmt = conn.prepareStatement(deleteQuery)) {
+		        // Loop through the map and delete the relevant orders
+		        for (Map.Entry<Integer, String> entry : ordersToDelete.entrySet()) {
+		            deleteStmt.setInt(1, entry.getKey());         
+		            deleteStmt.setString(2, entry.getValue());    
+		            deleteStmt.executeUpdate();                   
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+	}
+	
+	//UPDATE the subscribers 'notes' in messages table that their order has arrived and it has been more than 2 days
+	public static void timeDidntTakeOrder() {
+		Map <Integer, String> ordersToDelete = new HashMap<>();		
+		String query = "SELECT subID, bookName FROM orders WHERE arrivalTime IS NOT NULL AND arrivalTime < CURDATE() - INTERVAL 2 DAY;"; 
+		String updateMessage = "UPDATE messages SET note = ? WHERE subID = ?;";
+    	try {
+    		 PreparedStatement checkOrderStmt = conn.prepareStatement(query);
+             PreparedStatement updateMessageStmt = conn.prepareStatement(updateMessage);
+             ResultSet resultSet = checkOrderStmt.executeQuery();
+             while (resultSet.next()) {
+                 int subID = resultSet.getInt("subID");
+                 String bookName = resultSet.getString("bookName");
+                 // Update the notes column in the messages table
+                 updateMessageStmt.setString(1, "Your order of the book: " + bookName + " is canceled!");
+                 updateMessageStmt.setInt(2, subID);
+                 updateMessageStmt.executeUpdate();
+                 
+                 ordersToDelete.put(subID,bookName); //add the order to the HashMap
+             }            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }    	
+    	deleteOrders(ordersToDelete); //call the method to delete the non taken orders from the DB
+	}
+	
+	public static ArrayList<String> subscriberMessages(int subID) {
+		ArrayList<String> messages = new ArrayList<>();
+        String query = "SELECT note FROM messages WHERE subID = ?;";
+        
+        try (PreparedStatement ps = conn.prepareStatement(query)){
+        	ps.setInt(1, subID);
+        	ResultSet rs = ps.executeQuery();
+             while (rs.next()) {
+                 String message = rs.getString("note");
+                 messages.add(message);
+             }
+        } catch (SQLException e) {
+        	e.printStackTrace();
+        }
+        return messages;
+	}
 
 }

@@ -5,7 +5,9 @@ import java.net.ServerSocket;
 import java.sql.SQLException;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import common.Librarian;
 import common.Subscriber1;
@@ -116,8 +118,7 @@ public class EchoServer extends AbstractServer
 
                 case 5: // Check subscriber's status
                     subID =  (int) arr.get(1);
-                    String retStatus = "notFrozen"; // for the example
-                 // go to subscriber's DB and return the status of subID (subscriber's id)
+                    String retStatus = mysqlConnection.checkIsFrozen(subID);
                     arrToSend.add(5);
                     arrToSend.add(retStatus);
                     try {
@@ -395,8 +396,8 @@ public class EchoServer extends AbstractServer
 	            		 if(returnLate)
 	            			 lateDifference.append(" Late");
 	            	 }
-	            	 
-	         		Boolean bookIncrement = false;	// Initialized freezeSuccess to true because 
+	            	 boolean orderExists = mysqlConnection.addArrivalTimeToOrders(this.bookName); //add the arrival time to orders table	           	 
+	         		 Boolean bookIncrement = false;	// Initialized freezeSuccess to true because 
 	            	 Boolean freezeSuccess = true;	// of the AND action at sendToClient
 	            	 Boolean insertRowToActivity = false; // so if it won't happen then it will still pass.
 	            	 arrToSend.add(22);
@@ -412,8 +413,9 @@ public class EchoServer extends AbstractServer
 		            	 if(freeze==true){
 		            		 freezeSuccess = mysqlConnection.updateSubscriberStatusToFrozen(this.subscriberID,"Frozen");
 		            	 }
-		            	
-		            	 bookIncrement = mysqlConnection.incrimentBookAvailability(this.bookName);
+		            	 if (orderExists == false) { //which means no one has ordered this book then we can add the copy to the inventory
+		            		 bookIncrement = mysqlConnection.incrimentBookAvailability(this.bookName);
+		            	 }		            	
 		            	 arrToSend.add(bookIncrement && freezeSuccess && insertRowToActivity);
 		            	 client.sendToClient(arrToSend );
 
@@ -424,7 +426,7 @@ public class EchoServer extends AbstractServer
 						e.printStackTrace();
 					}
 	            	 break;
-                	case 23:
+                case 23:
                 	String bookNameBarCode;
                 	try {
                 		bookNameBarCode = mysqlConnection.BringBarCodeBookName((int)arr.get(1));
@@ -491,7 +493,37 @@ public class EchoServer extends AbstractServer
 					e.printStackTrace();
 				}
 	            	break;
-
+                case 27: //return ArrayList of ordered books of a subscriber
+                	ArrayList<String> orders = mysqlConnection.getOrdersOfSubscriber((int)arr.get(1));
+                	arrToSend.add(27);
+                	arrToSend.add(orders);
+                	try {
+                		client.sendToClient(arrToSend);
+                	} catch (IOException e) {
+                		e.printStackTrace();
+                	}
+                	break;
+                case 28: //delete the order after it has been taken by the subscriber
+                	Map <Integer, String> ordersToDelete = new HashMap<>();	
+                	ordersToDelete.put((int)arr.get(1), (String)arr.get(2));
+                	mysqlConnection.deleteOrders(ordersToDelete);
+                	arrToSend.add(28);
+                	try {
+                		client.sendToClient(arrToSend);
+                	} catch (IOException e) {
+                		e.printStackTrace();
+                	}
+                	break;
+                case 29:
+                	ArrayList<String> subMessages = mysqlConnection.subscriberMessages((int) arr.get(1));
+                	arrToSend.add(29);
+                	arrToSend.add(subMessages);
+                	try {
+                		client.sendToClient(arrToSend);
+                	} catch (IOException e) {
+                		e.printStackTrace();
+                	}
+                	break;
                 default:
                     System.out.println("The server - Received message is not of the expected type.");
                     break;
@@ -527,5 +559,12 @@ public class EchoServer extends AbstractServer
         } catch (Exception e) {
             System.out.println("Error during client disconnection: " + e.getMessage());
         }
-    }  
+    }
+    
+    //this method check all the actions that use time
+   public void time() {
+	 //go to DB and update subscribers that it has been 2 days since their order arrived
+	 //also, delete the tuples in 'orders' table
+   	 mysqlConnection.timeDidntTakeOrder();   	 
+   }
 }
