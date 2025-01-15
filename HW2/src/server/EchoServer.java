@@ -524,6 +524,16 @@ public class EchoServer extends AbstractServer
                 		e.printStackTrace();
                 	}
                 	break;
+                case 30:
+                	ArrayList<String> libMessages = SQLinstance.librarianMessages();
+                	arrToSend.add(30);
+                	arrToSend.add(libMessages);
+                	try {
+                		client.sendToClient(arrToSend);
+                	} catch (IOException e) {
+                		e.printStackTrace();
+                	}
+                	break;
                 default:
                     System.out.println("The server - Received message is not of the expected type.");
                     break;
@@ -561,10 +571,11 @@ public class EchoServer extends AbstractServer
         }
     }
     
-    //this method check all the actions that use time
+    //this method check all the actions that use time, it is called when the server starts
    public void time() {
 	 //go to DB and update subscribers that it has been 2 days since their order arrived
 	 //also, delete the tuples in 'orders' table
-   	 SQLinstance.timeDidntTakeOrder();   	 
+   	 SQLinstance.timeDidntTakeOrder();
+   	SQLinstance.notifyBeforeReturnDeadline();
    }
 }

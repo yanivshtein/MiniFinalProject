@@ -146,6 +146,12 @@ public class ClientConsole implements ChatIF
       arr.add(bookName);
       client.handleMessageFromClientUI(arr);		  
   }
+  
+  public void acceptMessagesForLibrarian() {
+	  ArrayList<Object> arr = new ArrayList<>();
+      arr.add(30);
+      client.handleMessageFromClientUI(arr);	
+  }
 
   public void acceptFromOrderController(int request, String id, String bookName) {
       ArrayList<Object> arr = new ArrayList<>();

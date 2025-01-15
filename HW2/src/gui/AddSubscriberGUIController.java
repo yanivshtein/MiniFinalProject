@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextField;
@@ -58,13 +59,42 @@ public class AddSubscriberGUIController {
         primaryStage.show();
     }
     
-    public void saveBtn(ActionEvent event)  {
-    	String status="active";
-    	int randomId = ThreadLocalRandom.current().nextInt(1, 100000);
-    	ClientGUIConnectionController.chat.acceptAddSubscriber(randomId,name.getText(),phoneNumber.getText() ,email.getText(),status,password.getText());
-        afterUpdate.setContentText("Added");
-        
+    public void saveBtn(ActionEvent event) {
+        StringBuilder missingFields = new StringBuilder();
+
+        // Check which fields are empty and append them to the missingFields message
+        if (name.getText().isEmpty()) {
+            missingFields.append("Name, ");
+        }
+        if (phoneNumber.getText().isEmpty()) {
+            missingFields.append("Phone Number, ");
+        }
+        if (email.getText().isEmpty()) {
+            missingFields.append("Email, ");
+        }
+        if (password.getText().isEmpty()) {
+            missingFields.append("Password, ");
+        }
+
+        // If there are missing fields, show a warning message
+        if (missingFields.length() > 0) {
+            // Remove the trailing comma and space
+            missingFields.setLength(missingFields.length() - 2);
+
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Missing Fields");
+            alert.setHeaderText("Some fields are missing");
+            alert.setContentText("Please fill in the following fields: " + missingFields.toString());
+            alert.showAndWait();
+        } else {
+            // If all fields are filled, proceed with the action
+            String status = "active";
+            int randomId = ThreadLocalRandom.current().nextInt(1, 100000);
+            ClientGUIConnectionController.chat.acceptAddSubscriber(randomId, name.getText(), phoneNumber.getText(), email.getText(), status, password.getText());
+            afterUpdate.setContentText("Added");
+        }
     }
+
 	public void getExitBtn(ActionEvent event) throws IOException {
 		System.out.println("Exit client");
 		System.exit(0);
