@@ -256,17 +256,17 @@ public class ClientConsole implements ChatIF
     }
   }
 
-  public void returnBook_accept(String actionType, String borrowerID, String bookName, Boolean isLate, Boolean freezeStatus, Period totalDaysLate) {
+  public void returnBook_accept(String actionType, String borrowerID, String bookID, Boolean isLate, Boolean freezeStatus, Period totalDaysLate) {
       ArrayList<Object> arr1 = new ArrayList<>();
-      
+      String bookName=bookID;
       switch (actionType) {
         case "EXIST":
             arr1.add(20);
             arr1.add(borrowerID);
-            arr1.add(bookName);
+            arr1.add(bookID);
             break;
             
-        case "SELECT DATE":
+        case "SELECT DATE":		//  the action and deadline date of the borrow 
             arr1.add(21);
             arr1.add(borrowerID);
             arr1.add(bookName);
@@ -281,7 +281,7 @@ public class ClientConsole implements ChatIF
             arr1.add(totalDaysLate);
             break;
             
-        case "CHECK_BOOK_RETURNED":
+        case "CHECK_BOOK_RETURNED":	
             arr1.add(26);
             arr1.add(borrowerID);
             arr1.add(bookName);

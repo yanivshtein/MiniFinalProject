@@ -1,5 +1,6 @@
 package gui;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -10,8 +11,13 @@ import client.ChatClient;
 import client.ClientUI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -27,7 +33,7 @@ public class LibrarianReturnGUI {
 	private TextField subscriberId=null;
 	
 	@FXML
-	private TextField bookName=null;
+	private TextField bookID=null;
 	
 	@FXML
 	private Label bookArriveDate=null;
@@ -42,7 +48,7 @@ public class LibrarianReturnGUI {
 	private Button checkButton=null;
 	
 	@FXML
-	private Button exitButton=null;
+	private Button subscriberBorrowList = null;
 	
 	@FXML
 	private Label artMsg = null;
@@ -50,14 +56,25 @@ public class LibrarianReturnGUI {
 	@FXML
 	private Label sendMsg = null;
 	
+	
+	
 	private Alert alertMessege = new Alert(AlertType.NONE);
 
+	private String BookName;
 	
-	
+	private boolean isChecked = false;
 	
 	
 	
 	public void sendButton(ActionEvent event) {		// method that sends information to the controller to return the book to the library
+		
+		 
+		if (!isChecked) {
+	        alertMessege.setContentText("You must check if the borrow exists before returning the book.");
+	        alertMessege.setAlertType(AlertType.ERROR);
+	        alertMessege.show();
+	        return;
+	    }
 		
 		if(bookArriveDate ==null || deadline == null) {
 			alertMessege.setContentText("Error need to check if exist borrow first");	
@@ -70,7 +87,7 @@ public class LibrarianReturnGUI {
 		}
 		
 		String BorrowerId=subscriberId.getText();
-		String BookName=bookName.getText();
+		
 		
 		// check if the book has already returned by the subscriber
 		ClientGUIConnectionController.chat.returnBook_accept("CHECK_BOOK_RETURNED", BorrowerId, BookName, null, null, null);
@@ -82,6 +99,10 @@ public class LibrarianReturnGUI {
 
 			return;
 		}
+		
+		
+		BookName = ChatClient.bookName;
+		System.out.println("book name is: "+BookName);
 		// get current time in a format of yyyy-MM-dd
 		LocalDate currentDate=LocalDate.now();
 		DateTimeFormatter dateFormatter= DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -123,6 +144,12 @@ public class LibrarianReturnGUI {
 			
 		}
 		
+		if(ChatClient.isFrozen) {	
+			alertMessege.setContentText("The subscriber’s status card has been frozen");	
+		 	alertMessege.setAlertType(AlertType.INFORMATION);
+		 	alertMessege.show();
+		}
+		
 		else {
 			showLabelTextForDuration(sendMsg, "Return operation successfully finished!", 3000); // Show text for 3 seconds
 		}
@@ -132,6 +159,8 @@ public class LibrarianReturnGUI {
 //		 	alertMessege.setAlertType(AlertType.ERROR);
 			e.getStackTrace();
 		}
+		
+		isChecked = false;
 	}
 	
 	public void showLabelTextForDuration(Label label, String text , int durationInMillis) {
@@ -147,35 +176,38 @@ public class LibrarianReturnGUI {
 		
 		String actionDate = null;
 		String Deadline = null;
-		String BorrowerId=subscriberId.getText();
-		String BookName=bookName.getText();
+		String BorrowerId;
+		String BookID;
 		
-		if(BorrowerId ==null || BookName == null) {
-			alertMessege.setContentText("Error you didn't write both Subscriber's ID and Book's name");	
-		 	alertMessege.setAlertType(AlertType.ERROR);
-			return;
+		if (subscriberId == null || bookID == null || 
+		        subscriberId.getText().trim().isEmpty() || bookID.getText().trim().isEmpty()) {
+		        alertMessege.setContentText("You must provide both the Subscriber's ID and the Book's ID.");
+		        alertMessege.setAlertType(AlertType.ERROR);
+		        alertMessege.show(); // Show the error alert
+		        return; // Stop further execution
 		}
-		BorrowerId=BorrowerId.trim();
-		BookName=BookName.trim();
+		BorrowerId = subscriberId.getText().trim();
+	    BookID = bookID.getText().trim();
+
 		int index =0;
 		
 		if(artMsg!=null)		// if the text in Label is currently visible 
 			artMsg.setText("");
 		
 		// check in the database if exist a borrow with the same borrower ID and book name
-		ClientGUIConnectionController.chat.returnBook_accept("EXIST", BorrowerId, BookName,false,false,null);
+		ClientGUIConnectionController.chat.returnBook_accept("EXIST", BorrowerId, BookID,false,false,null);
 		
 		// if there isn't any row that match, then show in label.
 		if (ChatClient.bool==false) {
 			
 			bookArriveDate.setText("");		// set labels to show them in GUI
 			deadline.setText("");
-			artMsg.setText("The Borrow does not exist!");
-			showLabelTextForDuration(sendMsg, "The Borrow does not exist!", 3000); // Show text for 3 seconds
-
+			
+			showLabelTextForDuration(artMsg, "The Borrow does not exist!", 3000); // Show text for 3 seconds
+			isChecked = false;
 			return;
 		}
-		
+		BookName = ChatClient.bookName;
 		// if there is a match then select the borrow date and deadline.
 		ClientGUIConnectionController.chat.returnBook_accept("SELECT DATE",BorrowerId,BookName,false,false,null);
 		
@@ -187,14 +219,31 @@ public class LibrarianReturnGUI {
 			
 			index++;
 		}
+		
+		isChecked = true;
 		// show the borrow date and deadline in the labels
 		bookArriveDate.setText(actionDate);		// set labels to show them in GUI
 		deadline.setText(Deadline);
 	}
 	
 	
-	public void exitButton(ActionEvent event) {
-		System.out.println("Exit return window");
-		System.exit(0);
+	public void retButton(ActionEvent event) throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+        Stage primaryStage = new Stage();
+        Pane root = loader.load(getClass().getResource("/gui/LibrarianGUIHomePageController.fxml").openStream());
+
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/gui/LibrarianGUIHomePageController.css").toExternalForm());
+        primaryStage.setTitle("Librarian home page");
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+	}
+	
+	public void borrowersBorrowList(ActionEvent event) {
+		
+		
+		
 	}
 }

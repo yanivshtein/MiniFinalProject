@@ -344,15 +344,18 @@ public class EchoServer extends AbstractServer
                     break;
                 case 20:	// search if exist borrower in the DB
 	            	String borrowerid = (String)arr.get(1); //subscriber ID is in the second position of the array
-		          	String bookname = (String)arr.get(2);
+		          	String bookID = (String)arr.get(2);
 		  
 				try {
-					Boolean isExist= SQLinstance.checkIfBorrowerFound(borrowerid, bookname);
+					String BookName=SQLinstance.BringBarCodeBookName(Integer.parseInt(bookID));	// get the book name from the book database
+					
+					Boolean isExist= SQLinstance.checkIfBorrowerFound(borrowerid, BookName);	// check if there is a borrow in the database
 					arrToSend.add(20);
-					//ar2.add(isExist);
+					
 					arrToSend.add(isExist);
+					arrToSend.add(BookName);
 					client.sendToClient(arrToSend);
-					//client.sendToClient(ar2);
+					
 				} catch (SQLException | IOException e) {
 					
 					e.printStackTrace();
@@ -412,11 +415,16 @@ public class EchoServer extends AbstractServer
 		            	 }
 		            	 if(freeze==true){
 		            		 freezeSuccess = SQLinstance.updateSubscriberStatusToFrozen(this.subscriberID,"Frozen");
+		            		 
+		            		 if(freezeSuccess)
+		            			 arrToSend.add(true);
 		            	 }
 		            	 if (orderExists == false) { //which means no one has ordered this book then we can add the copy to the inventory
 		            		 bookIncrement = SQLinstance.incrimentBookAvailability(this.bookName);
+		            		 
 		            	 }		            	
 		            	 arrToSend.add(bookIncrement && freezeSuccess && insertRowToActivity);
+		            	 
 		            	 client.sendToClient(arrToSend );
 
 	            	 } catch (IOException e) {

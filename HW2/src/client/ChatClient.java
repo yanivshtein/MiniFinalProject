@@ -209,12 +209,18 @@ public class ChatClient extends AbstractClient {
 			break;
 		case 20:
 			bool=(Boolean) arr.get(1);
+			bookName = (String)arr.get(2);
 			break;
 		case 21:
 			 ActionDateAndDeadline = (ArrayList<String>)arr.get(1);
 			break;
 		case 22:
-			  bool=(Boolean) arr.get(1);
+			  bool=(Boolean) arr.get(2);
+			  if ((Boolean)arr.get(1)) {
+				  isFrozen=true;
+			  }
+			  else
+				  isFrozen=false;
 			break;
 		case 23:
 			bookName = (String) arr.get(1);
