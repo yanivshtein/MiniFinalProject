@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="641.0" prefWidth="999.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LibrarianWatchAndUpdateGUI">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="641.0" prefWidth="999.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LibrarianWatchGUIGUIAndUpdateGUI">
    <children>
       <Label layoutX="32.0" layoutY="45.0" prefHeight="17.0" prefWidth="207.0" />
       <Button fx:id="ViewClick" layoutX="32.0" layoutY="50.0" mnemonicParsing="false" onAction="#ViewDetBtt" prefHeight="25.0" prefWidth="223.0" text="reader card details" />
