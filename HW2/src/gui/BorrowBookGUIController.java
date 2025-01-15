@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.CustomMenuItem;
@@ -58,23 +59,44 @@ public class BorrowBookGUIController {
     
 
     public void borrowBtn(ActionEvent event)  {
-    	 int subscriberId = Integer.parseInt(id.getText());
-
+    	 
+    	Alert alert = new Alert(Alert.AlertType.WARNING);
+    	 if(id.getText().isEmpty() ||bookName.getText().isEmpty() ) {
+             alert.setTitle("Missing Fields");
+             alert.setHeaderText("Some fields are missing");
+             alert.setContentText("Please fill in the following fields");
+             alert.showAndWait();
+    	
+    	 }else {
+    	 
+		int subscriberId = Integer.parseInt(id.getText());
     	 ClientGUIConnectionController.chat.acceptBorrowBook(subscriberId);
     	 ClientGUIConnectionController.chat.acceptSearchBook(14,bookName.getText());
     	if(ChatClient.bool==false) {
-    		msg.setContentText("Subscriber doesn't exist");
+            alert.setTitle("Error");
+            alert.setContentText("The subscriber does not exist");
+            alert.showAndWait();
     	}
     	else {
     		if(ChatClient.statusSub.equals("frozen")){
-    			msg.setContentText("The subscription is frozen, it is not possible to make the borrowing");
+                alert.setTitle("Error");
+                alert.setContentText("The subscription is frozen, it is not possible to make the borrowing");
+                alert.showAndWait();	
+    			
     		}
     		
     	    else if(ChatClient.bookAvailability== -1) {
-        		msg.setContentText("The book is not in the library");
+                alert.setTitle("Error");
+                alert.setContentText("The book is not in the library");
+                alert.showAndWait();
+        		
         	}
         	else if(ChatClient.bookAvailability == 0) {
-        		msg.setContentText("The book is in the library but currently out of stock");
+                alert.setTitle("Error");
+                alert.setContentText("The book is in the library but currently out of stock");
+                alert.showAndWait();
+        		
+        		
         	}
         	else if(ChatClient.bookAvailability >0) {
         		ClientGUIConnectionController.chat.acceptSearchBook(16,bookName.getText());
@@ -84,6 +106,7 @@ public class BorrowBookGUIController {
         	else {
         		msg.setContentText("ERROR" );
         	}
+    	}
     		
     	}
 

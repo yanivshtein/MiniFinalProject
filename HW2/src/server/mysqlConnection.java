@@ -43,7 +43,7 @@ public class mysqlConnection {
 		try {
 
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root",
-					"!vex123S");
+					"Sheli123");
 
 			System.out.println("SQL connection succeed");
 		} catch (SQLException ex) {
@@ -993,6 +993,55 @@ public class mysqlConnection {
 		}
 		deleteOrders(ordersToDelete); // call the method to delete the non taken orders from the DB
 	}
+	public void notifyBeforeReturnDeadline() {
+	    // SQL query to fetch subscribers with books borrowed and whose deadline is the next day
+	    String query = "SELECT SubscriberID, BookName, deadline, reminderSent " +
+	                   "FROM activityhistory " +
+	                   "WHERE ActionType = 'borrow' " +
+	                   "AND deadline = CURDATE() + INTERVAL 1 DAY " +
+	                   "AND reminderSent = FALSE;"; // Only fetch records where reminderSent is FALSE
+
+	    String insertMessage = "INSERT INTO sub_messages (subID, note) VALUES (?, ?);";
+	    String updateReminderSent = "UPDATE activityhistory SET reminderSent = TRUE WHERE SubscriberID = ? AND BookName = ?;";
+
+	    try {
+	        // Prepare the SQL statement to check for deadlines
+	        PreparedStatement checkDeadlineStmt = conn.prepareStatement(query);
+	        // Prepare the SQL statement to insert notification messages
+	        PreparedStatement insertMessageStmt = conn.prepareStatement(insertMessage);
+	        // Prepare the SQL statement to update reminderSent column
+	        PreparedStatement updateReminderSentStmt = conn.prepareStatement(updateReminderSent);
+	        
+	        // Execute the query and get the result set
+	        ResultSet resultSet = checkDeadlineStmt.executeQuery();
+
+	        // Process each record in the result set
+	        while (resultSet.next()) {
+	            int subID = resultSet.getInt("SubscriberID"); 
+	            String bookName = resultSet.getString("BookName"); 
+	            Date deadline = resultSet.getDate("deadline"); 
+
+	            // Create a notification message for the subscriber
+	            String note = "Reminder: The book \"" + bookName + "\" must be returned by " + deadline + ".";
+
+	            // Insert the notification message into the sub_messages table
+	            insertMessageStmt.setInt(1, subID);
+	            insertMessageStmt.setString(2, note);
+	            insertMessageStmt.executeUpdate();
+
+	            // Update the reminderSent column to TRUE to indicate that a reminder was sent
+	            updateReminderSentStmt.setInt(1, subID);
+	            updateReminderSentStmt.setString(2, bookName);
+	            updateReminderSentStmt.executeUpdate();
+
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace(); // Print the stack trace in case of an exception
+	    }
+	}
+
+
+
 
 	public ArrayList<String> subscriberMessages(int subID) {
 		ArrayList<String> messages = new ArrayList<>();
