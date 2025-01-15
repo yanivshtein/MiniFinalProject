@@ -14,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -155,15 +156,27 @@ public class SearchBookGUIController {
 	}
 
 	public void searchBtn(ActionEvent event) {
+		Alert alert = new Alert(Alert.AlertType.WARNING);
+		if(bookName.getText().isEmpty()) {
+            alert.setTitle("Missing Field");
+            alert.setContentText("Please fill the name of the book");
+            alert.showAndWait();
+		}else {
 		ClientGUIConnectionController.chat.acceptSearchBook(14, bookName.getText());
 		if (ChatClient.bookAvailability == -1) {
-			errorMsg.setContentText("The book is not in the library");
+            alert.setTitle("Error");
+            alert.setContentText("The book is not in the library");
+            alert.showAndWait();
+			
 		} else if (ChatClient.bookAvailability == 0) {
-			errorMsg.setContentText("The book is in the library but currently out of stock, estimated return date is:"+ChatClient.deadlineDate);
+            alert.setTitle("Error");
+            alert.setContentText("The book is in the library but currently out of stock, estimated return date is:"+ChatClient.deadlineDate);
+            alert.showAndWait();
 		} else if (ChatClient.bookAvailability > 0) {
 			errorMsg.setContentText("The book is available on shelf A. Copies left: " + ChatClient.bookAvailability);
 		} else {
 			errorMsg.setContentText("ERROR");
+		}
 		}
 	}
 

@@ -571,10 +571,11 @@ public class EchoServer extends AbstractServer
         }
     }
     
-    //this method check all the actions that use time
+    //this method check all the actions that use time, it is called when the server starts
    public void time() {
 	 //go to DB and update subscribers that it has been 2 days since their order arrived
 	 //also, delete the tuples in 'orders' table
-   	 SQLinstance.timeDidntTakeOrder();   	 
+   	 SQLinstance.timeDidntTakeOrder();
+   	SQLinstance.notifyBeforeReturnDeadline();
    }
 }
