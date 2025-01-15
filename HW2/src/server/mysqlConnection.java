@@ -66,7 +66,6 @@ public class mysqlConnection {
 		}
 	}
 
-          
 
 	public Subscriber1 select(String id) {
 		Subscriber1 sub = null;

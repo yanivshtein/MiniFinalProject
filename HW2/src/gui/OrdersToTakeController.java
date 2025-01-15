@@ -2,7 +2,6 @@ package gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
 import client.ChatClient;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
