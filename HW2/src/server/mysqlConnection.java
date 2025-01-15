@@ -317,7 +317,7 @@ public class mysqlConnection {
 
 	// this method updates the Borrow's deadline in more 7 days
 	private void addExtension(int id, String bookName) {
-		String addQuery = "UPDATE activityhistory SET additionalInfo = ?, deadline = DATE_ADD(deadline, INTERVAL 7 DAY)"
+		String addQuery = "UPDATE activityhistory SET additionalInfo = ?, deadline = DATE_ADD(deadline, INTERVAL 14 DAY)"
 				+ " WHERE SubscriberID = ? AND bookName = ? AND ActionType = 'Borrow';";
 		try {
 			PreparedStatement stmt = conn.prepareStatement(addQuery);
@@ -325,6 +325,16 @@ public class mysqlConnection {
 			stmt.setInt(2, id);
 			stmt.setString(3, bookName);
 			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		//update the Librarian's messages that the subscirber got extension
+		String libQuery = "INSERT INTO lib_messages (libID, note) VALUES (?, ?);";
+		try (PreparedStatement ps = conn.prepareStatement(libQuery)) {
+			ps.setInt(1, id);
+			ps.setString(2,
+					"The subscriber " + id + ", got Auto Extension for 14 more days");
+			ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -925,11 +935,11 @@ public class mysqlConnection {
 	}
 
 	public void addArrivedMessage(int subID, String bookName) {
-		String query = "INSERT INTO sub_messages (subID, note) VALUES (?, ?);";
+		String query = "INSERT INTO sub_messages (subID, note) VALUES (?, ?);";		
 		try (PreparedStatement ps = conn.prepareStatement(query)) {
 			ps.setInt(1, subID);
 			ps.setString(2,
-					"Your order of the book: " + bookName + " has arrived! Please take it in less than two days");
+					"Your order of the book: '" + bookName + "' has arrived! Please take it in less than two days");
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -982,7 +992,7 @@ public class mysqlConnection {
 				int subID = resultSet.getInt("subID");
 				String bookName = resultSet.getString("bookName");
 				// Update the notes column in the messages table
-				updateMessageStmt.setString(1, "Your order of the book: " + bookName + " is canceled!");
+				updateMessageStmt.setString(1, "Your order of the book: '" + bookName + "' is canceled!");
 				updateMessageStmt.setInt(2, subID);
 				updateMessageStmt.executeUpdate();
 
