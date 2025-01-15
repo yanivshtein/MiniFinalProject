@@ -332,10 +332,10 @@ public class mysqlConnection {
 		}
 		//update the Librarian's messages that the subscirber got extension
 		String libQuery = "INSERT INTO lib_messages (note) VALUES (?);";
-		LocalDateTime now = LocalDateTime.now();
-		Timestamp timestamp = Timestamp.valueOf(now);
+		LocalDate currentDate = LocalDate.now();
+		Date sqlDate = Date.valueOf(currentDate);
 		try (PreparedStatement ps = conn.prepareStatement(libQuery)) {
-			ps.setString(1, "The subscriber " + id + ", got Auto Extension for 14 more days. Action Date: " + timestamp);
+			ps.setString(1, "The subscriber " + id + ", got Auto Extension for 14 more days. Action Date: " + sqlDate);
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
