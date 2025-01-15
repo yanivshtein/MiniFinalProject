@@ -43,7 +43,7 @@ public class mysqlConnection {
 		try {
 
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root",
-					"Sheli123");
+					"!vex123S");
 
 			System.out.println("SQL connection succeed");
 		} catch (SQLException ex) {
@@ -329,11 +329,11 @@ public class mysqlConnection {
 			e.printStackTrace();
 		}
 		//update the Librarian's messages that the subscirber got extension
-		String libQuery = "INSERT INTO lib_messages (libID, note) VALUES (?, ?);";
+		String libQuery = "INSERT INTO lib_messages (note) VALUES (?);";
+		LocalDateTime now = LocalDateTime.now();
+		Timestamp timestamp = Timestamp.valueOf(now);
 		try (PreparedStatement ps = conn.prepareStatement(libQuery)) {
-			ps.setInt(1, id);
-			ps.setString(2,
-					"The subscriber " + id + ", got Auto Extension for 14 more days");
+			ps.setString(1, "The subscriber " + id + ", got Auto Extension for 14 more days. Action Date: " + timestamp);
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -429,7 +429,6 @@ public class mysqlConnection {
 				}
 			}
 		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
