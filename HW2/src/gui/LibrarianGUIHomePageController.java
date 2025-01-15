@@ -56,6 +56,9 @@ public class LibrarianGUIHomePageController {
 	private Button exit = null;
 	
 	@FXML
+	private Button  messagesBtn = null;
+	
+	@FXML
 	private void initialize() {
 		librarianName.setText(ChatClient.lib.getLibrarian_name());
 		BringLibName = librarianName.getText();
@@ -222,5 +225,22 @@ public class LibrarianGUIHomePageController {
 	    primaryStage.show();
 	}
 	
+	
+	public void getMessages(ActionEvent event) throws IOException {
+		// Hiding primary window
+	    ((Node) event.getSource()).getScene().getWindow().hide();
+	    
+	    // Loading FXML and setting up the new stage
+	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/LibrarianMessages.fxml"));
+	    Parent root = loader.load();
+	    
+	    Scene scene = new Scene(root);
+	    //scene.getStylesheets().add(getClass().getResource("/gui/OrdersToTake.css").toExternalForm());
+	    
+	    Stage primaryStage = new Stage();
+	    primaryStage.setTitle("Waiting Orders");
+	    primaryStage.setScene(scene);
+	    primaryStage.show();
+	}
 	
 }

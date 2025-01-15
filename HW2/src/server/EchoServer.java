@@ -524,6 +524,16 @@ public class EchoServer extends AbstractServer
                 		e.printStackTrace();
                 	}
                 	break;
+                case 30:
+                	ArrayList<String> libMessages = SQLinstance.librarianMessages();
+                	arrToSend.add(30);
+                	arrToSend.add(libMessages);
+                	try {
+                		client.sendToClient(arrToSend);
+                	} catch (IOException e) {
+                		e.printStackTrace();
+                	}
+                	break;
                 default:
                     System.out.println("The server - Received message is not of the expected type.");
                     break;

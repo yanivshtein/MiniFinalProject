@@ -43,7 +43,7 @@ public class mysqlConnection {
 		try {
 
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root",
-					"!vex123S");
+					"yaniv1234");
 
 			System.out.println("SQL connection succeed");
 		} catch (SQLException ex) {
@@ -1000,6 +1000,22 @@ public class mysqlConnection {
 
 		try (PreparedStatement ps = conn.prepareStatement(query)) {
 			ps.setInt(1, subID);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				String message = rs.getString("note");
+				messages.add(message);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return messages;
+	}
+	
+	public ArrayList<String> librarianMessages() {
+		ArrayList<String> messages = new ArrayList<>();
+		String query = "SELECT * FROM lib_messages;";
+
+		try (PreparedStatement ps = conn.prepareStatement(query)) {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				String message = rs.getString("note");
