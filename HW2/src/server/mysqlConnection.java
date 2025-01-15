@@ -43,7 +43,9 @@ public class mysqlConnection {
 		try {
 
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root",
-					"Sheli123");
+					"!vex123S");
+
+
 
 			System.out.println("SQL connection succeed");
 		} catch (SQLException ex) {
@@ -329,11 +331,11 @@ public class mysqlConnection {
 			e.printStackTrace();
 		}
 		//update the Librarian's messages that the subscirber got extension
-		String libQuery = "INSERT INTO lib_messages (libID, note) VALUES (?, ?);";
+		String libQuery = "INSERT INTO lib_messages (note) VALUES (?);";
+		LocalDate currentDate = LocalDate.now();
+		Date sqlDate = Date.valueOf(currentDate);
 		try (PreparedStatement ps = conn.prepareStatement(libQuery)) {
-			ps.setInt(1, id);
-			ps.setString(2,
-					"The subscriber " + id + ", got Auto Extension for 14 more days");
+			ps.setString(1, "The subscriber " + id + ", got Auto Extension for 14 more days. Action Date: " + sqlDate);
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -429,7 +431,6 @@ public class mysqlConnection {
 				}
 			}
 		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -1059,6 +1060,22 @@ public class mysqlConnection {
 
 		try (PreparedStatement ps = conn.prepareStatement(query)) {
 			ps.setInt(1, subID);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				String message = rs.getString("note");
+				messages.add(message);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return messages;
+	}
+	
+	public ArrayList<String> librarianMessages() {
+		ArrayList<String> messages = new ArrayList<>();
+		String query = "SELECT * FROM lib_messages";
+
+		try (PreparedStatement ps = conn.prepareStatement(query)) {
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				String message = rs.getString("note");
