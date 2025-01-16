@@ -25,6 +25,8 @@ import javafx.scene.control.TextArea;
 
 public class LibrarianGUIHomePageController {
 	
+	
+	public static String  Update_Watch_flag;
 
 	public static String BringLibName;
 	
@@ -149,6 +151,19 @@ public class LibrarianGUIHomePageController {
 	        // Optionally, display an error message to the user here
 	    }
 	}
+	
+	public void getLibrarianWatch(ActionEvent event) throws IOException {
+		Update_Watch_flag = "watch";
+		getLibrarianWatchAndUpdateBtn(event);
+	}
+	
+	public void getLibrarianUpdate(ActionEvent event) throws IOException {
+		Update_Watch_flag = "update";
+		getLibrarianWatchAndUpdateBtn(event);
+	}
+	
+	
+	
 	
 	public void getReportsGUIBtn(ActionEvent event) throws IOException {
 	    try {

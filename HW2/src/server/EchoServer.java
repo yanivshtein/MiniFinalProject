@@ -117,7 +117,13 @@ public class EchoServer extends AbstractServer
                     break;
 
                 case 5: // Check subscriber's status
-                    subID =  (int) arr.get(1);
+                	if(arr.get(1) instanceof String) {
+                		Integer temp = Integer.valueOf((String) arr.get(1));
+                		subID = temp;
+                	}
+                	else {
+                        subID =  (int) arr.get(1);
+                	}
                     String retStatus = SQLinstance.checkIsFrozen(subID);
                     arrToSend.add(5);
                     arrToSend.add(retStatus);
@@ -528,6 +534,16 @@ public class EchoServer extends AbstractServer
                 	ArrayList<String> libMessages = SQLinstance.librarianMessages();
                 	arrToSend.add(30);
                 	arrToSend.add(libMessages);
+                	try {
+                		client.sendToClient(arrToSend);
+                	} catch (IOException e) {
+                		e.printStackTrace();
+                	}
+                	break;
+                case 31:
+            	    ArrayList<String> booksNearDeadline = SQLinstance.getBooksNearDeadlineForSubscriber(Integer.parseInt((String) arr.get(1)));
+                	arrToSend.add(31);
+                	arrToSend.add(booksNearDeadline);
                 	try {
                 		client.sendToClient(arrToSend);
                 	} catch (IOException e) {

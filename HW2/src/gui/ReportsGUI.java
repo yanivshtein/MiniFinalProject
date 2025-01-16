@@ -30,6 +30,7 @@ public class ReportsGUI {
     private Button ExitBtt = null;
     @FXML
     private Button ReturnBtn = null;
+    
     @FXML
     private ComboBox<String> years = null;  // Specify type String for ComboBox
 
@@ -58,7 +59,12 @@ public class ReportsGUI {
         // Get the selected month and year from the ComboBox
         String selectedMonth = getMonthNumber(months.getValue());
         String selectedYear = years.getValue();
-
+        
+        if(selectedMonth == null|| selectedYear == null) {
+        	Displayarea.setText("You must select a month and a year!");
+        	return;
+        }
+        
         if (borrowRep.isSelected()) {
             // Request a borrow report from server
             ClientGUIConnectionController.chat.reports_accept("create borrow report", selectedMonth, selectedYear );
@@ -197,8 +203,7 @@ public class ReportsGUI {
             }
         }
 
-        // If the month name is not valid, return an error string or throw an exception
-        return "Invalid month";  // Invalid month name
+        return null;  
     }
     
     public void ReturnButton(ActionEvent event) throws IOException {

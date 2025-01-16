@@ -100,7 +100,17 @@ public class ClientConsole implements ChatIF
     {
       ArrayList<Object> arr1 = new ArrayList<>();
       
-      if(str.equals("watch borrow history")){
+      if(str.equals("check if frozen")) {
+    	  arr1.add(5);
+    	  arr1.add(id);
+      }
+      
+      else if(str.equals("watch books to extend")) {
+    	  arr1.add(31);
+    	  arr1.add(id);
+      }
+      
+      else if(str.equals("watch borrow history")){
           arr1.add(8);
           arr1.add(id);  
       }

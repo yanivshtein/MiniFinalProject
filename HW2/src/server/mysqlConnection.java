@@ -42,8 +42,8 @@ public class mysqlConnection {
 
 		try {
 
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=IST", "root",
-					"Aa123456");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "Aa123456");
+
 
 
 
@@ -1086,5 +1086,32 @@ public class mysqlConnection {
 		}
 		return messages;
 	}
+	
+	public ArrayList<String> getBooksNearDeadlineForSubscriber(int subscriberId) {
+	    ArrayList<String> booksNearDeadline = new ArrayList<>();
+	    String query = "SELECT BookName, MAX(deadline) AS deadline " +
+	               "FROM activityhistory " +
+	               "WHERE ActionType = 'Borrow' " +
+	               "AND SubscriberID = ? " +
+	               "AND DATE(deadline) <= CURDATE() + INTERVAL 7 DAY " +
+	               "GROUP BY BookName";
+
+
+	    try (PreparedStatement ps = conn.prepareStatement(query)) {
+	        ps.setInt(1, subscriberId); // Set the subscriber ID in the query
+	        ResultSet rs = ps.executeQuery();
+	        while (rs.next()) {
+	            String bookName = rs.getString("BookName");
+	            String deadline = rs.getString("deadline");
+	            booksNearDeadline.add(bookName);
+	            booksNearDeadline.add(deadline);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return booksNearDeadline;
+	}
+
 
 }
