@@ -87,7 +87,6 @@ public class EchoServer extends AbstractServer
                     sub = SQLinstance.select((String) arr.get(1));
                     arrToSend.add(2);
                 	arrToSend.add(sub);
-                	System.out.println(sub.getSubscriber_name());
                     try {                   	
                         client.sendToClient(arrToSend); // sent to the client
                     } catch (IOException e) {
@@ -117,22 +116,29 @@ public class EchoServer extends AbstractServer
                     break;
 
                 case 5: // Check subscriber's status
-                	if(arr.get(1) instanceof String) {
-                		Integer temp = Integer.valueOf((String) arr.get(1));
-                		subID = temp;
-                	}
-                	else {
-                        subID =  (int) arr.get(1);
-                	}
+                    if (arr.get(1) instanceof String) {
+                        subID = Integer.valueOf((String) arr.get(1));
+                    } else {
+                        subID = (int) arr.get(1);
+                    }
+
                     String retStatus = SQLinstance.checkIsFrozen(subID);
-                    arrToSend.add(5);
-                    arrToSend.add(retStatus);
+
+                    arrToSend.add(5); // Add the case identifier to the response
+
+                    if (retStatus == null) {
+                        arrToSend.add("NOT_FOUND"); // Indicate that the subscriber was not found
+                    } else {
+                        arrToSend.add(retStatus); // Add the subscription status
+                    }
+
                     try {
-                        client.sendToClient(arrToSend); // send back to the client if the status is frozen or not
+                        client.sendToClient(arrToSend); // Send back to the client if the status is frozen or not
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     break;
+
 
                 case 6: // Check if there is a book like this and then Check book availability
                     bookName = (String) arr.get(2); 

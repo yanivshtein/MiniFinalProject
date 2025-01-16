@@ -86,6 +86,10 @@ public class mysqlConnection {
 				String password = rs.getString("password");
 				sub = new Subscriber1(sub_id, sub_name, phone, email, status, password);
 			}
+			else {
+				sub = new Subscriber1(0, "", "", "", "", "");
+			}
+				
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -891,19 +895,21 @@ public class mysqlConnection {
 	}
 
 	public String checkIsFrozen(int id) {
-		String status = null;
-		String query = "SELECT subscription_status FROM subscriber WHERE subscriber_id = ?;";
-		try {
-			PreparedStatement stmt = conn.prepareStatement(query);
-			stmt.setInt(1, id);
-			ResultSet resultSet = stmt.executeQuery();
-			resultSet.next();
-			status = resultSet.getString("subscription_status");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return status;
+	    String status = null;
+	    String query = "SELECT subscription_status FROM subscriber WHERE subscriber_id = ?;";
+	    try (PreparedStatement stmt = conn.prepareStatement(query)) { // Use try-with-resources for proper cleanup
+	        stmt.setInt(1, id);
+	        try (ResultSet resultSet = stmt.executeQuery()) { // Use try-with-resources for ResultSet
+	            if (resultSet.next()) { // Check if a row exists
+	                status = resultSet.getString("subscription_status");
+	            } 
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace(); // Log the exception for debugging
+	    }
+	    return status; // This will return null if no rows were found
 	}
+
 
 	// UPDATE arrivalTime in orders table of the oldest time for the given bookName
 	// and add a message to messages table

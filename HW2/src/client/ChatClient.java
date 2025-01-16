@@ -33,7 +33,7 @@ public class ChatClient extends AbstractClient {
 	public static ArrayList<String> activityHistory;
 	public static ArrayList<String> borrowHistory;
 	public static ArrayList<String> FullBorrowRep , FullStatusRep;
-	public static Boolean bool, isFrozen, isAvailable, isCan, isExist, isSeven, orderExists;
+	public static Boolean bool, isFrozen , isAvailable, isCan, isExist, isSeven, orderExists;
 	public static boolean awaitResponse = false;
 	public static ArrayList<String> ActionDateAndDeadline;
 	public static Integer bookAvailability=0, subID;
@@ -119,17 +119,12 @@ public class ChatClient extends AbstractClient {
 		case 1:
 		case 2:
 			Subscriber1 sub = (Subscriber1) arr.get(1);
-			if (sub.equals(null)) {
-				s1 = new Subscriber1(0, "", "", "", "", "");
-			} else {
-				s1.setSubscriber_id(sub.getSubscriber_id());
-				s1.setSubscriber_name(sub.getSubscriber_name());
-				s1.setSubscriber_phone_number(sub.getSubscriber_phone_number());
-				s1.setSubscriber_email(sub.getSubscriber_email());
-				s1.setSub_status(sub.getSub_status());
-				s1.setPassword(sub.getPassword());
-				System.out.println(s1.getSubscriber_name());
-			}
+			s1.setSubscriber_id(sub.getSubscriber_id());
+			s1.setSubscriber_name(sub.getSubscriber_name());
+			s1.setSubscriber_phone_number(sub.getSubscriber_phone_number());
+			s1.setSubscriber_email(sub.getSubscriber_email());
+			s1.setSub_status(sub.getSub_status());
+			s1.setPassword(sub.getPassword());
 			break;
 		case 3:
 			lib = (Librarian)arr.get(1);
@@ -139,7 +134,10 @@ public class ChatClient extends AbstractClient {
 			
 			break;
 		case 5:
-			if (arr.get(1).equals("frozen")) 
+			if ("NOT_FOUND".equals(arr.get(1))) {
+				isFrozen = null;
+			}
+			else if (arr.get(1).equals("frozen")) 
 				isFrozen=true;
 			else 
 				isFrozen=false;

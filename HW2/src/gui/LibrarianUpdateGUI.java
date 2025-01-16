@@ -27,7 +27,7 @@ import javafx.scene.control.TextArea;
 
 
 
-public class LibrarianWatchAndUpdateGUI {
+public class LibrarianUpdateGUI {
 	@FXML
 	private Pane pane;
 
@@ -55,7 +55,6 @@ public class LibrarianWatchAndUpdateGUI {
 
 	@FXML
 	private void initialize() {
-		configureVisibility();
 	    RelevantBooks.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 	    });
 	}
@@ -68,11 +67,16 @@ public class LibrarianWatchAndUpdateGUI {
 	        statusCheck = ChatClient.isFrozen;
 	    }
 
-	    // If the account is frozen, show a message and exit
-	    if (statusCheck) {
+	    if(statusCheck == null) {
+	    	ChangesSavedPop.setContentText("Subscriber not found.");
+	        return;
+	    	
+	    }
+	    else if (statusCheck) {
 	        ChangesSavedPop.setContentText("The account is frozen. It is not possible to extend the borrow.");
 	        return;
 	    }
+	    
 
 	    ArrayList<String> bookNames = new ArrayList<>();
 	    ArrayList<String> deadlines = new ArrayList<>();
@@ -115,32 +119,7 @@ public class LibrarianWatchAndUpdateGUI {
 
 		
 
-    
-    public void ViewDetBtt(ActionEvent event) throws IOException {
-    	ClientGUIConnectionController.chat.accept("select", subID.getText(), "", "");
-        Subscriber1 sub = ChatClient.s1;
-        subID.setText(String.valueOf(sub.getSubscriber_id()));
-        name.setText(sub.getSubscriber_name());
-        phone_number.setText(sub.getSubscriber_phone_number());
-        email.setText(sub.getSubscriber_email());
-        SubStatus.setText(sub.getSub_status());
-        
-        
-        ClientGUIConnectionController.chat.accept("watch borrow history", subID.getText(), "", "");
-        borrowHistory = ChatClient.borrowHistory;
-        
-
-        if (borrowHistory == null || borrowHistory.isEmpty()) {
-            Bview.setText("No borrow history found.");
-            return;
-        }
-
-        for (int i = 0; i < borrowHistory.size(); i++) {
-            Bview.appendText(borrowHistory.get(i));
-            Bview.appendText("\n\n");
-        }
-    }
-
+ 
     
     public void SaveChangBtt(ActionEvent event) throws IOException {
     	if(statusCheck)
@@ -228,37 +207,5 @@ public class LibrarianWatchAndUpdateGUI {
 			System.exit(0);
 		}
 	 
-	 private void configureVisibility() {
-		    boolean isWatchMode = LibrarianGUIHomePageController.Update_Watch_flag.equals("watch");
-
-		    // Hide or show components based on the mode
-		    ViewRelevantBooks.setVisible(!isWatchMode);
-		    RelevantBooks.setVisible(!isWatchMode);
-		    OldRetDate.setVisible(!isWatchMode);
-		    NewRetDate.setVisible(!isWatchMode);
-		    SaveChangesbtt.setVisible(!isWatchMode);
-		    OriginalDate.setVisible(!isWatchMode);
-		    NewDate.setVisible(!isWatchMode);
-		    subID1.setVisible(!isWatchMode);
-		    RetButton1.setVisible(!isWatchMode);
-		    exitbtn1.setVisible(!isWatchMode);
-
-		    
-		    ViewClick.setVisible(isWatchMode);
-		    subID.setVisible(isWatchMode);
-		    name.setVisible(isWatchMode);
-		    email.setVisible(isWatchMode);
-		    phone_number.setVisible(isWatchMode);
-		    SubStatus.setVisible(isWatchMode);
-		    Bview.setVisible(isWatchMode);
-		    exitbtn.setVisible(isWatchMode);
-		    RetButton.setVisible(isWatchMode);
-		    namelabel.setVisible(isWatchMode);
-		    emaillabel.setVisible(isWatchMode);
-		    phonelabel.setVisible(isWatchMode);
-		    statuslabel.setVisible(isWatchMode);
-		    borrowhislabel.setVisible(isWatchMode);
-
-		}
 }
 	
