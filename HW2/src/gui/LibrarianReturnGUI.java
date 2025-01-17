@@ -16,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -43,6 +44,9 @@ public class LibrarianReturnGUI {
 	private TextField getSubscribersId=null;
 	
 	@FXML
+	private TextField bookName=null;
+	
+	@FXML
 	private Label bookArriveDate=null;
 	
 	@FXML
@@ -53,6 +57,9 @@ public class LibrarianReturnGUI {
 	
 	@FXML
 	private Button checkButton=null;
+	
+	@FXML
+	private Button scanButton=null;
 	
 	@FXML
 	private Button BorrowHistoryIdButton=null;
@@ -154,6 +161,7 @@ public class LibrarianReturnGUI {
 		}
 		
 		if(ChatClient.isFrozen) {	
+			showLabelTextForDuration(sendMsg, "Return operation successfully finished!", 3000); // Show text for 3 seconds
 			alertMessege.setContentText("The subscriber’s status card has been frozen");	
 		 	alertMessege.setAlertType(AlertType.INFORMATION);
 		 	alertMessege.show();
@@ -169,7 +177,8 @@ public class LibrarianReturnGUI {
 			e.getStackTrace();
 		}
 		
-		isChecked = false;
+//		isChecked = false;
+		//checkButton.setDisable(true);
 	}
 	
 	public void showLabelTextForDuration(Label label, String text , int durationInMillis) {
@@ -190,7 +199,7 @@ public class LibrarianReturnGUI {
 		
 		if (subscriberId == null || bookID == null || 
 		        subscriberId.getText().trim().isEmpty() || bookID.getText().trim().isEmpty()) {
-		        alertMessege.setContentText("You must provide both the Subscriber's ID and the Book's ID.");
+		        alertMessege.setContentText("You must provide both the Subscriber's ID and the Barcode.");
 		        alertMessege.setAlertType(AlertType.ERROR);
 		        alertMessege.show(); // Show the error alert
 		        return; // Stop further execution
@@ -253,7 +262,20 @@ public class LibrarianReturnGUI {
 	public void viewBorrowersHistoryButton(ActionEvent event) {
 		StringBuilder history = new StringBuilder();
 		
+		 int subscriberId = Integer.parseInt(getSubscribersId.getText());
+
+    	 ClientGUIConnectionController.chat.acceptBorrowBook(subscriberId);
 		
+    	 if(!ChatClient.bool) {
+    		 
+    		alertMessege.setContentText("The subscriber ID does not exist in the library’s database.");	
+    		alertMessege.setAlertType(AlertType.ERROR);
+    		alertMessege.show();
+    		return;
+    			
+    	 }
+    	 
+    	 
 		ClientGUIConnectionController.chat.accept("select", getSubscribersId.getText(), "", "");
         Subscriber1 sub = ChatClient.s1;
         history.append("Subscriber's ID:  " + String.valueOf(sub.getSubscriber_id())+"\n");
@@ -294,6 +316,20 @@ public class LibrarianReturnGUI {
 				+ "*********************************************"
 				+ "**********");
 		ShowHistory.setText(history.toString());
+//		checkButton.setVisible(isChecked);
+	}
+	
+	//when in the barcode the book was scanned we enable the button
+	
+	public void barcodeButton (ActionEvent event) {
+		int bookId = Integer.parseInt(bookID.getText());
+		ClientGUIConnectionController.chat.acceptBarCode(bookId);
+		if(ChatClient.bookName.equals("")) {
+			showLabelTextForDuration(artMsg, "The Borrow does not exist!", 4000); // Show text for 4 seconds
+		}
+    	else {
+    		bookName.setText(ChatClient.bookName);
+    	}
 	}
 }
 

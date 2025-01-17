@@ -416,9 +416,21 @@ public class EchoServer extends AbstractServer
 		            	 if(freeze==true){
 		            		 freezeSuccess = SQLinstance.updateSubscriberStatusToFrozen(this.subscriberID,"Frozen");
 		            		 
-		            		 if(freezeSuccess)
-		            			 arrToSend.add(true);
+		            		 if(freezeSuccess) 
+		            			 arrToSend.add("FROZEN");
+		            			
+		            		 else {
+		            			 System.err.println("Freezing subscriber status didn't work");
+		            			 
+		            		 }
+		            			 
+		            		 
 		            	 }
+		            	 
+		            	 if (freeze==false) 
+		            		 arrToSend.add("Active");
+	            			 
+		            	 
 		            	 if (orderExists == false) { //which means no one has ordered this book then we can add the copy to the inventory
 		            		 bookIncrement = SQLinstance.incrimentBookAvailability(this.bookName);
 		            		 

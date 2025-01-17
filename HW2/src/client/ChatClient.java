@@ -215,8 +215,9 @@ public class ChatClient extends AbstractClient {
 			 ActionDateAndDeadline = (ArrayList<String>)arr.get(1);
 			break;
 		case 22:
+			
 			  bool=(Boolean) arr.get(2);
-			  if ((Boolean)arr.get(1)) {
+			  if (((String)arr.get(1)).equals("FROZEN")) {
 				  isFrozen=true;
 			  }
 			  else
