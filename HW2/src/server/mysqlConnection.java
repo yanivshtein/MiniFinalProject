@@ -1081,7 +1081,8 @@ public class mysqlConnection {
 			e.printStackTrace();
 		}
 		finally {
-			try {
+			try {	
+				// Close resources to avoid memory leaks
 				if (returnDates != null) returnDates.close();
 		        if (subscribersID != null) subscribersID.close();
 		        if (selectSubscribersID != null) selectSubscribersID.close();
