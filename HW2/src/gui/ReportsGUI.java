@@ -120,9 +120,6 @@ public class ReportsGUI {
             if (ChatClient.FullStatusRep == null || ChatClient.FullStatusRep.isEmpty()) {
                 Displayarea.setText("No information to display.");
             } else {
-                // Add a title for the report
-                reportBuilder.append("### Status Report for ").append(selectedMonth).append("/").append(selectedYear).append(" ###\n\n");
-
                 // Create headers with proper spacing
                 reportBuilder.append(String.format("%-25s %-15s %-15s\n", "Subscriber Name", "ID", "Status"));
                 reportBuilder.append("-".repeat(55) + "\n"); // Separator line after headers
@@ -130,7 +127,7 @@ public class ReportsGUI {
                 int activeCount = 0;
                 int frozenCount = 0;
 
-                // Format each row with aligned columns
+                // Count active and frozen subscribers
                 for (int i = 1; i < ChatClient.FullStatusRep.size(); i++) {  // Note change to i < FullStatusRep.size()
                     // Parse the entry string to extract the subscriber's name, ID, and status
                     String[] parts = ChatClient.FullStatusRep.get(i).split(" , ");
@@ -149,17 +146,27 @@ public class ReportsGUI {
                     reportBuilder.append(String.format("%-25s %-15s %-15s\n", name, id, status));
                 }
 
-                // Add a summary at the bottom
+                // Calculate percentages
                 int totalSubscribers = activeCount + frozenCount;
-                reportBuilder.append("\nSummary:\n");
-                reportBuilder.append("Active Subscribers: " + activeCount + "\n");
-                reportBuilder.append("Frozen Subscribers: " + frozenCount + "\n");
-                reportBuilder.append("Total Subscribers: " + totalSubscribers + "\n");
+                double activePercentage = totalSubscribers > 0 ? (double) activeCount / totalSubscribers * 100 : 0;
+                double frozenPercentage = totalSubscribers > 0 ? (double) frozenCount / totalSubscribers * 100 : 0;
+                
+                StringBuilder temp = new StringBuilder();
+                temp.append("### Status Report for " + selectedMonth + "/" + selectedYear + " ###\n\n");
+                temp.append("Summary:\n");
+                temp.append(String.format("Active Subscribers: %d (%.2f%%)\n", activeCount, activePercentage));
+                temp.append(String.format("Frozen Subscribers: %d (%.2f%%)\n", frozenCount, frozenPercentage));
+                temp.append(String.format("Total Subscribers: %d\n\n\n", totalSubscribers));
+
+
+                // Add the summary at the beginning
+                reportBuilder.insert(0, temp.toString());
 
                 // Display the formatted report in the text area
                 Displayarea.setText(reportBuilder.toString());
             }
         }
+
 
 
     }

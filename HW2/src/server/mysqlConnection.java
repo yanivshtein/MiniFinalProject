@@ -377,7 +377,7 @@ public class mysqlConnection {
 					int subscriberId = rsSubscriber.getInt("subscriber_id");
 
 					// Second query to get activity history using subscriber ID
-					String activityQuery = "SELECT * FROM activityhistory WHERE SubscriberID = ?";
+					String activityQuery = "SELECT * FROM activityhistory WHERE SubscriberID = ? ORDER BY ActionDate DESC";
 
 					try (PreparedStatement psActivity = conn.prepareStatement(activityQuery)) {
 						psActivity.setInt(1, subscriberId);
@@ -403,26 +403,61 @@ public class mysqlConnection {
 		return activityHistory;
 	}
 
-	public ArrayList<String> getBorrowHistory(int subscriberId) {
-		ArrayList<String> borrowHistory = new ArrayList<>();
-		String query = "SELECT * FROM ActivityHistory WHERE SubscriberID = ? AND ActionType = 'Borrow'";
-		try (PreparedStatement ps = conn.prepareStatement(query)) {
-			ps.setInt(1, subscriberId);
-			try (ResultSet rs = ps.executeQuery()) {
-				while (rs.next()) {
-					String deadline = rs.getString("deadline");
-					// System.out.println(deadline);
-					String bookName = rs.getString("BookName");
-					String actionDate = rs.getString("ActionDate");
-					borrowHistory
-							.add("Book Name: " + bookName + ",Borrow Date: " + actionDate + ", Deadline: " + deadline);
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return borrowHistory;
+	public ArrayList<String> getBorrowHistory(int subscriberID) throws SQLException {
+	    ArrayList<String> borrowHistory = new ArrayList<>();
+
+	    // Query for Borrowed and Returned Books
+	    String query1 = "SELECT br1.SubscriberID, br1.BookName, MIN(br1.ActionDate) AS BorrowDate, "
+	            + "MIN(br2.ActionDate) AS ReturnDate, br1.deadline , br2.additionalInfo "
+	            + "FROM activityhistory br1 JOIN activityhistory br2 "
+	            + "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName "
+	            + "AND br1.ActionType = 'Borrow' AND br2.ActionType = 'Return' AND br1.ActionDate < br2.ActionDate "
+	            + "WHERE br1.SubscriberID = ? "
+	            + "GROUP BY br1.SubscriberID, br1.BookName, br1.deadline , br2.additionalInfo";
+
+	    try (PreparedStatement ps = conn.prepareStatement(query1)) {
+	        // Set the SubscriberID parameter for the query
+	        ps.setInt(1, subscriberID);
+
+	        try (ResultSet rs = ps.executeQuery()) {
+	            while (rs.next()) {
+	                // Check if the book was returned late or on time
+	                String lateStatus = rs.getString("additionalInfo");
+
+	                // Add the information to the list, including the late status
+	                borrowHistory.add(String.format(
+	                        "%s,%s,%s,%s,%s",
+	                        rs.getString("BookName"), rs.getString("BorrowDate"),
+	                        rs.getString("ReturnDate"), rs.getString("Deadline"), lateStatus));
+	            }
+	        }
+	    }
+
+	    // Query for Borrowed but Not Returned Books
+	    String query2 = "SELECT br1.SubscriberID, br1.BookName, MIN(br1.ActionDate) AS BorrowDate, br1.deadline "
+	            + "FROM activityhistory br1 LEFT JOIN activityhistory br2 "
+	            + "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName "
+	            + "AND br2.ActionType = 'Return' " + "WHERE br1.ActionType = 'Borrow' AND br2.ActionType IS NULL "
+	            + "AND br1.SubscriberID = ? "
+	            + "GROUP BY br1.SubscriberID, br1.BookName, br1.deadline";
+
+	    try (PreparedStatement ps = conn.prepareStatement(query2)) {
+	        // Set the SubscriberID parameter for the query
+	        ps.setInt(1, subscriberID);
+
+	        try (ResultSet rs = ps.executeQuery()) {
+	            while (rs.next()) {
+	            	borrowHistory.add(String.format(
+	                        "%s,%s,Return Date: __-__-____,%s,Status: Not returned yet",
+	                        rs.getString("BookName"), rs.getString("BorrowDate"),
+	                        rs.getString("deadline")));
+	            }
+	        }
+	    }
+
+	    return borrowHistory;
 	}
+
 
 	public boolean ChangeReturnDate(int subscriberId, String BookName, String OldDate, String NewDate,
 			String Librarian_name) {
@@ -586,60 +621,63 @@ public class mysqlConnection {
 	}
 
 	public ArrayList<String> BringBorrowRepInfo(String SelectedMonth, String SelectedYear) throws SQLException {
-		ArrayList<String> FullBorrowRep = new ArrayList<>();
-		FullBorrowRep.add("borrow report");
+	    ArrayList<String> FullBorrowRep = new ArrayList<>();
+	    FullBorrowRep.add("borrow report");
 
-		// Query for Borrowed and Returned Books
-		String query1 = "SELECT br1.SubscriberID, br1.BookName, MIN(br1.ActionDate) AS BorrowDate, "
-				+ "MIN(br2.ActionDate) AS ReturnDate, br1.deadline , br2.additionalInfo "
-				+ "FROM activityhistory br1 JOIN activityhistory br2 "
-				+ "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName "
-				+ "AND br1.ActionType = 'Borrow' AND br2.ActionType = 'Return' AND br1.ActionDate < br2.ActionDate "
-				+ "WHERE DATE_FORMAT(br1.ActionDate, '%Y-%m') = ? "
-				+ "GROUP BY br1.SubscriberID, br1.BookName, br1.deadline , br2.additionalInfo";
+	    // Query for Borrowed and Returned Books, ordered by BorrowDate
+	    String query1 = "SELECT br1.SubscriberID, br1.BookName, MIN(br1.ActionDate) AS BorrowDate, "
+	            + "MIN(br2.ActionDate) AS ReturnDate, br1.deadline , br2.additionalInfo "
+	            + "FROM activityhistory br1 JOIN activityhistory br2 "
+	            + "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName "
+	            + "AND br1.ActionType = 'Borrow' AND br2.ActionType = 'Return' AND br1.ActionDate < br2.ActionDate "
+	            + "WHERE DATE_FORMAT(br1.ActionDate, '%Y-%m') = ? "
+	            + "GROUP BY br1.SubscriberID, br1.BookName, br1.deadline , br2.additionalInfo "
+	            + "ORDER BY BorrowDate"; // Sort by BorrowDate (earliest first)
 
-		try (PreparedStatement ps = conn.prepareStatement(query1)) {
-			// Set the SelectedMonth parameter for the query
-			ps.setString(1, SelectedYear + "-" + SelectedMonth);
+	    try (PreparedStatement ps = conn.prepareStatement(query1)) {
+	        // Set the SelectedMonth parameter for the query
+	        ps.setString(1, SelectedYear + "-" + SelectedMonth);
 
-			try (ResultSet rs = ps.executeQuery()) {
-				while (rs.next()) {
-					// Check if the book was returned late or on time
-					String lateStatus = rs.getString("additionalInfo");
+	        try (ResultSet rs = ps.executeQuery()) {
+	            while (rs.next()) {
+	                // Check if the book was returned late or on time
+	                String lateStatus = rs.getString("additionalInfo");
 
-					// Add the information to the list, including the late status
-					FullBorrowRep.add(String.format(
-							"Subscriber ID: %s , Book Name: %s , Borrow Date: %s , Return Date: %s , Deadline: %s , Status: %s",
-							rs.getString("SubscriberID"), rs.getString("BookName"), rs.getString("BorrowDate"),
-							rs.getString("ReturnDate"), rs.getString("Deadline"), lateStatus));
-				}
-			}
-		}
+	                // Add the information to the list, including the late status
+	                FullBorrowRep.add(String.format(
+	                        "Subscriber ID: %s , Book Name: %s , Borrow Date: %s , Return Date: %s , Deadline: %s , Status: %s",
+	                        rs.getString("SubscriberID"), rs.getString("BookName"), rs.getString("BorrowDate"),
+	                        rs.getString("ReturnDate"), rs.getString("Deadline"), lateStatus));
+	            }
+	        }
+	    }
 
-		// Query for Borrowed but Not Returned Books
-		String query2 = "SELECT br1.SubscriberID, br1.BookName, MIN(br1.ActionDate) AS BorrowDate, br1.deadline "
-				+ "FROM activityhistory br1 LEFT JOIN activityhistory br2 "
-				+ "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName "
-				+ "AND br2.ActionType = 'Return' " + "WHERE br1.ActionType = 'Borrow' AND br2.ActionType IS NULL "
-				+ "AND DATE_FORMAT(br1.ActionDate, '%Y-%m') = ? "
-				+ "GROUP BY br1.SubscriberID, br1.BookName, br1.deadline";
+	    // Query for Borrowed but Not Returned Books, ordered by BorrowDate
+	    String query2 = "SELECT br1.SubscriberID, br1.BookName, MIN(br1.ActionDate) AS BorrowDate, br1.deadline "
+	            + "FROM activityhistory br1 LEFT JOIN activityhistory br2 "
+	            + "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName "
+	            + "AND br2.ActionType = 'Return' " + "WHERE br1.ActionType = 'Borrow' AND br2.ActionType IS NULL "
+	            + "AND DATE_FORMAT(br1.ActionDate, '%Y-%m') = ? "
+	            + "GROUP BY br1.SubscriberID, br1.BookName, br1.deadline "
+	            + "ORDER BY BorrowDate"; // Sort by BorrowDate (earliest first)
 
-		try (PreparedStatement ps = conn.prepareStatement(query2)) {
-			// Set the SelectedMonth parameter for the query
-			ps.setString(1, SelectedYear + "-" + SelectedMonth);
+	    try (PreparedStatement ps = conn.prepareStatement(query2)) {
+	        // Set the SelectedMonth parameter for the query
+	        ps.setString(1, SelectedYear + "-" + SelectedMonth);
 
-			try (ResultSet rs = ps.executeQuery()) {
-				while (rs.next()) {
-					FullBorrowRep.add(String.format(
-							"Subscriber ID: %s , Book Name: %s , Borrow Date: %s , Return Date: __-__-____ __ , Deadline: %s , Status: Not returned yet",
-							rs.getString("SubscriberID"), rs.getString("BookName"), rs.getString("BorrowDate"),
-							rs.getString("deadline")));
-				}
-			}
-		}
+	        try (ResultSet rs = ps.executeQuery()) {
+	            while (rs.next()) {
+	                FullBorrowRep.add(String.format(
+	                        "Subscriber ID: %s , Book Name: %s , Borrow Date: %s , Return Date: __-__-____ __ , Deadline: %s , Status: Not returned yet",
+	                        rs.getString("SubscriberID"), rs.getString("BookName"), rs.getString("BorrowDate"),
+	                        rs.getString("deadline")));
+	            }
+	        }
+	    }
 
-		return FullBorrowRep;
+	    return FullBorrowRep;
 	}
+
 
 	public ArrayList<String> BringStatusRepInfo(String selectedMonth, String selectedYear) throws SQLException {
 		// Input validation
