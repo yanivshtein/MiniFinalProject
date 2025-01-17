@@ -2,29 +2,33 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LibrarianReturnGUI">
    <children>
-      <Pane layoutX="1.0" prefHeight="485.0" prefWidth="540.0">
+      <Pane layoutX="1.0" prefHeight="429.0" prefWidth="689.0">
          <children>
-            <TextField fx:id="subscriberId" layoutX="146.0" layoutY="45.0" prefHeight="31.0" prefWidth="207.0" />
-            <Label layoutX="33.0" layoutY="58.0" text="Subscriber ID: " />
-            <Button fx:id="sendButton" layoutX="142.0" layoutY="345.0" mnemonicParsing="false" onAction="#sendButton" text="Send" />
+            <TextField fx:id="subscriberId" layoutX="134.0" layoutY="44.0" prefHeight="31.0" prefWidth="207.0" />
+            <Label layoutX="33.0" layoutY="51.0" text="Subscriber ID: " />
+            <Button fx:id="sendButton" layoutX="135.0" layoutY="351.0" mnemonicParsing="false" onAction="#sendButton" text="Send" />
             <Label layoutX="33.0" layoutY="106.0" text=" Book ID: " />
-            <TextField fx:id="bookID" layoutX="146.0" layoutY="99.0" prefHeight="31.0" prefWidth="207.0" />
-            <Label layoutX="27.0" layoutY="192.0" text="Book arrive date:" />
-            <Label layoutX="27.0" layoutY="239.0" text="Deadline:" />
+            <TextField fx:id="bookID" layoutX="134.0" layoutY="99.0" prefHeight="31.0" prefWidth="207.0" />
+            <Label layoutX="27.0" layoutY="215.0" text="Book arrive date:" />
+            <Label layoutX="27.0" layoutY="272.0" text="Deadline:" />
             <Label layoutX="158.0" layoutY="127.0" />
-            <Label fx:id="bookArriveDate" layoutX="146.0" layoutY="192.0" prefHeight="17.0" prefWidth="91.0" />
-            <Label fx:id="deadline" layoutX="146.0" layoutY="239.0" prefHeight="17.0" prefWidth="91.0" />
-            <Button fx:id="checkButton" layoutX="383.0" layoutY="75.0" mnemonicParsing="false" onAction="#checkBttn" text="Check" />
-            <Label fx:id="sendMsg" layoutX="142.0" layoutY="292.0" prefHeight="26.0" prefWidth="257.0" />
-            <Label fx:id="artMsg" layoutX="152.0" layoutY="144.0" prefHeight="26.0" prefWidth="171.0" />
-            <Button layoutX="334.0" layoutY="345.0" mnemonicParsing="false" onAction="#retButton" text="return" />
-            <Button layoutX="215.0" layoutY="399.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="112.0" text="borrowers list" />
+            <Label fx:id="bookArriveDate" layoutX="146.0" layoutY="215.0" prefHeight="17.0" prefWidth="91.0" />
+            <Label fx:id="deadline" layoutX="146.0" layoutY="272.0" prefHeight="17.0" prefWidth="91.0" />
+            <Button fx:id="checkButton" layoutX="204.0" layoutY="139.0" mnemonicParsing="false" onAction="#checkBttn" text="Check" />
+            <Label fx:id="sendMsg" layoutX="109.0" layoutY="301.0" prefHeight="26.0" prefWidth="257.0" />
+            <Label fx:id="artMsg" layoutX="145.0" layoutY="169.0" prefHeight="26.0" prefWidth="171.0" />
+            <Button layoutX="256.0" layoutY="351.0" mnemonicParsing="false" onAction="#retButton" text="Back to Home" />
+            <Button fx:id="BorrowHistoryIdButton" layoutX="475.0" layoutY="102.0" mnemonicParsing="false" onAction="#viewBorrowersHistoryButton" prefHeight="26.0" prefWidth="112.0" text="borrow list" />
+            <TextArea fx:id="ShowHistory" layoutX="383.0" layoutY="139.0" prefHeight="200.0" prefWidth="284.0" />
+            <TextField fx:id="getSubscribersId" alignment="TOP_CENTER" layoutX="467.0" layoutY="51.0" prefHeight="26.0" prefWidth="142.0" promptText="Enter subscriber's ID" />
+            <Label layoutX="432.0" layoutY="56.0" text="ID:" />
          </children>
       </Pane>
    </children>

@@ -1,14 +1,17 @@
 package gui;
 
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 
 import client.ChatClient;
 import client.ClientUI;
+import common.Subscriber1;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +24,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.util.Duration;
 import javafx.animation.KeyFrame;
@@ -36,6 +40,9 @@ public class LibrarianReturnGUI {
 	private TextField bookID=null;
 	
 	@FXML
+	private TextField getSubscribersId=null;
+	
+	@FXML
 	private Label bookArriveDate=null;
 	
 	@FXML
@@ -48,7 +55,8 @@ public class LibrarianReturnGUI {
 	private Button checkButton=null;
 	
 	@FXML
-	private Button subscriberBorrowList = null;
+	private Button BorrowHistoryIdButton=null;
+	
 	
 	@FXML
 	private Label artMsg = null;
@@ -56,7 +64,8 @@ public class LibrarianReturnGUI {
 	@FXML
 	private Label sendMsg = null;
 	
-	
+	@FXML
+	private TextArea ShowHistory = null;
 	
 	private Alert alertMessege = new Alert(AlertType.NONE);
 
@@ -64,7 +73,7 @@ public class LibrarianReturnGUI {
 	
 	private boolean isChecked = false;
 	
-	
+	private ArrayList<String> borrowersBorrowHistory;
 	
 	public void sendButton(ActionEvent event) {		// method that sends information to the controller to return the book to the library
 		
@@ -241,9 +250,51 @@ public class LibrarianReturnGUI {
         primaryStage.show();
 	}
 	
-	public void borrowersBorrowList(ActionEvent event) {
+	public void viewBorrowersHistoryButton(ActionEvent event) {
+		StringBuilder history = new StringBuilder();
 		
 		
+		ClientGUIConnectionController.chat.accept("select", getSubscribersId.getText(), "", "");
+        Subscriber1 sub = ChatClient.s1;
+        history.append("Subscriber's ID:  " + String.valueOf(sub.getSubscriber_id())+"\n");
+        history.append("Subscriber's Name:  " + sub.getSubscriber_name()+"\n");
+        history.append("Subscriber's Phone:  " + sub.getSubscriber_phone_number()+"\n");
+        history.append("Subscriber's Email:  " + sub.getSubscriber_email()+"\n");
+        history.append("Subscriber's Status:  " + sub.getSub_status()+"\n\n");
+        
+		if (getSubscribersId.getText().trim().isEmpty()) {
+		        alertMessege.setContentText("You must provide the Subscriber's ID.");
+		        alertMessege.setAlertType(AlertType.ERROR);
+		        alertMessege.show(); // Show the error alert
+		        return; // Stop further execution
+		}
 		
+		
+		ClientGUIConnectionController.chat.accept("watch borrow history", getSubscribersId.getText(), "", "");
+	
+		
+		borrowersBorrowHistory = ChatClient.borrowHistory;
+		
+		if(borrowersBorrowHistory.isEmpty()) {	
+			alertMessege.setContentText("There is no borrow history.");	
+		 	alertMessege.setAlertType(AlertType.INFORMATION);
+		 	alertMessege.show();
+		}
+		
+		for(String line: borrowersBorrowHistory) {
+			history.append("***********************************"
+					+ "*********************************************"
+					+ "*********************************************"
+					+ "**********\n\n");
+			history.append(line);
+			history.append("\n\n");
+		}
+		history.append("***********************************"
+				+ "*********************************************"
+				+ "*********************************************"
+				+ "**********");
+		ShowHistory.setText(history.toString());
 	}
 }
+
+

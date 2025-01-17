@@ -1021,4 +1021,76 @@ public class mysqlConnection {
 		return messages;
 	}
 
+	/*
+	 * Update subscriber's status from 'Frozen' to 'Active' if a month has passed
+	 * 
+	 */
+	public void unfreezeAfterMonthStatus()  {
+		
+		ArrayList<String> frozenSubscribers = new ArrayList<String>();
+		
+		String getSubscribersID = "SELECT subscriber_id FROM subscriber WHERE subscription_status = 'Frozen'";
+		
+		String getReturnDates = "SELECT MAX(ActionDate) AS LastActionDate FROM activityhistory WHERE SubscriberID = ? "
+				+ "AND ActionType = 'Return'";
+		
+		String updateSubscribersStatus = "UPDATE subscriber SET subscription_status = 'Active' WHERE subscriber_id=?";
+		
+		PreparedStatement updateStatus = null;
+		ResultSet returnDates = null;
+		ResultSet subscribersID = null;
+		PreparedStatement selectReturnDates = null;
+		
+		PreparedStatement selectSubscribersID = null;
+		try {
+		selectSubscribersID = conn.prepareStatement(getSubscribersID);
+		
+		subscribersID = selectSubscribersID.executeQuery();
+		
+		while(subscribersID.next()) {
+			frozenSubscribers.add(subscribersID.getString("subscriber_id"));
+		}
+		
+		selectReturnDates = conn.prepareStatement(getReturnDates);
+		updateStatus = conn.prepareStatement(updateSubscribersStatus);
+		
+		for(String subID : frozenSubscribers) {
+			
+			selectReturnDates.setString(1, subID);
+			returnDates= selectReturnDates.executeQuery();
+			
+			if ( returnDates.next()) {
+				String lastActionDateStr = returnDates.getString("LastActionDate");
+				
+				if(lastActionDateStr != null) {
+					LocalDate lastActionDate = LocalDate.parse(lastActionDateStr);
+					LocalDate  currentDate = LocalDate.now();
+					
+					if(lastActionDate.isBefore(currentDate.minusMonths(1))) {
+						updateStatus.setString(1, subID);
+						updateStatus.executeUpdate();
+					}
+				}
+					
+			}
+		}
+		
+		}
+		
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				if (returnDates != null) returnDates.close();
+		        if (subscribersID != null) subscribersID.close();
+		        if (selectSubscribersID != null) selectSubscribersID.close();
+		        if (selectReturnDates != null) selectReturnDates.close();
+		        if (updateStatus != null) updateStatus.close();
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+			}
+			
+		}
+	}
 }
