@@ -25,7 +25,6 @@ import javafx.scene.control.TextArea;
 
 public class LibrarianGUIHomePageController {
 	
-
 	public static String BringLibName;
 	
 	@FXML
@@ -54,6 +53,9 @@ public class LibrarianGUIHomePageController {
 	
 	@FXML
 	private Button exit = null;
+	
+	@FXML
+	private Button  messagesBtn = null;
 	
 	@FXML
 	private void initialize() {
@@ -119,33 +121,66 @@ public class LibrarianGUIHomePageController {
 	
 	
 	
-	public void getLibrarianWatchAndUpdateBtn(ActionEvent event) throws IOException {
-	    try {
-	        ((Node) event.getSource()).getScene().getWindow().hide(); // Hide the current window
+	public void getLibrarianWatch(ActionEvent event) throws IOException {
+		 try {
+		        ((Node) event.getSource()).getScene().getWindow().hide(); // Hide the current window
 
-	        // Load the LibrarianWatchAndUpdateGUI FXML
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/LibrarianWatchAndUpdateGUI.fxml"));
-	        Parent root = loader.load();
+		        // Load the LibrarianWatchAndUpdateGUI FXML
+		        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/LibrarianWatchGUI.fxml"));
+		        Parent root = loader.load();
 
-	        // Set up the new stage
-	        Stage primaryStage = new Stage();
-	        Scene scene = new Scene(root);
+		        // Set up the new stage
+		        Stage primaryStage = new Stage();
+		        Scene scene = new Scene(root);
 
-	        // Apply stylesheets
-	        scene.getStylesheets().add(getClass().getResource("/gui/LibrarianWatchAndUpdateGUI.css").toExternalForm());
+		        // Apply stylesheets
+		        scene.getStylesheets().add(getClass().getResource("/gui/LibrarianWatchGUI.css").toExternalForm());
 
-	        // Configure the stage
-	        primaryStage.setTitle("Librarian Watch and Update GUI");
-	        primaryStage.setScene(scene);
+		        // Configure the stage
+		        primaryStage.setTitle("Librarian Watch  GUI");
+		        primaryStage.setScene(scene);
 
-	        // Show the stage
-	        primaryStage.show();
-	    } catch (IOException e) {
-	        System.err.println("Error: Could not load FXML file");
-	        e.printStackTrace();
-	        // Optionally, display an error message to the user here
-	    }
+		        // Show the stage
+		        primaryStage.show();
+		    } catch (IOException e) {
+		        System.err.println("Error: Could not load FXML file");
+		        e.printStackTrace();
+		        // Optionally, display an error message to the user here
+		    }
 	}
+	
+	
+	public void getLibrarianUpdate(ActionEvent event) throws IOException {
+		 try {
+		        ((Node) event.getSource()).getScene().getWindow().hide(); // Hide the current window
+
+		        // Load the LibrarianWatchAndUpdateGUI FXML
+		        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/LibrarianUpdateGUI.fxml"));
+		        Parent root = loader.load();
+
+		        // Set up the new stage
+		        Stage primaryStage = new Stage();
+		        Scene scene = new Scene(root);
+
+		        // Apply stylesheets
+		        scene.getStylesheets().add(getClass().getResource("/gui/LibrarianUpdateGUI.css").toExternalForm());
+
+		        // Configure the stage
+		        primaryStage.setTitle("Librarian Update GUI");
+		        primaryStage.setScene(scene);
+
+		        // Show the stage
+		        primaryStage.show();
+		    } catch (IOException e) {
+		        System.err.println("Error: Could not load FXML file");
+		        e.printStackTrace();
+		        // Optionally, display an error message to the user here
+		    }
+	}
+	
+	
+	
+	
 	
 	public void getReportsGUIBtn(ActionEvent event) throws IOException {
 	    try {
@@ -222,5 +257,22 @@ public class LibrarianGUIHomePageController {
 	    primaryStage.show();
 	}
 	
+	
+	public void getMessages(ActionEvent event) throws IOException {
+		// Hiding primary window
+	    ((Node) event.getSource()).getScene().getWindow().hide();
+	    
+	    // Loading FXML and setting up the new stage
+	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/LibrarianMessages.fxml"));
+	    Parent root = loader.load();
+	    
+	    Scene scene = new Scene(root);
+	    //scene.getStylesheets().add(getClass().getResource("/gui/OrdersToTake.css").toExternalForm());
+	    
+	    Stage primaryStage = new Stage();
+	    primaryStage.setTitle("Waiting Orders");
+	    primaryStage.setScene(scene);
+	    primaryStage.show();
+	}
 	
 }

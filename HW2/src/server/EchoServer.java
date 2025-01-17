@@ -87,7 +87,6 @@ public class EchoServer extends AbstractServer
                     sub = SQLinstance.select((String) arr.get(1));
                     arrToSend.add(2);
                 	arrToSend.add(sub);
-                	System.out.println(sub.getSubscriber_name());
                     try {                   	
                         client.sendToClient(arrToSend); // sent to the client
                     } catch (IOException e) {
@@ -117,16 +116,29 @@ public class EchoServer extends AbstractServer
                     break;
 
                 case 5: // Check subscriber's status
-                    subID =  (int) arr.get(1);
+                    if (arr.get(1) instanceof String) {
+                        subID = Integer.valueOf((String) arr.get(1));
+                    } else {
+                        subID = (int) arr.get(1);
+                    }
+
                     String retStatus = SQLinstance.checkIsFrozen(subID);
-                    arrToSend.add(5);
-                    arrToSend.add(retStatus);
+
+                    arrToSend.add(5); // Add the case identifier to the response
+
+                    if (retStatus == null) {
+                        arrToSend.add("NOT_FOUND"); // Indicate that the subscriber was not found
+                    } else {
+                        arrToSend.add(retStatus); // Add the subscription status
+                    }
+
                     try {
-                        client.sendToClient(arrToSend); // send back to the client if the status is frozen or not
+                        client.sendToClient(arrToSend); // Send back to the client if the status is frozen or not
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     break;
+
 
                 case 6: // Check if there is a book like this and then Check book availability
                     bookName = (String) arr.get(2); 
@@ -160,7 +172,13 @@ public class EchoServer extends AbstractServer
                 case 8: //watch activity history
                     subID = Integer.parseInt((String)arr.get(1)); //subscriber ID is in the second position of the array
                  // Retrieve the borrow history for the given subscriber ID
-                    ArrayList<String> borrowHistory = SQLinstance.getBorrowHistory(subID);
+				ArrayList<String> borrowHistory = null;
+				try {
+					borrowHistory = SQLinstance.getBorrowHistory(subID);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
                     arrToSend.add(8);
                     arrToSend.add(borrowHistory);
                     try {
@@ -544,6 +562,26 @@ public class EchoServer extends AbstractServer
                 		e.printStackTrace();
                 	}
                 	break;
+                case 30:
+                	ArrayList<String> libMessages = SQLinstance.librarianMessages();
+                	arrToSend.add(30);
+                	arrToSend.add(libMessages);
+                	try {
+                		client.sendToClient(arrToSend);
+                	} catch (IOException e) {
+                		e.printStackTrace();
+                	}
+                	break;
+                case 31:
+            	    ArrayList<String> booksNearDeadline = SQLinstance.getBooksNearDeadlineForSubscriber(Integer.parseInt((String) arr.get(1)));
+                	arrToSend.add(31);
+                	arrToSend.add(booksNearDeadline);
+                	try {
+                		client.sendToClient(arrToSend);
+                	} catch (IOException e) {
+                		e.printStackTrace();
+                	}
+                	break;
                 default:
                     System.out.println("The server - Received message is not of the expected type.");
                     break;
@@ -587,5 +625,6 @@ public class EchoServer extends AbstractServer
 	 //also, delete the tuples in 'orders' table
    	 SQLinstance.timeDidntTakeOrder();
    	 SQLinstance.unfreezeAfterMonthStatus();
+   	 SQLinstance.notifyBeforeReturnDeadline();
    }
 }
