@@ -5,7 +5,7 @@
     -fx-background-size: cover;
     -fx-background-position: center;
     -fx-padding: 20px;
-    -fx-font-family: "Garamond", "Georgia", "Times New Roman", serif; /* Classic serif fonts */
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
 }
 
 /* Form and button styling */
@@ -16,7 +16,6 @@
     -fx-font-size: 14px;
     -fx-padding: 10px;
     -fx-text-fill: #333; /* Dark text for contrast */
-    -fx-font-family: "Garamond", "Georgia", "Times New Roman", serif; /* Classic serif fonts */
 }
 
 /* Label Styling without a frame or background */
@@ -26,7 +25,6 @@
     -fx-font-size: 16px;
     -fx-background-color: transparent; /* No background for label */
     -fx-border-color: transparent; /* No border for label */
-    -fx-font-family: "Garamond", "Georgia", "Times New Roman", serif; /* Classic serif fonts */
 }
 
 /* Button Styling */
@@ -40,7 +38,6 @@
     -fx-padding: 8px 16px; /* Slightly larger button for better accessibility */
     -fx-cursor: hand;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 4, 0, 0, 2);
-    -fx-font-family: "Garamond", "Georgia", "Times New Roman", serif; /* Classic serif fonts */
 }
 
 .button:hover {
@@ -51,7 +48,6 @@
 .button.close {
     -fx-background-color: #f44336; /* Red color for close button */
     -fx-text-fill: white;
-    -fx-font-family: "Garamond", "Georgia", "Times New Roman", serif; /* Classic serif fonts */
 }
 
 .button.close:hover {
@@ -65,5 +61,4 @@
     -fx-border-radius: 5px;
     -fx-padding: 20px;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 0);
-    -fx-font-family: "Garamond", "Georgia", "Times New Roman", serif; /* Classic serif fonts */
 }
