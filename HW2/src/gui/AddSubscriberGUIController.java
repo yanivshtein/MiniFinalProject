@@ -87,6 +87,7 @@ public class AddSubscriberGUIController {
             alert.setHeaderText("Some fields are missing");
             alert.setContentText("Please fill in the following fields: " + missingFields.toString());
             alert.showAndWait();
+            return;
         } else {
             // If all fields are filled, proceed with the action
             String status = "active";
