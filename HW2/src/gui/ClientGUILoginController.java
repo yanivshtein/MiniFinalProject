@@ -17,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -56,7 +57,7 @@ public class ClientGUILoginController {
 	
 	
 	@FXML
-	private DialogPane alertMsg = null;
+	private Label alertMsg = null;
 	
 	private String user = "Sub";
 
@@ -83,7 +84,7 @@ public class ClientGUILoginController {
         	if(user.equals("Sub")) {
         		ClientGUIConnectionController.chat.acceptLogin("searchSub", email,passwordString);
         		if (ChatClient.sub1 == null) {
-                    alertMsg.setContentText("The ID does not exist!");
+                    alertMsg.setText("The ID does not exist!");
                 }else {
                 	System.out.println("Subscriber ID Found");
                     ((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
@@ -101,7 +102,7 @@ public class ClientGUILoginController {
         	else if(user.equals("Lib")) {
         		ClientGUIConnectionController.chat.acceptLogin("searchLib", email, passwordString);
         		if (ChatClient.lib == null) {
-                    alertMsg.setContentText("The ID does not exist!");
+                    alertMsg.setText("The ID does not exist!");
                 }else {
                 	System.out.println("Librarian ID Found");
                     ((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window

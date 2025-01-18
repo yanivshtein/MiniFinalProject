@@ -10,10 +10,10 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SearchBookGUIController">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SearchBookGUIController">
    <children>
       <Accordion />
-      <Pane fx:id="nameOfTheBook" prefHeight="618.0" prefWidth="818.0">
+      <Pane fx:id="nameOfTheBook" layoutX="-14.0" prefHeight="618.0" prefWidth="818.0">
          <children>
             <!-- Title Label -->
             <Label layoutX="89.0" layoutY="36.0" text="Search a book:">
@@ -44,7 +44,7 @@
 
             <!-- Buttons (Return and Exit) -->
             <Button fx:id="return1" layoutX="56.0" layoutY="572.0" mnemonicParsing="false" onAction="#getReturnBtn" text="Return" />
-            <Button fx:id="exit" layoutX="538.0" layoutY="559.0" mnemonicParsing="false" onAction="#getExitBtn" text="Exit" />
+            <Button fx:id="exit" layoutX="760.0" layoutY="572.0" mnemonicParsing="false" onAction="#getExitBtn" text="Exit" />
          </children>
       </Pane>
    </children>
