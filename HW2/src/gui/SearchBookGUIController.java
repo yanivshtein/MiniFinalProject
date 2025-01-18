@@ -156,6 +156,7 @@ public class SearchBookGUIController {
 	}
 
 	public void searchBtn(ActionEvent event) {
+		//ברי תעתיק מפה!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		Alert alert = new Alert(Alert.AlertType.WARNING);
 		if(bookName.getText().isEmpty()) {
             alert.setTitle("Missing Field");

@@ -20,7 +20,7 @@
             <Button layoutX="52.0" layoutY="222.0" mnemonicParsing="false" onAction="#getExtension" text="Ask for Extension" />
             <Button fx:id="LogOut" layoutX="334.0" layoutY="362.0" mnemonicParsing="false" onAction="#getLogOutBtn" text="Log out" />
             <Button layoutX="308.0" layoutY="222.0" mnemonicParsing="false" onAction="#getSubMessages" text="My Messages" />
-            <ImageView fx:id="picSunOrMoon" fitHeight="70.0" fitWidth="94.0" layoutX="189.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="picSunOrMoon" fitHeight="70.0" fitWidth="94.0" layoutX="218.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </Pane>
    </children>

@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -44,7 +45,7 @@ public class AddSubscriberGUIController {
 	private TextField email = null;
 	
 	@FXML
-	private DialogPane afterUpdate = null;
+	private Label afterUpdate = null;
 	
 	
 	
@@ -91,7 +92,7 @@ public class AddSubscriberGUIController {
             String status = "active";
             int randomId = ThreadLocalRandom.current().nextInt(1, 100000);
             ClientGUIConnectionController.chat.acceptAddSubscriber(randomId, name.getText(), phoneNumber.getText(), email.getText(), status, password.getText());
-            afterUpdate.setContentText("Added");
+            afterUpdate.setText("Added");
         }
     }
 

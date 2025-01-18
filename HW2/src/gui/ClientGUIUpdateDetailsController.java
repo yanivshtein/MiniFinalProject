@@ -42,7 +42,7 @@ public class ClientGUIUpdateDetailsController {
 
 	
 	@FXML
-	private DialogPane afterUpdate = null;
+	private Label afterUpdate = null;
 	
 	@FXML
 	private Label IdName = null;
@@ -87,7 +87,7 @@ public class ClientGUIUpdateDetailsController {
             return;	
 		}
 		ClientGUIConnectionController.chat.accept("update",subId, Phone.getText(), Email.getText());
-		afterUpdate.setContentText("Updated");
+		afterUpdate.setText("Updated");
 	}
 	
 	public void getExitBtn(ActionEvent event) throws IOException {
