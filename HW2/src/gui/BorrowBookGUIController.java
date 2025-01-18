@@ -67,6 +67,7 @@ public class BorrowBookGUIController {
             alert.setHeaderText("Some fields are missing");
             alert.setContentText("Please fill in the following fields");
             alert.showAndWait();
+            return;
         } else {
             try {
                 subscriberId = Integer.parseInt(id.getText());
@@ -86,19 +87,23 @@ public class BorrowBookGUIController {
             alert.setTitle("Error");
             alert.setContentText("The subscriber does not exist");
             alert.showAndWait();
+            return;
         } else {
             if(ChatClient.statusSub.equals("frozen")) {
                 alert.setTitle("Error");
                 alert.setContentText("The subscription is frozen, it is not possible to make the borrowing");
                 alert.showAndWait();
+                return;
             } else if(ChatClient.bookAvailability == -1) {
                 alert.setTitle("Error");
                 alert.setContentText("The book is not in the library");
                 alert.showAndWait();
+                return;
             } else if(ChatClient.bookAvailability == 0) {
                 alert.setTitle("Error");
                 alert.setContentText("The book is in the library but currently out of stock");
                 alert.showAndWait();
+                return;
             } else if(ChatClient.bookAvailability > 0) {
                 ClientGUIConnectionController.chat.acceptSearchBook(16, bookName.getText());
                 ClientGUIConnectionController.chat.acceptAddToActivityHistoryController(17, subscriberId, bookName.getText());
