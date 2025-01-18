@@ -21,7 +21,6 @@
             <RadioButton fx:id="radio_sub" layoutX="272.0" layoutY="178.0" mnemonicParsing="false" onAction="#getRadioSubBtn" selected="true" text="Subscriber" />
             <RadioButton fx:id="radio_lib" layoutX="96.0" layoutY="178.0" mnemonicParsing="false" onAction="#getRadioLibBtn" text="Librarian" />
             <Button fx:id="search" layoutX="189.0" layoutY="229.0" mnemonicParsing="false" onAction="#getSearchBtn" text="search For Book" />
-            <DialogPane fx:id="alertMsg" layoutX="141.0" layoutY="99.0" prefHeight="0.0" prefWidth="150.0" />
          </children>
       </Pane>
    </children>

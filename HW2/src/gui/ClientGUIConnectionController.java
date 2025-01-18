@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextField;
@@ -22,9 +23,6 @@ public class ClientGUIConnectionController {
 
 	@FXML
 	private TextField serverIP = null;
-
-	@FXML
-	private DialogPane status = null;
 
 	@FXML
 	private Button exit = null;
@@ -47,6 +45,7 @@ public class ClientGUIConnectionController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		Alert alert = new Alert(Alert.AlertType.WARNING);
 		try {
 			chat = new ClientConsole(serverIP.getText(), 5555);
 			if (chat.connected) {
@@ -64,7 +63,9 @@ public class ClientGUIConnectionController {
 
 			}
 		} catch (Exception e) {
-			status.setContentText("Wrong IP");
+			alert.setTitle("Error");
+            alert.setContentText("Wrong IP");
+            alert.showAndWait();
 		}
 	}
 

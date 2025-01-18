@@ -15,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.RadioButton;
@@ -54,10 +55,6 @@ public class ClientGUILoginController {
 	private TextField password = null;
 	
 	
-	
-	@FXML
-	private DialogPane alertMsg = null;
-	
 	private String user = "Sub";
 
 	public void start(Stage primaryStage) throws Exception {
@@ -72,18 +69,21 @@ public class ClientGUILoginController {
 	// This method is called on button click
     public void getEnterBtn(ActionEvent event) throws IOException, InterruptedException {
         FXMLLoader loader = new FXMLLoader();
-
+        Alert alert = new Alert(Alert.AlertType.WARNING);
         email = userName.getText();
         passwordString = password.getText();
         
         if (email.trim().isEmpty() || email.trim().isEmpty()) {
-
-            System.out.println("You must enter an email and password");
+        	 alert.setTitle("Missing Field");
+             alert.setContentText("Please enter email and password");
+             alert.showAndWait();
         } else {
         	if(user.equals("Sub")) {
         		ClientGUIConnectionController.chat.acceptLogin("searchSub", email,passwordString);
         		if (ChatClient.sub1 == null) {
-                    alertMsg.setContentText("The ID does not exist!");
+        			alert.setTitle("Missing Field");
+                    alert.setContentText("The email or password do not match!");
+                    alert.showAndWait();
                 }else {
                 	System.out.println("Subscriber ID Found");
                     ((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
@@ -101,7 +101,9 @@ public class ClientGUILoginController {
         	else if(user.equals("Lib")) {
         		ClientGUIConnectionController.chat.acceptLogin("searchLib", email, passwordString);
         		if (ChatClient.lib == null) {
-                    alertMsg.setContentText("The ID does not exist!");
+        			alert.setTitle("Missing Field");
+                    alert.setContentText("The email or password do not match!");
+                    alert.showAndWait();
                 }else {
                 	System.out.println("Librarian ID Found");
                     ((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
