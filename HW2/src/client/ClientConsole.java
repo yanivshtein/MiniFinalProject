@@ -100,7 +100,17 @@ public class ClientConsole implements ChatIF
     {
       ArrayList<Object> arr1 = new ArrayList<>();
       
-      if(str.equals("watch borrow history")){
+      if(str.equals("check if frozen")) {
+    	  arr1.add(5);
+    	  arr1.add(id);
+      }
+      
+      else if(str.equals("watch books to extend")) {
+    	  arr1.add(31);
+    	  arr1.add(id);
+      }
+      
+      else if(str.equals("watch borrow history")){
           arr1.add(8);
           arr1.add(id);  
       }
@@ -145,6 +155,12 @@ public class ClientConsole implements ChatIF
       arr.add(id);
       arr.add(bookName);
       client.handleMessageFromClientUI(arr);		  
+  }
+  
+  public void acceptMessagesForLibrarian() {
+	  ArrayList<Object> arr = new ArrayList<>();
+      arr.add(30);
+      client.handleMessageFromClientUI(arr);	
   }
 
   public void acceptFromOrderController(int request, String id, String bookName) {
@@ -256,17 +272,17 @@ public class ClientConsole implements ChatIF
     }
   }
 
-  public void returnBook_accept(String actionType, String borrowerID, String bookName, Boolean isLate, Boolean freezeStatus, Period totalDaysLate) {
+  public void returnBook_accept(String actionType, String borrowerID, String bookID, Boolean isLate, Boolean freezeStatus, Period totalDaysLate) {
       ArrayList<Object> arr1 = new ArrayList<>();
-      
+      String bookName=bookID;
       switch (actionType) {
         case "EXIST":
             arr1.add(20);
             arr1.add(borrowerID);
-            arr1.add(bookName);
+            arr1.add(bookID);
             break;
             
-        case "SELECT DATE":
+        case "SELECT DATE":		//  the action and deadline date of the borrow 
             arr1.add(21);
             arr1.add(borrowerID);
             arr1.add(bookName);
@@ -281,7 +297,7 @@ public class ClientConsole implements ChatIF
             arr1.add(totalDaysLate);
             break;
             
-        case "CHECK_BOOK_RETURNED":
+        case "CHECK_BOOK_RETURNED":	
             arr1.add(26);
             arr1.add(borrowerID);
             arr1.add(bookName);

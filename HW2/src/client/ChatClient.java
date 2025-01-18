@@ -33,7 +33,7 @@ public class ChatClient extends AbstractClient {
 	public static ArrayList<String> activityHistory;
 	public static ArrayList<String> borrowHistory;
 	public static ArrayList<String> FullBorrowRep , FullStatusRep;
-	public static Boolean bool, isFrozen, isAvailable, isCan, isExist, isSeven, orderExists;
+	public static Boolean bool, isFrozen , isAvailable, isCan, isExist, isSeven, orderExists;
 	public static boolean awaitResponse = false;
 	public static ArrayList<String> ActionDateAndDeadline;
 	public static Integer bookAvailability=0, subID;
@@ -45,6 +45,8 @@ public class ChatClient extends AbstractClient {
 	public static ArrayList<String> borrowedBooks = new ArrayList<>();
 	public static ArrayList<String> filteredBooks = new ArrayList<>();
 	public static ArrayList<String> subMessages = new ArrayList<>();
+	public static ArrayList<String> libMessages = new ArrayList<>();
+	public static ArrayList<String> booksNearDeadline = new ArrayList<>();
 	public static String bookName;
 	public static Subscriber1 sub1;
 	public static Librarian lib;
@@ -117,17 +119,12 @@ public class ChatClient extends AbstractClient {
 		case 1:
 		case 2:
 			Subscriber1 sub = (Subscriber1) arr.get(1);
-			if (sub.equals(null)) {
-				s1 = new Subscriber1(0, "", "", "", "", "");
-			} else {
-				s1.setSubscriber_id(sub.getSubscriber_id());
-				s1.setSubscriber_name(sub.getSubscriber_name());
-				s1.setSubscriber_phone_number(sub.getSubscriber_phone_number());
-				s1.setSubscriber_email(sub.getSubscriber_email());
-				s1.setSub_status(sub.getSub_status());
-				s1.setPassword(sub.getPassword());
-				System.out.println(s1.getSubscriber_name());
-			}
+			s1.setSubscriber_id(sub.getSubscriber_id());
+			s1.setSubscriber_name(sub.getSubscriber_name());
+			s1.setSubscriber_phone_number(sub.getSubscriber_phone_number());
+			s1.setSubscriber_email(sub.getSubscriber_email());
+			s1.setSub_status(sub.getSub_status());
+			s1.setPassword(sub.getPassword());
 			break;
 		case 3:
 			lib = (Librarian)arr.get(1);
@@ -137,7 +134,10 @@ public class ChatClient extends AbstractClient {
 			
 			break;
 		case 5:
-			if (arr.get(1).equals("frozen")) 
+			if ("NOT_FOUND".equals(arr.get(1))) {
+				isFrozen = null;
+			}
+			else if (arr.get(1).equals("frozen")) 
 				isFrozen=true;
 			else 
 				isFrozen=false;
@@ -209,12 +209,19 @@ public class ChatClient extends AbstractClient {
 			break;
 		case 20:
 			bool=(Boolean) arr.get(1);
+			bookName = (String)arr.get(2);
 			break;
 		case 21:
 			 ActionDateAndDeadline = (ArrayList<String>)arr.get(1);
 			break;
 		case 22:
-			  bool=(Boolean) arr.get(1);
+			
+			  bool=(Boolean) arr.get(2);
+			  if (((String)arr.get(1)).equals("FROZEN")) {
+				  isFrozen=true;
+			  }
+			  else
+				  isFrozen=false;
 			break;
 		case 23:
 			bookName = (String) arr.get(1);
@@ -248,7 +255,14 @@ public class ChatClient extends AbstractClient {
 		case 29:
 			subMessages = (ArrayList<String>) arr.get(1);
 			break;
+		case 30:
+			libMessages = (ArrayList<String>) arr.get(1);
+			break;
+		case 31:
+			booksNearDeadline = (ArrayList<String>) arr.get(1);
+			break;
 		}
+		
 			
 		
 	}	

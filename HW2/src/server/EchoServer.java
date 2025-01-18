@@ -87,7 +87,6 @@ public class EchoServer extends AbstractServer
                     sub = SQLinstance.select((String) arr.get(1));
                     arrToSend.add(2);
                 	arrToSend.add(sub);
-                	System.out.println(sub.getSubscriber_name());
                     try {                   	
                         client.sendToClient(arrToSend); // sent to the client
                     } catch (IOException e) {
@@ -117,16 +116,29 @@ public class EchoServer extends AbstractServer
                     break;
 
                 case 5: // Check subscriber's status
-                    subID =  (int) arr.get(1);
+                    if (arr.get(1) instanceof String) {
+                        subID = Integer.valueOf((String) arr.get(1));
+                    } else {
+                        subID = (int) arr.get(1);
+                    }
+
                     String retStatus = SQLinstance.checkIsFrozen(subID);
-                    arrToSend.add(5);
-                    arrToSend.add(retStatus);
+
+                    arrToSend.add(5); // Add the case identifier to the response
+
+                    if (retStatus == null) {
+                        arrToSend.add("NOT_FOUND"); // Indicate that the subscriber was not found
+                    } else {
+                        arrToSend.add(retStatus); // Add the subscription status
+                    }
+
                     try {
-                        client.sendToClient(arrToSend); // send back to the client if the status is frozen or not
+                        client.sendToClient(arrToSend); // Send back to the client if the status is frozen or not
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     break;
+
 
                 case 6: // Check if there is a book like this and then Check book availability
                     bookName = (String) arr.get(2); 
@@ -160,7 +172,13 @@ public class EchoServer extends AbstractServer
                 case 8: //watch activity history
                     subID = Integer.parseInt((String)arr.get(1)); //subscriber ID is in the second position of the array
                  // Retrieve the borrow history for the given subscriber ID
-                    ArrayList<String> borrowHistory = SQLinstance.getBorrowHistory(subID);
+				ArrayList<String> borrowHistory = null;
+				try {
+					borrowHistory = SQLinstance.getBorrowHistory(subID);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
                     arrToSend.add(8);
                     arrToSend.add(borrowHistory);
                     try {
@@ -344,15 +362,18 @@ public class EchoServer extends AbstractServer
                     break;
                 case 20:	// search if exist borrower in the DB
 	            	String borrowerid = (String)arr.get(1); //subscriber ID is in the second position of the array
-		          	String bookname = (String)arr.get(2);
+		          	String bookID = (String)arr.get(2);
 		  
 				try {
-					Boolean isExist= SQLinstance.checkIfBorrowerFound(borrowerid, bookname);
+					String BookName=SQLinstance.BringBarCodeBookName(Integer.parseInt(bookID));	// get the book name from the book database
+					
+					Boolean isExist= SQLinstance.checkIfBorrowerFound(borrowerid, BookName);	// check if there is a borrow in the database
 					arrToSend.add(20);
-					//ar2.add(isExist);
+					
 					arrToSend.add(isExist);
+					arrToSend.add(BookName);
 					client.sendToClient(arrToSend);
-					//client.sendToClient(ar2);
+					
 				} catch (SQLException | IOException e) {
 					
 					e.printStackTrace();
@@ -412,11 +433,28 @@ public class EchoServer extends AbstractServer
 		            	 }
 		            	 if(freeze==true){
 		            		 freezeSuccess = SQLinstance.updateSubscriberStatusToFrozen(this.subscriberID,"Frozen");
+		            		 
+		            		 if(freezeSuccess) 
+		            			 arrToSend.add("FROZEN");
+		            			
+		            		 else {
+		            			 System.err.println("Freezing subscriber status didn't work");
+		            			 
+		            		 }
+		            			 
+		            		 
 		            	 }
+		            	 
+		            	 if (freeze==false) 
+		            		 arrToSend.add("Active");
+	            			 
+		            	 
 		            	 if (orderExists == false) { //which means no one has ordered this book then we can add the copy to the inventory
 		            		 bookIncrement = SQLinstance.incrimentBookAvailability(this.bookName);
+		            		 
 		            	 }		            	
 		            	 arrToSend.add(bookIncrement && freezeSuccess && insertRowToActivity);
+		            	 
 		            	 client.sendToClient(arrToSend );
 
 	            	 } catch (IOException e) {
@@ -524,6 +562,26 @@ public class EchoServer extends AbstractServer
                 		e.printStackTrace();
                 	}
                 	break;
+                case 30:
+                	ArrayList<String> libMessages = SQLinstance.librarianMessages();
+                	arrToSend.add(30);
+                	arrToSend.add(libMessages);
+                	try {
+                		client.sendToClient(arrToSend);
+                	} catch (IOException e) {
+                		e.printStackTrace();
+                	}
+                	break;
+                case 31:
+            	    ArrayList<String> booksNearDeadline = SQLinstance.getBooksNearDeadlineForSubscriber(Integer.parseInt((String) arr.get(1)));
+                	arrToSend.add(31);
+                	arrToSend.add(booksNearDeadline);
+                	try {
+                		client.sendToClient(arrToSend);
+                	} catch (IOException e) {
+                		e.printStackTrace();
+                	}
+                	break;
                 default:
                     System.out.println("The server - Received message is not of the expected type.");
                     break;
@@ -566,6 +624,7 @@ public class EchoServer extends AbstractServer
 	 //go to DB and update subscribers that it has been 2 days since their order arrived
 	 //also, delete the tuples in 'orders' table
    	 SQLinstance.timeDidntTakeOrder();
-   	SQLinstance.notifyBeforeReturnDeadline();
+   	 SQLinstance.unfreezeAfterMonthStatus();
+   	 SQLinstance.notifyBeforeReturnDeadline();
    }
 }

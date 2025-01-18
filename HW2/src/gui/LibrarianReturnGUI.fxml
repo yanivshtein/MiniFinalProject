@@ -1,29 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LibrarianReturnGUI">
    <children>
-      <Pane prefHeight="350.0" prefWidth="520.0">
+      <Pane layoutX="1.0" prefHeight="458.0" prefWidth="689.0">
          <children>
-            <TextField fx:id="subscriberId" layoutX="146.0" layoutY="29.0" prefHeight="31.0" prefWidth="207.0" />
-            <Label layoutX="43.0" layoutY="36.0" text="Subscriber ID: " />
-            <Button fx:id="sendButton" layoutX="111.0" layoutY="265.0" mnemonicParsing="false" onAction="#sendButton" text="Send" />
-            <Button fx:id="exitButton" layoutX="325.0" layoutY="265.0" mnemonicParsing="false" onAction="#exitButton" text="Exit" />
-            <Label layoutX="43.0" layoutY="73.0" text=" Book Name: " />
-            <TextField fx:id="bookName" layoutX="146.0" layoutY="66.0" prefHeight="31.0" prefWidth="207.0" />
-            <Label layoutX="33.0" layoutY="159.0" text="Book arrive date:" />
-            <Label layoutX="33.0" layoutY="183.0" text="Deadline:" />
+            <TextField fx:id="subscriberId" layoutX="134.0" layoutY="41.0" prefHeight="31.0" prefWidth="207.0" />
+            <Label layoutX="31.0" layoutY="48.0" text="Subscriber ID: " />
+            <Button fx:id="sendButton" layoutX="135.0" layoutY="390.0" mnemonicParsing="false" onAction="#sendButton" text="Send" />
+            <Label layoutX="35.0" layoutY="153.0" text=" Book Name: " />
+            <TextField fx:id="bookName" alignment="CENTER" disable="true" layoutX="134.0" layoutY="146.0" prefHeight="31.0" prefWidth="207.0" promptText="Scan the book first">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="TEXT" />
+               </cursor></TextField>
+            <Label layoutX="26.0" layoutY="269.0" text="Book arrive date:" />
+            <Label layoutX="27.0" layoutY="331.0" text="Deadline:" />
             <Label layoutX="158.0" layoutY="127.0" />
-            <Label fx:id="bookArriveDate" layoutX="140.0" layoutY="159.0" prefHeight="17.0" prefWidth="91.0" />
-            <Label fx:id="deadline" layoutX="140.0" layoutY="183.0" prefHeight="17.0" prefWidth="79.0" />
-            <Button fx:id="checkButton" layoutX="384.0" layoutY="47.0" mnemonicParsing="false" onAction="#checkBttn" text="Check" />
-            <Label fx:id="sendMsg" layoutX="132.0" layoutY="225.0" prefHeight="26.0" prefWidth="257.0" />
-            <Label fx:id="artMsg" layoutX="156.0" layoutY="110.0" prefHeight="26.0" prefWidth="171.0" />
+            <Label fx:id="bookArriveDate" layoutX="146.0" layoutY="269.0" prefHeight="17.0" prefWidth="91.0" />
+            <Label fx:id="deadline" layoutX="146.0" layoutY="331.0" prefHeight="17.0" prefWidth="91.0" />
+            <Button fx:id="checkButton" layoutX="165.0" layoutY="191.0" mnemonicParsing="false" onAction="#checkBttn" text="Check" />
+            <Label fx:id="sendMsg" layoutX="109.0" layoutY="353.0" prefHeight="26.0" prefWidth="257.0" />
+            <Label fx:id="artMsg" layoutX="152.0" layoutY="226.0" prefHeight="26.0" prefWidth="171.0" />
+            <Button layoutX="251.0" layoutY="390.0" mnemonicParsing="false" onAction="#retButton" text="Back to Home" />
+            <Button fx:id="BorrowHistoryIdButton" layoutX="475.0" layoutY="102.0" mnemonicParsing="false" onAction="#viewBorrowersHistoryButton" prefHeight="26.0" prefWidth="112.0" text="borrow list" />
+            <TextArea fx:id="ShowHistory" layoutX="383.0" layoutY="139.0" prefHeight="200.0" prefWidth="284.0" />
+            <TextField fx:id="getSubscribersId" alignment="TOP_CENTER" layoutX="467.0" layoutY="51.0" prefHeight="26.0" prefWidth="142.0" promptText="Enter subscriber's ID" />
+            <Label layoutX="432.0" layoutY="56.0" text="ID:" />
+            <Button fx:id="scanButton" layoutX="245.0" layoutY="191.0" mnemonicParsing="false" onAction="#barcodeButton" text="Scan" />
+            <TextField fx:id="bookID" layoutX="134.0" layoutY="92.0" prefHeight="31.0" prefWidth="207.0" />
+            <Label layoutX="35.0" layoutY="99.0" text="Barcode" />
          </children>
       </Pane>
    </children>

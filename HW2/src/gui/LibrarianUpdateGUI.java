@@ -18,118 +18,118 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
 
 
 
-public class LibrarianWatchAndUpdateGUI {
+public class LibrarianUpdateGUI {
+	@FXML
+	private Pane pane;
 
 	@FXML
-    private TextField subID = null;
-    @FXML
-    private TextField name = null;
-    @FXML
-    private TextField phone_number = null;
-    @FXML
-    private TextField email = null;
-    @FXML
-    private TextField history = null;
-    @FXML
-    private TextArea Bview = null;
-    @FXML
-    private Button ViewClick = null;
-    @FXML
-    private Button ManBorrowClick = null;
-    @FXML
-    private TextField BookName = null;
-    @FXML
-    private TextField OldRetDate = null;
-    @FXML
-    private TextField NewRetDate = null;
-    @FXML
-    private DialogPane ChangesSavedPop = null;
-    @FXML
-    private Button SaveChangesbtt = null;
-    @FXML
-    private TextField SubStatus = null; //active OR frozen
-    @FXML
-    private Button RetButton = null;
+	private Button ViewRelevantBooks, ViewClick, ViewClick1, exitbtn, exitbtn1, ManBorrowClick, SaveChangesbtt, RetButton, RetButton1;
+
+	@FXML
+	private ListView<String> RelevantBooks;
+
+	@FXML
+	private Text namelabel, emaillabel, phonelabel, statuslabel, borrowhislabel, OriginalDate, NewDate;
+
+	@FXML
+	private TextField subID, subID1, name, phone_number, email, history, OldRetDate, NewRetDate, SubStatus;
+
+	@FXML
+	private TextArea Bview;
+
+	@FXML
+	private DialogPane ChangesSavedPop;
+
+	private String TempStatus, selectedBook;
+	private Boolean statusCheck = null;
+	private ArrayList<String> borrowHistory;
+
+	@FXML
+	private void initialize() {
+	    RelevantBooks.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+	    });
+	}
+
+	public void ViewRelevantBooksclick(ActionEvent event) throws IOException {
+	    // Check if the frozen status has already been evaluated
+	    if (statusCheck == null) { 
+	        // Evaluate the frozen status only once
+	        ClientGUIConnectionController.chat.accept("check if frozen", subID1.getText(), "", "");
+	        statusCheck = ChatClient.isFrozen;
+	    }
+
+	    if(statusCheck == null) {
+	    	ChangesSavedPop.setContentText("Subscriber not found.");
+	        return;
+	    	
+	    }
+	    else if (statusCheck) {
+	        ChangesSavedPop.setContentText("The account is frozen. It is not possible to extend the borrow.");
+	        return;
+	    }
+	    
+
+	    ArrayList<String> bookNames = new ArrayList<>();
+	    ArrayList<String> deadlines = new ArrayList<>();
+
+	    // Fetch books near the deadline
+	    ClientGUIConnectionController.chat.accept("watch books to extend", subID1.getText(), "", "");
+	    ArrayList<String> booksNearDeadline = ChatClient.booksNearDeadline;
+
+	    if (booksNearDeadline == null || booksNearDeadline.isEmpty()) {
+	        System.out.println("No relevant books found.");
+	        return;
+	    }
+
+	    System.out.println(booksNearDeadline.toString());
+
+	    // Populate bookNames and deadlines
+	    for (int i = 0; i < booksNearDeadline.size(); i += 2) {
+	        bookNames.add(booksNearDeadline.get(i).trim());
+	        deadlines.add(booksNearDeadline.get(i + 1).trim());
+	    }
+
+	    if (RelevantBooks != null) {
+	        RelevantBooks.getItems().clear();
+	        RelevantBooks.getItems().addAll(bookNames);
+	    }
+
+	    // Wait until the user selects a book
+	    RelevantBooks.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+	        if (newValue != null) {
+	            selectedBook = newValue; // Set the selected book
+	            for (int i = 0; i < bookNames.size(); i++) {
+	                if (bookNames.get(i).equals(selectedBook)) {
+	                    OldRetDate.setText(deadlines.get(i)); // Set the deadline
+	                    break;
+	                }
+	            }
+	        }
+	    });
+	}
+
+		
+
+ 
     
-    private  String TempStatus;
-        
-    private ArrayList<String> borrowHistory;
-
-    public void ViewDetBtt(ActionEvent event) throws IOException {
-    	ClientGUIConnectionController.chat.accept("select", subID.getText(), "", "");
-        Subscriber1 sub = ChatClient.s1;
-        subID.setText(String.valueOf(sub.getSubscriber_id()));
-        name.setText(sub.getSubscriber_name());
-        phone_number.setText(sub.getSubscriber_phone_number());
-        email.setText(sub.getSubscriber_email());
-        SubStatus.setText(sub.getSub_status());
-        
-        
-        ClientGUIConnectionController.chat.accept("watch borrow history", subID.getText(), "", "");
-        borrowHistory = ChatClient.borrowHistory;
-        
-
-        if (borrowHistory == null || borrowHistory.isEmpty()) {
-            Bview.setText("No borrow history found.");
-            return;
-        }
-
-        for (int i = 0; i < borrowHistory.size(); i++) {
-            Bview.appendText(borrowHistory.get(i));
-            Bview.appendText("\n\n");
-        }
-        TempStatus = sub.getSub_status();
-        if (TempStatus.equals("frozen")) {
-        	ChangesSavedPop.setContentText("The account is frozen. It is not possible to extend the borrow.");
-        	return;
-        	
-        }
-    }
-
-    public void ManReturnBtt(ActionEvent event) throws IOException {
-        if (TempStatus.equals("frozen")) {
-            return;
-        }
-        for (int i = 0; i < borrowHistory.size(); i++) {
-            if (borrowHistory.get(i).contains(BookName.getText())) {
-            	
-                // Extract the "Date" portion
-                int dateIndex = borrowHistory.get(i).indexOf("Deadline: ");
-                if (dateIndex != -1) {
-                    int startIndex = dateIndex + 10; // Length of "Date: " is 10
-                    int endIndex = borrowHistory.get(i).indexOf(",", startIndex);
-                    
-                    // If there's no comma, assume the date goes to the end of the string
-                    if (endIndex == -1) {
-                        endIndex = borrowHistory.get(i).length();
-                    }
-                    
-                    String dateTimePart = borrowHistory.get(i).substring(startIndex, endIndex).trim();
-                    OldRetDate.setText(dateTimePart);
-                    break;
-                }
-            }
-        }
-    }
-
-
     public void SaveChangBtt(ActionEvent event) throws IOException {
-    	if (TempStatus.equals("frozen")) {
-    		return;
-    	}
+    	if(statusCheck)
+			return;
         if (!DateValidation(OldRetDate.getText(), NewRetDate.getText())) {
             ChangesSavedPop.setContentText("Invalid New Date! - Must be both after the old date and within 2 weeks!");
             return;
         }
             
-        ClientGUIConnectionController.chat.book_accept("set new return date", subID.getText(), BookName.getText(), OldRetDate.getText(), NewRetDate.getText() , LibrarianGUIHomePageController.BringLibName );
+        ClientGUIConnectionController.chat.book_accept("set new return date", subID1.getText(), selectedBook, OldRetDate.getText(), NewRetDate.getText() , LibrarianGUIHomePageController.BringLibName );
 
         if (ChatClient.bool) {
             ChangesSavedPop.setContentText("Updated successfully");
@@ -202,8 +202,10 @@ public class LibrarianWatchAndUpdateGUI {
 		primaryStage.show();
 		
 	}
-
-
-
+	
+	 public void getExitBtn(ActionEvent event) throws IOException {
+			System.exit(0);
+		}
+	 
 }
 	
