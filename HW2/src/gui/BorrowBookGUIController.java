@@ -58,59 +58,58 @@ public class BorrowBookGUIController {
     }
     
 
-    public void borrowBtn(ActionEvent event)  {
-    	 
-    	Alert alert = new Alert(Alert.AlertType.WARNING);
-    	 if(id.getText().isEmpty() ||bookName.getText().isEmpty() ) {
-             alert.setTitle("Missing Fields");
-             alert.setHeaderText("Some fields are missing");
-             alert.setContentText("Please fill in the following fields");
-             alert.showAndWait();
-    	
-    	 }else {
-    	 
-		int subscriberId = Integer.parseInt(id.getText());
-    	 ClientGUIConnectionController.chat.acceptBorrowBook(subscriberId);
-    	 ClientGUIConnectionController.chat.acceptSearchBook(14,bookName.getText());
-    	if(ChatClient.bool==false) {
+    public void borrowBtn(ActionEvent event) {
+        int subscriberId = -1;
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        
+        if(id.getText().isEmpty() || bookName.getText().isEmpty()) {
+            alert.setTitle("Missing Fields");
+            alert.setHeaderText("Some fields are missing");
+            alert.setContentText("Please fill in the following fields");
+            alert.showAndWait();
+        } else {
+            try {
+                subscriberId = Integer.parseInt(id.getText());
+            } catch (NumberFormatException e) {
+                alert.setTitle("Invalid Input");
+                alert.setHeaderText("Please enter a valid number.");
+                alert.setContentText("The input must be a valid integer.");
+                alert.showAndWait();
+                return;
+            }
+        }
+
+        ClientGUIConnectionController.chat.acceptBorrowBook(subscriberId);
+        ClientGUIConnectionController.chat.acceptSearchBook(14, bookName.getText());
+        
+        if(ChatClient.bool == false) {
             alert.setTitle("Error");
             alert.setContentText("The subscriber does not exist");
             alert.showAndWait();
-    	}
-    	else {
-    		if(ChatClient.statusSub.equals("frozen")){
+        } else {
+            if(ChatClient.statusSub.equals("frozen")) {
                 alert.setTitle("Error");
                 alert.setContentText("The subscription is frozen, it is not possible to make the borrowing");
-                alert.showAndWait();	
-    			
-    		}
-    		
-    	    else if(ChatClient.bookAvailability== -1) {
+                alert.showAndWait();
+            } else if(ChatClient.bookAvailability == -1) {
                 alert.setTitle("Error");
                 alert.setContentText("The book is not in the library");
                 alert.showAndWait();
-        		
-        	}
-        	else if(ChatClient.bookAvailability == 0) {
+            } else if(ChatClient.bookAvailability == 0) {
                 alert.setTitle("Error");
                 alert.setContentText("The book is in the library but currently out of stock");
                 alert.showAndWait();
-        		
-        		
-        	}
-        	else if(ChatClient.bookAvailability >0) {
-        		ClientGUIConnectionController.chat.acceptSearchBook(16,bookName.getText());
-        		ClientGUIConnectionController.chat.acceptAddToActivityHistoryController(17,subscriberId,bookName.getText());
-        		msg.setContentText("The book is available. Copies left: " + (ChatClient.bookAvailability-1) );
-        	}
-        	else {
-        		msg.setContentText("ERROR" );
-        	}
-    	}
-    		
-    	}
+            } else if(ChatClient.bookAvailability > 0) {
+                ClientGUIConnectionController.chat.acceptSearchBook(16, bookName.getText());
+                ClientGUIConnectionController.chat.acceptAddToActivityHistoryController(17, subscriberId, bookName.getText());
+                msg.setContentText("The book is available. Copies left: " + (ChatClient.bookAvailability - 1));
+            } else {
+                msg.setContentText("ERROR");
+            }
+        }
+    }
 
-}
+
     public void getReturnBtn(ActionEvent event) throws IOException{
 		FXMLLoader loader = new FXMLLoader();
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
