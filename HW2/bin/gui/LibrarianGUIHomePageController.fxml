@@ -15,17 +15,17 @@
          </font></Label>
       <Text layoutX="39.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" />
       <Label fx:id="librarianName" layoutX="91.0" layoutY="44.0" prefHeight="35.0" prefWidth="83.0" text="Label" />
-      <Button fx:id="addSub" layoutX="41.0" layoutY="140.0" mnemonicParsing="false" onAction="#getAddSubBtn" prefHeight="25.0" prefWidth="151.0" text="Add subscriber" />
-      <Button fx:id="borrowBook" layoutX="41.0" layoutY="215.0" mnemonicParsing="false" onAction="#BorrowingBookBtn" prefHeight="25.0" prefWidth="151.0" text="Borrowing a book" />
-      <Button fx:id="returnBook" layoutX="258.0" layoutY="215.0" mnemonicParsing="false" onAction="#returnBookbttn" prefHeight="25.0" prefWidth="151.0" text="Return a book" />
-      <Button fx:id="searchBook" layoutX="258.0" layoutY="140.0" mnemonicParsing="false" onAction="#SearchBookBtn" prefHeight="25.0" prefWidth="151.0" text="Search a book" />
-      <Button fx:id="LogOut" layoutX="298.0" layoutY="458.0" mnemonicParsing="false" onAction="#getLogOutBtn" text="Log out" />
+      <Button fx:id="addSub" layoutX="41.0" layoutY="140.0" mnemonicParsing="false" onAction="#getAddSubBtn" prefHeight="25.0" prefWidth="151.0" text="Add Subscriber" />
+      <Button fx:id="borrowBook" layoutX="41.0" layoutY="215.0" mnemonicParsing="false" onAction="#BorrowingBookBtn" prefHeight="25.0" prefWidth="151.0" text="Borrowing a Book" />
+      <Button fx:id="returnBook" layoutX="258.0" layoutY="215.0" mnemonicParsing="false" onAction="#returnBookbttn" prefHeight="25.0" prefWidth="151.0" text="Return a Book" />
+      <Button fx:id="searchBook" layoutX="258.0" layoutY="140.0" mnemonicParsing="false" onAction="#SearchBookBtn" prefHeight="25.0" prefWidth="151.0" text="Search a Book" />
+      <Button fx:id="LogOut" layoutX="32.0" layoutY="458.0" mnemonicParsing="false" onAction="#getLogOutBtn" text="Log out" />
       <Button fx:id="exit" layoutX="401.0" layoutY="458.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="25.0" prefWidth="57.0" text="Exit" />
-      <Button fx:id="GetReports" layoutX="258.0" layoutY="289.0" mnemonicParsing="false" onAction="#getReportsGUIBtn" prefHeight="25.0" prefWidth="151.0" text="Viewing reports" />
+      <Button fx:id="GetReports" layoutX="258.0" layoutY="289.0" mnemonicParsing="false" onAction="#getReportsGUIBtn" prefHeight="25.0" prefWidth="151.0" text="View Reports" />
       <Button layoutX="273.0" layoutY="364.0" mnemonicParsing="false" onAction="#getOrders" text="Waiting Orders" />
-      <Button fx:id="messagesBtn" layoutX="84.0" layoutY="421.0" mnemonicParsing="false" onAction="#getMessages" text="messages" />
-      <Button layoutX="42.0" layoutY="289.0" mnemonicParsing="false" onAction="#getLibrarianWatch" prefHeight="25.0" prefWidth="151.0" text="watch reader card" />
-      <Button layoutX="41.0" layoutY="364.0" mnemonicParsing="false" onAction="#getLibrarianUpdate" prefHeight="25.0" prefWidth="151.0" text="manual extension" />
+      <Button fx:id="messagesBtn" layoutX="201.0" layoutY="427.0" mnemonicParsing="false" onAction="#getMessages" text="Messages" />
+      <Button layoutX="42.0" layoutY="289.0" mnemonicParsing="false" onAction="#getLibrarianWatch" prefHeight="25.0" prefWidth="151.0" text="Watch Reader Card" />
+      <Button layoutX="41.0" layoutY="364.0" mnemonicParsing="false" onAction="#getLibrarianUpdate" prefHeight="25.0" prefWidth="151.0" text="Manual Extension" />
       <ImageView fx:id="picSunOrMoon" fitHeight="83.0" fitWidth="108.0" layoutX="167.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
 
    </children>

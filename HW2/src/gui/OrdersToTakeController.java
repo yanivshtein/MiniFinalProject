@@ -49,7 +49,14 @@ public class OrdersToTakeController {
 	            alert.showAndWait();
 	            return;
 			}
-		}		
+		}
+		ClientGUIConnectionController.chat.acceptBorrowBook(ID);
+		if(ChatClient.bool == false) {
+            alert.setTitle("Error");
+            alert.setContentText("The subscriber does not exist");
+            alert.showAndWait();
+            return;
+		}
 		ClientGUIConnectionController.chat.acceptFromController(27, ID, "");
 		ArrayList<String> books = ChatClient.orders;
 		if (books.isEmpty()) {

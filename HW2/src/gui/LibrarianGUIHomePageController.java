@@ -295,7 +295,7 @@ public class LibrarianGUIHomePageController {
 	    scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 	    
 	    Stage primaryStage = new Stage();
-	    primaryStage.setTitle("Waiting Orders");
+	    primaryStage.setTitle("Messages");
 	    primaryStage.setScene(scene);
 	    primaryStage.show();
 	}

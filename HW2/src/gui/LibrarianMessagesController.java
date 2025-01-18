@@ -45,7 +45,7 @@ public class LibrarianMessagesController {
 		    scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 		    
 		    Stage primaryStage = new Stage();
-		    primaryStage.setTitle("Client Home Page");
+		    primaryStage.setTitle("Librarian Home Page");
 		    primaryStage.setScene(scene);
 		    primaryStage.show();
 		}

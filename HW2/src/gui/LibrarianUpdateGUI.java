@@ -61,8 +61,16 @@ public class LibrarianUpdateGUI {
 	}
 
 	public void ViewRelevantBooksclick(ActionEvent event) throws IOException {
+		
+		if(subID1.getText().isEmpty()) {
+			alert.setTitle("No ID Was Entered");
+            alert.setContentText("You must enter an ID!");
+            alert.showAndWait();
+	        return;
+			
+		}
 	    // Check if the frozen status has already been evaluated
-	    if (statusCheck == null) { 
+	    if (statusCheck == null || statusCheck == true) { 
 	        // Evaluate the frozen status only once
 	        ClientGUIConnectionController.chat.accept("check if frozen", subID1.getText(), "", "");
 	        statusCheck = ChatClient.isFrozen;
