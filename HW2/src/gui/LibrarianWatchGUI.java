@@ -87,8 +87,8 @@ public class LibrarianWatchGUI {
         System.out.println(borrowHistory.toString());
 
 		// Print the table header
-		Bview.setText(String.format("%-30s %-20s %-20s %-20s %-20s", "Book Name", "Borrow Date", "Return Date" , "Deadline" ,"Addition Information"));
-		Bview.appendText("\n-----------------------------------------------------------------------------------------------------------------");
+		Bview.setText(String.format("%-35s %-20s %-20s %-20s %-20s", "Book Name", "Borrow Date", "Return Date" , "Deadline" ,"Addition Information"));
+		Bview.appendText("\n-----------------------------------------------------------------------------------------------------------------------");
 
 		// Print each row of activity history
 		for (String record : borrowHistory) {
@@ -102,7 +102,7 @@ public class LibrarianWatchGUI {
 				String ExIssues = parts[4].trim();
 
 				// Print the row in table format
-				Bview.appendText(String.format("\n%-30s %-20s %-20s %-20s %-20s", bookName, BorrowDate, ReturnDate , deadline ,ExIssues ));
+				Bview.appendText(String.format("\n%-35s %-20s %-20s %-20s %-20s", bookName, BorrowDate, ReturnDate , deadline ,ExIssues ));
 			}
 		}
 		
