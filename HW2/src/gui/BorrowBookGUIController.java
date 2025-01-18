@@ -1,6 +1,6 @@
 package gui;
 
-import java.awt.Label;
+
 import java.io.IOException;
 import java.util.List;
 import client.ChatClient;
@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -29,7 +30,7 @@ public class BorrowBookGUIController {
 	private TextField barCode = null;
 	
     @FXML
-    private DialogPane msg = null;
+    private Label msg = null;
     
 	@FXML
 	private TextField bookName = null;
@@ -107,9 +108,9 @@ public class BorrowBookGUIController {
             } else if(ChatClient.bookAvailability > 0) {
                 ClientGUIConnectionController.chat.acceptSearchBook(16, bookName.getText());
                 ClientGUIConnectionController.chat.acceptAddToActivityHistoryController(17, subscriberId, bookName.getText());
-                msg.setContentText("The book is available. Copies left: " + (ChatClient.bookAvailability - 1));
+                msg.setText("The book is available. Copies left: " + (ChatClient.bookAvailability - 1));
             } else {
-                msg.setContentText("ERROR");
+                msg.setText("ERROR");
             }
         }
     }
@@ -131,19 +132,26 @@ public class BorrowBookGUIController {
     
     
     public void BarCodeBtn(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
     	try {
-    		msg.setContentText("");
+    		msg.setText("");
     		bookName.setText("");
     		int bookId = Integer.parseInt(barCode.getText());
     		ClientGUIConnectionController.chat.acceptBarCode(bookId);
         	if(ChatClient.bookName.equals("")) {
-        		msg.setContentText("The barcode does not exist in the database");
+                alert.setTitle("Error");
+                alert.setContentText("The barcode does not exist in the database");
+                alert.showAndWait();
+                return;
         	}else {
+        		
         		bookName.setText(ChatClient.bookName);
         	}
     	}catch(NumberFormatException e) {
-    		System.out.println("letters were entered");
-    		msg.setContentText("The barcode does not exist in the database");
+            alert.setTitle("Error");
+            alert.setContentText("Please enter a valid barcode number");
+            alert.showAndWait();
+    		return;
     	}
     	
     	
