@@ -189,7 +189,7 @@ public class ReportsGUI {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/gui/ReportsGUI.fxml"));
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/gui/ReportsGUI.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
         primaryStage.setTitle("Reports GUI");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -222,7 +222,7 @@ public class ReportsGUI {
 
         // Create a new scene and apply the stylesheet
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/gui/LibrarianGUIHomePageController.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 
         // Create a new stage for the new page
         Stage newStage = new Stage();

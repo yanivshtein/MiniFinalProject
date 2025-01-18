@@ -51,7 +51,7 @@ public class BorrowBookGUIController {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/gui/BorrowBookGUIController.fxml"));
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/gui/BorrowBookGUIController.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
         primaryStage.setTitle("Borrowing a book");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -122,7 +122,7 @@ public class BorrowBookGUIController {
         Pane root = loader.load(getClass().getResource("/gui/LibrarianGUIHomePageController.fxml").openStream());
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/gui/LibrarianGUIHomePageController.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
         primaryStage.setTitle("Labrarian home page");
 
         primaryStage.setScene(scene);
