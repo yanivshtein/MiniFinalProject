@@ -5,7 +5,7 @@
     -fx-background-size: cover;
     -fx-background-position: center;
     -fx-padding: 20px;
-     -fx-font-family: "Comic Sans MS", cursive, "Segoe UI", Arial, sans-serif;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
     -fx-font-size: 14px; /* Base font size */
 }
 
@@ -71,4 +71,11 @@
     -fx-border-radius: 5px;
     -fx-padding: 20px;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 0);
+}
+
+.dialog-pane {
+    -fx-background-color: transparent; /* Fully transparent background */
+    -fx-border-color: transparent; /* No border for a seamless look */
+    -fx-padding: 10px;
+    -fx-text-fill: #333; /* Dark text for contrast */
 }
