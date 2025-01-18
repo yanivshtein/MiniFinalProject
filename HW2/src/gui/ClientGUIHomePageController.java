@@ -1,6 +1,7 @@
 package gui;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import client.ChatClient;
 import javafx.event.ActionEvent;
@@ -11,6 +12,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -30,8 +33,26 @@ public class ClientGUIHomePageController {
 	private Button LogOut = null;
 	
 	@FXML
+	private ImageView picSunOrMoon = null;
+	
+	@FXML
 	private void initialize() {
 		subName.setText(ChatClient.sub1.getSubscriber_name());
+		
+		// If it's between 6 AM and 6 PM, set the sun image, else set the moon image
+        LocalDateTime now = LocalDateTime.now();
+	    
+	    // Get the current hour
+	    int currentHour = now.getHour();
+		
+		
+		if (currentHour >= 6 && currentHour < 18) {
+            // Morning / Afternoon - Sun Image
+        	picSunOrMoon.setImage(new Image("/resources/SunPic.png"));
+        } else {
+            // Evening / Night - Moon Image
+        	picSunOrMoon.setImage(new Image("/resources/MoonPic.png"));
+        }
 	}
 	
 	

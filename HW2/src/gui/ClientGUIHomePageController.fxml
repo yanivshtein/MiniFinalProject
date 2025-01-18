@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
@@ -11,7 +12,7 @@
          <children>
             <Button layoutX="312.0" layoutY="104.0" mnemonicParsing="false" onAction="#getUpdateDetails" text="Update Detalis" />
             <Button layoutX="312.0" layoutY="159.0" mnemonicParsing="false" onAction="#getViewHistory" text="View History" />
-            <Label layoutX="59.0" layoutY="48.0" text="Hello" />
+            <Label layoutX="59.0" layoutY="48.0" text="Hello," />
             <Button fx:id="exit" layoutX="86.0" layoutY="362.0" mnemonicParsing="false" onAction="#getExitBtn" text="EXIT" />
             <Label fx:id="subName" layoutX="129.0" layoutY="48.0" text="Label" />
             <Button layoutX="65.0" layoutY="159.0" mnemonicParsing="false" onAction="#getOrder" text="Order a Book" />
@@ -19,6 +20,7 @@
             <Button layoutX="52.0" layoutY="222.0" mnemonicParsing="false" onAction="#getExtension" text="Ask for Extension" />
             <Button fx:id="LogOut" layoutX="334.0" layoutY="362.0" mnemonicParsing="false" onAction="#getLogOutBtn" text="Log out" />
             <Button layoutX="308.0" layoutY="222.0" mnemonicParsing="false" onAction="#getSubMessages" text="My Messages" />
+            <ImageView fx:id="picSunOrMoon" fitHeight="70.0" fitWidth="94.0" layoutX="218.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </Pane>
    </children>

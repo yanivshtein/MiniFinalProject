@@ -2,6 +2,7 @@ package gui;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -19,6 +20,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
@@ -53,16 +56,38 @@ public class LibrarianGUIHomePageController {
 	
 	@FXML
 	private Button exit = null;
+	@FXML
+	private ImageView picSunOrMoon = null;
 	
 	@FXML
 	private Button  messagesBtn = null;
 	
 	@FXML
 	private void initialize() {
-		librarianName.setText(ChatClient.lib.getLibrarian_name());
-		BringLibName = librarianName.getText();
+	    // Set librarian name
+	    librarianName.setText(ChatClient.lib.getLibrarian_name());
+	    
+	    // Get the current time
+	    LocalDateTime now = LocalDateTime.now();
+	    
+	    // Get the current hour
+	    int currentHour = now.getHour();
+	    
+	    // Optionally set a default value for librarian's name (if required)
+	    BringLibName = librarianName.getText();
 
-	}
+	 
+	        // If it's between 6 AM and 6 PM, set the sun image, else set the moon image
+	        if (currentHour >= 6 && currentHour < 18) {
+	            // Morning / Afternoon - Sun Image
+	        	picSunOrMoon.setImage(new Image("/resources/SunPic.png"));
+	        } else {
+	            // Evening / Night - Moon Image
+	        	picSunOrMoon.setImage(new Image("/resources/MoonPic.png"));
+	        }
+    }
+	
+
 		
 	public void getExitBtn(ActionEvent event) throws IOException {
 		System.out.println("Exit client");
