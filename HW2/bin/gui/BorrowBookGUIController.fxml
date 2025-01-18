@@ -22,9 +22,9 @@
       <Text layoutX="165.0" layoutY="137.0" strokeType="OUTSIDE" strokeWidth="0.0" />
       <TextField fx:id="id" layoutX="213.0" layoutY="120.0" />
       <TextField fx:id="bookName" layoutX="213.0" layoutY="179.0" />
-      <Button fx:id="borrow" layoutX="106.0" layoutY="311.0" mnemonicParsing="false" onAction="#borrowBtn" text="Borrow" />
-      <Button fx:id="return1" layoutX="33.0" layoutY="378.0" mnemonicParsing="false" onAction="#getReturnBtn" text="Return" />
-      <Button fx:id="exit" layoutX="611.0" layoutY="378.0" mnemonicParsing="false" onAction="#getExitBtn" text="Exit" />
+      <Button fx:id="borrow" layoutX="106.0" layoutY="332.0" mnemonicParsing="false" onAction="#borrowBtn" text="Borrow" />
+      <Button fx:id="return1" layoutX="33.0" layoutY="378.0" mnemonicParsing="false" onAction="#getReturnBtn" prefHeight="45.0" prefWidth="149.0" text="Return to Home Page" />
+      <Button fx:id="exit" layoutX="573.0" layoutY="378.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="45.0" prefWidth="66.0" text="Exit" />
       <Label layoutX="53.0" layoutY="237.0" text="Barcode:" />
       <TextField fx:id="barCode" layoutX="213.0" layoutY="233.0" />
       <Button fx:id="barcode" layoutX="417.0" layoutY="233.0" mnemonicParsing="false" onAction="#BarCodeBtn" text="scan" />
