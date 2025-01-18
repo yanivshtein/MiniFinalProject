@@ -47,7 +47,6 @@ public class mysqlConnection {
 
 
 
-
 			System.out.println("SQL connection succeed");
 		} catch (SQLException ex) {
 			System.out.println("SQLException: " + ex.getMessage());
