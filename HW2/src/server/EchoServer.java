@@ -582,6 +582,22 @@ public class EchoServer extends AbstractServer
                 		e.printStackTrace();
                 	}
                 	break;
+                	
+                case 32:
+                	ArrayList<String> currentBorrowedBooks;
+                	Integer SubID = Integer.parseInt((String)arr.get(1));
+                	arrToSend.add(32);
+				try {
+					
+					currentBorrowedBooks = SQLinstance.selectCurrentBorrowedBooksById(SubID);
+					arrToSend.add(currentBorrowedBooks);
+					client.sendToClient(arrToSend);
+				} catch (SQLException | IOException e) {
+					
+					e.printStackTrace();
+				}
+                	break;
+                	
                 default:
                     System.out.println("The server - Received message is not of the expected type.");
                     break;

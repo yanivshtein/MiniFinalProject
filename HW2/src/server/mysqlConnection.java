@@ -42,7 +42,7 @@ public class mysqlConnection {
 
 		try {
 
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "Aa123456");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "!vex123S");
 
 
 
@@ -822,23 +822,40 @@ public class mysqlConnection {
 
 	}
 
-	public ArrayList<Object> getBorrowDateAndReturnDate(String borrowerId, String bookName) throws SQLException {
-		ArrayList<Object> borrowAndReturnDate = new ArrayList<>();
-		PreparedStatement ps = conn.prepareStatement(
-				"SELECT ActionDate,deadline FROM activityhistory where SubscriberID=? AND BookName=? AND ActionType='Borrow'");
+	public ArrayList<String> getBorrowDateAndReturnDate(String borrowerId, String bookName) throws SQLException {
+	    ArrayList<String> borrowAndReturnDate = new ArrayList<>();
+	    PreparedStatement ps = conn.prepareStatement(
+	    		"SELECT ActionDate, deadline " +
+	    		"FROM activityhistory t1 " +
+	    		"WHERE SubscriberID = ? " +
+	    		"  AND BookName = ? " +
+	    		"  AND ActionType = 'Borrow' " +
+	    		"  AND NOT EXISTS ( " +
+	    		"      SELECT 1 " +
+	    		"      FROM activityhistory t2 " +
+	    		"      WHERE t2.SubscriberID = t1.SubscriberID " +
+	    		"        AND t2.BookName = t1.BookName " +
+	    		"        AND t2.ActionType = 'Return' " +
+	    		"        AND t2.ActionDate > t1.ActionDate " +
+	    		"  ) " +
+	    		"ORDER BY ActionDate ASC " +
+	    		"LIMIT 1"
+	    );
 
-		ps.setString(1, borrowerId);
-		ps.setString(2, bookName);
+	    ps.setString(1, borrowerId);
+	    ps.setString(2, bookName);
 
-		ResultSet resultSet = ps.executeQuery();
-		if (resultSet.last()) {
-			borrowAndReturnDate.add(resultSet.getString(1));
-			borrowAndReturnDate.add(resultSet.getString(2));
-			return borrowAndReturnDate;
-		}
-		return null;
+	    ResultSet resultSet = ps.executeQuery();
+	    if (resultSet.next()) {  // Fetch the first result (LIMIT ensures only one row is returned)
+	        borrowAndReturnDate.add(resultSet.getString("ActionDate"));
+	        borrowAndReturnDate.add(resultSet.getString("deadline"));
+	    } else {
+	        return null;  // No matching record found
+	    }
 
+	    return borrowAndReturnDate;
 	}
+	
 
 	// method that checks in the database if there is a certain borrower that
 	// borrowed the selected book
@@ -1166,12 +1183,12 @@ public class mysqlConnection {
 		
 		ArrayList<String> frozenSubscribers = new ArrayList<String>();
 		
-		String getSubscribersID = "SELECT subscriber_id FROM subscriber WHERE subscription_status = 'Frozen'";
+		String getSubscribersID = "SELECT subscriber_id FROM subscriber WHERE subscription_status = 'frozen'";
 		
 		String getReturnDates = "SELECT MAX(ActionDate) AS LastActionDate FROM activityhistory WHERE SubscriberID = ? "
 				+ "AND ActionType = 'Return'";
 		
-		String updateSubscribersStatus = "UPDATE subscriber SET subscription_status = 'Active' WHERE subscriber_id=?";
+		String updateSubscribersStatus = "UPDATE subscriber SET subscription_status = 'active' WHERE subscriber_id=?";
 		
 		PreparedStatement updateStatus = null;
 		ResultSet returnDates = null;
@@ -1231,4 +1248,41 @@ public class mysqlConnection {
 			
 		}
 	}
+	
+	
+	public  ArrayList<String> selectCurrentBorrowedBooksById(Integer subscriberId) throws SQLException {
+		// i have a problem here
+		ArrayList<String> subCurrentBorrowedBooks = new ArrayList<String>();
+		ResultSet resultSet = null;
+		String query= "SELECT t1.BookName, MAX(t1.ActionDate) AS LastBorrowDate " +
+                "FROM activityhistory t1 " +
+                "LEFT JOIN activityhistory t2 " +
+                "  ON t1.SubscriberID = t2.SubscriberID " +
+                "  AND t1.BookName = t2.BookName " +
+                "  AND t2.ActionType = 'Return' " +
+                "  AND t2.ActionDate >= t1.ActionDate " +
+                "WHERE t1.SubscriberID = ? " +
+                "  AND t1.ActionType = 'Borrow' " +
+                "  AND t2.ActionID IS NULL " +
+                "GROUP BY t1.BookName " +
+                "ORDER BY LastBorrowDate DESC";
+
+		
+		PreparedStatement ps = conn.prepareStatement(query);
+		
+		ps.setInt(1,subscriberId);
+		
+		resultSet = ps.executeQuery();
+		//resultSet.next();
+		if (!resultSet.isBeforeFirst()) { 
+	        System.out.println("No current borrowed books found for Subscriber ID: " + subscriberId);
+	        return subCurrentBorrowedBooks; // Empty list
+	    }
+			
+		while(resultSet.next()) {
+			subCurrentBorrowedBooks.add(resultSet.getString("BookName"));
+		}
+		return subCurrentBorrowedBooks;
+	}
+	
 }

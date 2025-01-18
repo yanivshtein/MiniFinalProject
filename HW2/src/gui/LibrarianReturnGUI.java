@@ -8,6 +8,7 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Observable;
 
 import client.ChatClient;
 import client.ClientUI;
@@ -25,11 +26,14 @@ import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.util.Duration;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class LibrarianReturnGUI {
 
@@ -56,7 +60,7 @@ public class LibrarianReturnGUI {
 	private Button sendButton=null;
 	
 	@FXML
-	private Button checkButton=null;
+	private Button exitButton=null;
 	
 	@FXML
 	private Button scanButton=null;
@@ -66,13 +70,10 @@ public class LibrarianReturnGUI {
 	
 	
 	@FXML
-	private Label artMsg = null;
-	
-	@FXML
 	private Label sendMsg = null;
 	
 	@FXML
-	private TextArea ShowHistory = null;
+	private ListView<String> ShowBorrowedBooks = null;
 	
 	private Alert alertMessege = new Alert(AlertType.NONE);
 
@@ -80,24 +81,55 @@ public class LibrarianReturnGUI {
 	
 	private boolean isChecked = false;
 	
-	private ArrayList<String> borrowersBorrowHistory;
+	private ArrayList<String> borrowersBorrowedBooks;
+	
+	private ObservableList<String> BooksNames;
+	
+	public void initialize() {
+		showAllBooks();
+		
+		
+	
+	}
+	
+	
 	
 	public void sendButton(ActionEvent event) {		// method that sends information to the controller to return the book to the library
 		
-		 
-		if (!isChecked) {
-	        alertMessege.setContentText("You must check if the borrow exists before returning the book.");
-	        alertMessege.setAlertType(AlertType.ERROR);
-	        alertMessege.show();
-	        return;
-	    }
+		 String errorType;
 		
-		if(bookArriveDate ==null || deadline == null) {
-			alertMessege.setContentText("Error need to check if exist borrow first");	
-		 	alertMessege.setAlertType(AlertType.ERROR);
-		 	alertMessege.show();
+		errorType=checkBttn();
+		
+		switch (errorType) {
+		case "Subscriber's ID or Barcode is missing":
+			alertMessege.setContentText("You must provide both the Subscriber's ID and the Barcode.");
+	        alertMessege.setAlertType(AlertType.ERROR);
+	        alertMessege.show(); // Show the error alert
 			return;
+		
+		case "Borrow does not exist":
+			alertMessege.setContentText("The Borrow does not exist in the library's database!.");
+	        alertMessege.setAlertType(AlertType.ERROR);
+	        alertMessege.show(); // Show the error alert
+			return;
+		
+		default:	// if the check is successfully finished
+			break;
 		}
+		
+//		if (!isChecked) {
+//	        alertMessege.setContentText("You must check if the borrow exists before returning the book.");
+//	        alertMessege.setAlertType(AlertType.ERROR);
+//	        alertMessege.show();
+//	        return;
+//	    }
+//		
+//		if(bookArriveDate ==null || deadline == null) {
+//			alertMessege.setContentText("Error need to check if exist borrow first");	
+//		 	alertMessege.setAlertType(AlertType.ERROR);
+//		 	alertMessege.show();
+//			return;
+//		}
 		if(sendMsg!=null) {
 			sendMsg.setText("");;
 		}
@@ -110,9 +142,10 @@ public class LibrarianReturnGUI {
 		
 		// if the book already returned then show message 
 		if (ChatClient.bool==true) {
-			//sendMsg.setText("Book has already returned!");
-			showLabelTextForDuration(sendMsg, "Book has already returned!", 3000); // Show text for 3 seconds
-
+			
+			alertMessege.setContentText("Book has already returned!");	
+		 	alertMessege.setAlertType(AlertType.ERROR);
+		 	alertMessege.show();
 			return;
 		}
 		
@@ -189,7 +222,7 @@ public class LibrarianReturnGUI {
 		timeline.setCycleCount(1);
 		timeline.play();
 	}
-	public void checkBttn(ActionEvent event) {		// method that get information from the data the controller to return the book to the library
+	public String checkBttn() {		// method that get information from the data the controller to return the book to the library
 		
 		
 		String actionDate = null;
@@ -199,18 +232,14 @@ public class LibrarianReturnGUI {
 		
 		if (subscriberId == null || bookID == null || 
 		        subscriberId.getText().trim().isEmpty() || bookID.getText().trim().isEmpty()) {
-		        alertMessege.setContentText("You must provide both the Subscriber's ID and the Barcode.");
-		        alertMessege.setAlertType(AlertType.ERROR);
-		        alertMessege.show(); // Show the error alert
-		        return; // Stop further execution
+		        return "Subscriber's ID or Barcode is missing"; // Stop further execution
 		}
 		BorrowerId = subscriberId.getText().trim();
 	    BookID = bookID.getText().trim();
 
 		int index =0;
 		
-		if(artMsg!=null)		// if the text in Label is currently visible 
-			artMsg.setText("");
+		
 		
 		// check in the database if exist a borrow with the same borrower ID and book name
 		ClientGUIConnectionController.chat.returnBook_accept("EXIST", BorrowerId, BookID,false,false,null);
@@ -221,9 +250,8 @@ public class LibrarianReturnGUI {
 			bookArriveDate.setText("");		// set labels to show them in GUI
 			deadline.setText("");
 			
-			showLabelTextForDuration(artMsg, "The Borrow does not exist!", 3000); // Show text for 3 seconds
 			isChecked = false;
-			return;
+			return "Borrow does not exist";
 		}
 		BookName = ChatClient.bookName;
 		// if there is a match then select the borrow date and deadline.
@@ -242,6 +270,7 @@ public class LibrarianReturnGUI {
 		// show the borrow date and deadline in the labels
 		bookArriveDate.setText(actionDate);		// set labels to show them in GUI
 		deadline.setText(Deadline);
+		return "Check Successfully Finished";
 	}
 	
 	
@@ -260,77 +289,78 @@ public class LibrarianReturnGUI {
 	}
 	
 	public void viewBorrowersHistoryButton(ActionEvent event) {
-		StringBuilder history = new StringBuilder();
 		
-		 int subscriberId = Integer.parseInt(getSubscribersId.getText());
-
-    	 ClientGUIConnectionController.chat.acceptBorrowBook(subscriberId);
+		if(getSubscribersId==null) {
+			alertMessege.setContentText("Enter Subscriber's ID.");
+	        alertMessege.setAlertType(AlertType.ERROR);
+	        alertMessege.show(); // Show the error alert
+	        return; // Stop further execution
+		}
 		
-    	 if(!ChatClient.bool) {
+		
+		
+		 ClientGUIConnectionController.chat.returnBook_accept("SELECT_CURRENT_BORROWED_BOOKS_BY_ID", getSubscribersId.getText(), "", null, null, null);
+		
+		  
+    	 if(ChatClient.subCurrentBorrowedBooks.isEmpty()) {
     		 
-    		alertMessege.setContentText("The subscriber ID does not exist in the library’s database.");	
+    		alertMessege.setContentText("The subscriber has no currently borrowed books in the library’s database.");	
     		alertMessege.setAlertType(AlertType.ERROR);
     		alertMessege.show();
     		return;
     			
     	 }
+    	 borrowersBorrowedBooks = ChatClient.subCurrentBorrowedBooks;
+    	 BooksNames = FXCollections.observableArrayList(borrowersBorrowedBooks);
+ 		ShowBorrowedBooks.setItems(BooksNames);
     	 
-    	 
-		ClientGUIConnectionController.chat.accept("select", getSubscribersId.getText(), "", "");
-        Subscriber1 sub = ChatClient.s1;
-        history.append("Subscriber's ID:  " + String.valueOf(sub.getSubscriber_id())+"\n");
-        history.append("Subscriber's Name:  " + sub.getSubscriber_name()+"\n");
-        history.append("Subscriber's Phone:  " + sub.getSubscriber_phone_number()+"\n");
-        history.append("Subscriber's Email:  " + sub.getSubscriber_email()+"\n");
-        history.append("Subscriber's Status:  " + sub.getSub_status()+"\n\n");
-        
-		if (getSubscribersId.getText().trim().isEmpty()) {
-		        alertMessege.setContentText("You must provide the Subscriber's ID.");
-		        alertMessege.setAlertType(AlertType.ERROR);
-		        alertMessege.show(); // Show the error alert
-		        return; // Stop further execution
-		}
-		
-		
-		ClientGUIConnectionController.chat.accept("watch borrow history", getSubscribersId.getText(), "", "");
+	} 
+
 	
-		
-		borrowersBorrowHistory = ChatClient.borrowHistory;
-		
-		if(borrowersBorrowHistory.isEmpty()) {	
-			alertMessege.setContentText("There is no borrow history.");	
-		 	alertMessege.setAlertType(AlertType.INFORMATION);
-		 	alertMessege.show();
-		}
-		
-		for(String line: borrowersBorrowHistory) {
-			history.append("***********************************"
-					+ "*********************************************"
-					+ "*********************************************"
-					+ "**********\n\n");
-			history.append(line);
-			history.append("\n\n");
-		}
-		history.append("***********************************"
-				+ "*********************************************"
-				+ "*********************************************"
-				+ "**********");
-		ShowHistory.setText(history.toString());
-//		checkButton.setVisible(isChecked);
-	}
 	
-	//when in the barcode the book was scanned we enable the button
+	// barcode button method
 	
 	public void barcodeButton (ActionEvent event) {
-		int bookId = Integer.parseInt(bookID.getText());
+		int bookId=0;
+		try {
+			bookId = Integer.parseInt(bookID.getText());
+		} catch (NumberFormatException e) {
+			alertMessege.setContentText("Please scan the Barcode's book.");	
+    		alertMessege.setAlertType(AlertType.ERROR);
+    		alertMessege.show();
+    		return;
+		}
+		
 		ClientGUIConnectionController.chat.acceptBarCode(bookId);
 		if(ChatClient.bookName.equals("")) {
-			showLabelTextForDuration(artMsg, "The Borrow does not exist!", 4000); // Show text for 4 seconds
+			
+			alertMessege.setContentText("The Barcode does not exist in the library’s database.");	
+    		alertMessege.setAlertType(AlertType.ERROR);
+    		alertMessege.show();
+    		return;
 		}
     	else {
     		bookName.setText(ChatClient.bookName);
     	}
 	}
+	
+	private void showAllBooks() {
+		
+		ClientGUIConnectionController.chat.acceptAllTheBooks(18);
+		borrowersBorrowedBooks = ChatClient.allbooks;
+		
+		if(borrowersBorrowedBooks==null || borrowersBorrowedBooks.isEmpty()) {
+			BooksNames = FXCollections.observableArrayList("No Books currently available");
+			ShowBorrowedBooks.setItems(BooksNames);
+		}
+		BooksNames = FXCollections.observableArrayList(borrowersBorrowedBooks);
+		ShowBorrowedBooks.setItems(BooksNames);
+	}
+	
+	public void getExitBtn(ActionEvent event) throws IOException {
+		System.exit(0);
+	}
+	
 }
 
 
