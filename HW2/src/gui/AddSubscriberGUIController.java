@@ -47,10 +47,7 @@ public class AddSubscriberGUIController {
 	@FXML
 	private Label afterUpdate = null;
 	
-	
-	
-	
-	
+				
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/gui/AddSubscriberGUIController.fxml"));
         Scene scene = new Scene(root);
