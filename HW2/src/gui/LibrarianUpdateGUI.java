@@ -68,15 +68,13 @@ public class LibrarianUpdateGUI {
 	    }
 
 	    if(statusCheck == null) {
-	    	ChangesSavedPop.setContentText("Subscriber not found.");
+	        ChangesSavedPop.setContentText("Subscriber not found.");
 	        return;
-	    	
 	    }
 	    else if (statusCheck) {
 	        ChangesSavedPop.setContentText("The account is frozen. It is not possible to extend the borrow.");
 	        return;
 	    }
-	    
 
 	    ArrayList<String> bookNames = new ArrayList<>();
 	    ArrayList<String> deadlines = new ArrayList<>();
@@ -86,7 +84,8 @@ public class LibrarianUpdateGUI {
 	    ArrayList<String> booksNearDeadline = ChatClient.booksNearDeadline;
 
 	    if (booksNearDeadline == null || booksNearDeadline.isEmpty()) {
-	        System.out.println("No relevant books found.");
+	        ChangesSavedPop.setContentText("No relevant books found.");
+	        RelevantBooks.getItems().clear();  // Clear the ListView if no relevant books are found
 	        return;
 	    }
 
@@ -116,6 +115,7 @@ public class LibrarianUpdateGUI {
 	        }
 	    });
 	}
+
 
 		
 
