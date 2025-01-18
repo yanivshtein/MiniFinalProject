@@ -42,7 +42,7 @@ public class SubscriberMessagesController {
 		    Parent root = loader.load();
 		    
 		    Scene scene = new Scene(root);
-		    scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIHomePageController.css").toExternalForm());
+		    scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 		    
 		    Stage primaryStage = new Stage();
 		    primaryStage.setTitle("Client Home Page");

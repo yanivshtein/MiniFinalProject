@@ -2,13 +2,12 @@
 
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.DialogPane?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ServerGUI">
+<AnchorPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ServerGUI">
    <children>
       <Accordion />
       <Pane prefHeight="561.0" prefWidth="612.0">
@@ -21,7 +20,7 @@
             <Label layoutX="47.0" layoutY="241.0" prefHeight="21.0" prefWidth="127.0" text="Host Name:" />
             <Label layoutX="47.0" layoutY="358.0" prefHeight="21.0" prefWidth="127.0" text="Status:" />
             <Button fx:id="exit" layoutX="264.0" layoutY="474.0" mnemonicParsing="false" onAction="#getCloseBtn" text="Close" />
-            <DialogPane fx:id="serverRun" layoutX="189.0" layoutY="23.0" />
+            <Label fx:id="serverRun" layoutX="218.0" layoutY="45.0" />
          </children>
       </Pane>
    </children>

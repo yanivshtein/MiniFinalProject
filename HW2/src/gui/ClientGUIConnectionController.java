@@ -34,7 +34,7 @@ public class ClientGUIConnectionController {
 	public void start(Stage primaryStage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("/gui/ClientGUIConnection.fxml"));
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIConnection.css").toExternalForm());
+		scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 		primaryStage.setTitle("Client Connection");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -56,7 +56,7 @@ public class ClientGUIConnectionController {
 				Pane root = loader.load(getClass().getResource("/gui/ClientGUILogin.fxml").openStream());
 
 				Scene scene = new Scene(root);
-				scene.getStylesheets().add(getClass().getResource("/gui/ClientGUILogin.css").toExternalForm());
+				scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 				primaryStage.setTitle("Login Page");
 
 				primaryStage.setScene(scene);

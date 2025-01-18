@@ -32,7 +32,7 @@ public class SearchBookGUIController {
 	private TextField bookName = null;
 
 	@FXML
-	private DialogPane errorMsg = null;
+	private Label errorMsg = null;
 
 	@FXML
 	private Button return1 = null;
@@ -149,7 +149,7 @@ public class SearchBookGUIController {
 	public void start(Stage primaryStage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("/gui/SearchBookGUIController.fxml"));
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(getClass().getResource("/gui/SearchBookGUIController.css").toExternalForm());
+		scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 		primaryStage.setTitle("Search a book");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -173,9 +173,9 @@ public class SearchBookGUIController {
             alert.setContentText("The book is in the library but currently out of stock, estimated return date is:"+ChatClient.deadlineDate);
             alert.showAndWait();
 		} else if (ChatClient.bookAvailability > 0) {
-			errorMsg.setContentText("The book is available on shelf A. Copies left: " + ChatClient.bookAvailability);
+			errorMsg.setText("The book is available on shelf A. Copies left: " + ChatClient.bookAvailability);
 		} else {
-			errorMsg.setContentText("ERROR");
+			errorMsg.setText("ERROR");
 		}
 		}
 	}
@@ -194,7 +194,7 @@ public class SearchBookGUIController {
 
 			Scene scene = new Scene(root);
 			scene.getStylesheets()
-					.add(getClass().getResource("/gui/ClientGUILogin.css").toExternalForm());
+					.add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 			primaryStage.setTitle("Login");
 
 			primaryStage.setScene(scene);
@@ -208,7 +208,7 @@ public class SearchBookGUIController {
 
 			Scene scene = new Scene(root);
 			scene.getStylesheets()
-					.add(getClass().getResource("/gui/LibrarianGUIHomePageController.css").toExternalForm());
+					.add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 			primaryStage.setTitle("Librarian home page");
 
 			primaryStage.setScene(scene);
@@ -222,7 +222,7 @@ public class SearchBookGUIController {
 
 		Scene scene = new Scene(root);
 		scene.getStylesheets()
-				.add(getClass().getResource("/gui/ClientGUIHomePageController.css").toExternalForm());
+				.add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 		primaryStage.setTitle("Librarian home page");
 
 		primaryStage.setScene(scene);

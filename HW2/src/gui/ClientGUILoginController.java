@@ -63,7 +63,7 @@ public class ClientGUILoginController {
 	public void start(Stage primaryStage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("/gui/ClientGUILogin.fxml"));
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(getClass().getResource("/gui/ClientGUILogin.css").toExternalForm());
+		scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 		primaryStage.setTitle("Login Screen");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -91,7 +91,7 @@ public class ClientGUILoginController {
                     Pane root = loader.load(getClass().getResource("/gui/ClientGUIHomePageController.fxml").openStream());
 
                     Scene scene = new Scene(root);
-                    scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIHomePageController.css").toExternalForm());
+                    scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
                     primaryStage.setTitle("Client Second GUI");
 
                     primaryStage.setScene(scene);
@@ -109,7 +109,7 @@ public class ClientGUILoginController {
                     Pane root = loader.load(getClass().getResource("/gui/LibrarianGUIHomePageController.fxml").openStream());
 
                     Scene scene = new Scene(root);
-                    scene.getStylesheets().add(getClass().getResource("/gui/LibrarianGUIHomePageController.css").toExternalForm());
+                    scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
                     primaryStage.setTitle("Librarian HomePage");
 
                     primaryStage.setScene(scene);
@@ -139,7 +139,7 @@ public class ClientGUILoginController {
 	    Parent root = loader.load();
 	    
 	    Scene scene = new Scene(root);
-	    scene.getStylesheets().add(getClass().getResource("/gui/SearchBookGUIController.css").toExternalForm());
+	    scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 	    
 	    Stage primaryStage = new Stage();
 	    primaryStage.setTitle("Search");

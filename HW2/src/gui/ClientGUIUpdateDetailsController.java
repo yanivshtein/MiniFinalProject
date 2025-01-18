@@ -64,7 +64,7 @@ public class ClientGUIUpdateDetailsController {
 	public void start(Stage primaryStage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("/gui/ClientGUIHomePage.fxml"));
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIHomePage.css").toExternalForm());
+		scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 		primaryStage.setTitle("Client GUI");
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -88,7 +88,7 @@ public class ClientGUIUpdateDetailsController {
         Pane root = loader.load(getClass().getResource("/gui/ClientGUIHomePageController.fxml").openStream());
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIHomePageController.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
         primaryStage.setTitle("Home page");
 
         primaryStage.setScene(scene);

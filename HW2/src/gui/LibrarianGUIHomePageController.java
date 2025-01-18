@@ -72,7 +72,7 @@ public class LibrarianGUIHomePageController {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/gui/LibrarianGUIHomePageController.fxml"));
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/gui/LibrarianGUIHomePageController.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
         primaryStage.setTitle("Librarian watch and update GUI");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -85,7 +85,7 @@ public class LibrarianGUIHomePageController {
         Pane root = loader.load(getClass().getResource("/gui/ClientGUILogin.fxml").openStream());
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/gui/ClientGUILogin.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
         primaryStage.setTitle("Login");
 
         primaryStage.setScene(scene);
@@ -98,7 +98,7 @@ public class LibrarianGUIHomePageController {
         Pane root = loader.load(getClass().getResource("/gui/BorrowBookGUIController.fxml").openStream());
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/gui/BorrowBookGUIController.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
         primaryStage.setTitle("Borrow a book");
 
         primaryStage.setScene(scene);
@@ -111,7 +111,7 @@ public class LibrarianGUIHomePageController {
         Pane root = loader.load(getClass().getResource("/gui/SearchBookGUIController.fxml").openStream());
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/gui/SearchBookGUIController.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
         primaryStage.setTitle("Search a book");
 
         primaryStage.setScene(scene);
@@ -134,7 +134,7 @@ public class LibrarianGUIHomePageController {
 		        Scene scene = new Scene(root);
 
 		        // Apply stylesheets
-		        scene.getStylesheets().add(getClass().getResource("/gui/LibrarianWatchGUI.css").toExternalForm());
+		        scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 
 		        // Configure the stage
 		        primaryStage.setTitle("Librarian Watch  GUI");
@@ -163,7 +163,7 @@ public class LibrarianGUIHomePageController {
 		        Scene scene = new Scene(root);
 
 		        // Apply stylesheets
-		        scene.getStylesheets().add(getClass().getResource("/gui/LibrarianUpdateGUI.css").toExternalForm());
+		        scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 
 		        // Configure the stage
 		        primaryStage.setTitle("Librarian Update GUI");
@@ -196,7 +196,7 @@ public class LibrarianGUIHomePageController {
 	        Scene scene = new Scene(root);
 
 	        // Apply stylesheets
-	        scene.getStylesheets().add(getClass().getResource("/gui/ReportsGUI.css").toExternalForm());
+	        scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 
 	        // Configure the stage
 	        primaryStage.setTitle("Reports GUI");
@@ -219,7 +219,7 @@ public class LibrarianGUIHomePageController {
         Pane root = loader.load(getClass().getResource("/gui/AddSubscriberGUIController.fxml").openStream());
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/gui/AddSubscriberGUIController.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
         primaryStage.setTitle("Add new subscriber");
 
         primaryStage.setScene(scene);
@@ -233,7 +233,7 @@ public class LibrarianGUIHomePageController {
         Pane root = loader.load(getClass().getResource("/gui/LibrarianReturnGUI.fxml").openStream());
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/gui/LibrarianReturnGUI.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
         primaryStage.setTitle("Librarian Return GUI");
 
         primaryStage.setScene(scene);
@@ -249,7 +249,7 @@ public class LibrarianGUIHomePageController {
 	    Parent root = loader.load();
 	    
 	    Scene scene = new Scene(root);
-	    //scene.getStylesheets().add(getClass().getResource("/gui/OrdersToTake.css").toExternalForm());
+	    scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 	    
 	    Stage primaryStage = new Stage();
 	    primaryStage.setTitle("Waiting Orders");
@@ -267,7 +267,7 @@ public class LibrarianGUIHomePageController {
 	    Parent root = loader.load();
 	    
 	    Scene scene = new Scene(root);
-	    //scene.getStylesheets().add(getClass().getResource("/gui/OrdersToTake.css").toExternalForm());
+	    scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 	    
 	    Stage primaryStage = new Stage();
 	    primaryStage.setTitle("Waiting Orders");
