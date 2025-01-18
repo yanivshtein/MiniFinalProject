@@ -24,6 +24,9 @@ public class ClientGUIConnectionController {
 	@FXML
 	private TextField serverIP = null;
 
+
+
+
 	@FXML
 	private Button exit = null;
 

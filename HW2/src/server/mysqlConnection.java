@@ -43,7 +43,7 @@ public class mysqlConnection {
 		try {
 
 
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "Aa123456");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "yaniv1234");
 
 
 
