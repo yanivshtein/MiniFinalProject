@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.DialogPane?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="418.0" prefWidth="424.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AddSubscriberGUIController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="418.0" prefWidth="424.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AddSubscriberGUIController">
    <children>
       <Label layoutX="184.0" layoutY="310.0" prefHeight="25.0" prefWidth="158.0" />
       <Label layoutX="56.0" layoutY="126.0" text="Name:" />
@@ -26,6 +25,6 @@
       <Button fx:id="save" layoutX="115.0" layoutY="306.0" mnemonicParsing="false" onAction="#saveBtn" text="Save" />
       <Button fx:id="return1" layoutX="30.0" layoutY="357.0" mnemonicParsing="false" onAction="#getReturnBtn" text="return" />
       <Button fx:id="exit" layoutX="327.0" layoutY="357.0" mnemonicParsing="false" onAction="#getExitBtn" text="Exit" />
-      <DialogPane fx:id="afterUpdate" layoutX="297.0" layoutY="291.0" prefHeight="53.0" prefWidth="105.0" />
+      <Label fx:id="afterUpdate" layoutX="283.0" layoutY="300.0" prefHeight="45.0" prefWidth="119.0" />
    </children>
 </Pane>
