@@ -23,8 +23,8 @@
             <RadioButton fx:id="radio_lib" layoutX="75.0" layoutY="254.0" mnemonicParsing="false" onAction="#getRadioLibBtn" text="Librarian" />
             <Button fx:id="search" layoutX="163.0" layoutY="206.0" mnemonicParsing="false" onAction="#getSearchBtn" text="search For Book" />
             <DialogPane fx:id="alertMsg" layoutX="148.0" layoutY="114.0" prefHeight="0.0" prefWidth="150.0" />
-            <ImageView fx:id="picL" fitHeight="81.0" fitWidth="101.0" layoutX="75.0" layoutY="263.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="picS" fitHeight="88.0" fitWidth="110.0" layoutX="337.0" layoutY="263.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="picL" fitHeight="70.0" fitWidth="101.0" layoutX="75.0" layoutY="274.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="picS" fitHeight="79.0" fitWidth="110.0" layoutX="337.0" layoutY="272.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </Pane>
    </children>
