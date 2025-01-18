@@ -17,9 +17,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
-import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import server.EchoServer;
@@ -34,6 +35,13 @@ public class ClientGUILoginController {
 	
 	@FXML
 	private Button exit = null;
+	
+	@FXML
+	private ImageView picL = null;
+	
+	@FXML
+	private ImageView picS = null;
+
 
 	@FXML
 	private Button enter = null;
@@ -54,13 +62,31 @@ public class ClientGUILoginController {
 	@FXML
 	private TextField password = null;
 	
-	
+	@FXML
+	private DialogPane temp = null;
 	
 	@FXML
-	private Label alertMsg = null;
+	private DialogPane alertMsg = null;
 	
 	private String user = "Sub";
 
+	
+	
+	@FXML
+	public void initialize() {
+	    // Check if the image is already set by Scene Builder (no need to do this unless you need to update it)
+	    if (picL.getImage() == null) {
+	        // Optionally set a default image or handle error
+	        picL.setImage(new Image("/resources/LibrarianPic.png"));
+	    }
+	    if (picS.getImage() == null) {
+	        // Optionally set a default image or handle error
+	        picS.setImage(new Image("/resources/UserPic.png"));
+	    }
+	}
+	
+
+		
 	public void start(Stage primaryStage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("/gui/ClientGUILogin.fxml"));
 		Scene scene = new Scene(root);
@@ -84,7 +110,7 @@ public class ClientGUILoginController {
         	if(user.equals("Sub")) {
         		ClientGUIConnectionController.chat.acceptLogin("searchSub", email,passwordString);
         		if (ChatClient.sub1 == null) {
-                    alertMsg.setText("The ID does not exist!");
+                    alertMsg.setContentText("The ID does not exist!");
                 }else {
                 	System.out.println("Subscriber ID Found");
                     ((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
@@ -102,7 +128,7 @@ public class ClientGUILoginController {
         	else if(user.equals("Lib")) {
         		ClientGUIConnectionController.chat.acceptLogin("searchLib", email, passwordString);
         		if (ChatClient.lib == null) {
-                    alertMsg.setText("The ID does not exist!");
+                    alertMsg.setContentText("The ID does not exist!");
                 }else {
                 	System.out.println("Librarian ID Found");
                     ((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window

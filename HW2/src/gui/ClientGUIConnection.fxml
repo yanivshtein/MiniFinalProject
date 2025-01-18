@@ -15,7 +15,6 @@
             <Label layoutX="35.0" layoutY="54.0" text="Server IP: " />
             <Button fx:id="exit" layoutX="310.0" layoutY="182.0" mnemonicParsing="false" onAction="#getExitBtn" text="Exit" />
             <Button fx:id="connect" layoutX="391.0" layoutY="49.0" mnemonicParsing="false" onAction="#getConnectBtn" text="Connect" />
-            <DialogPane fx:id="status" layoutX="157.0" layoutY="80.0" prefHeight="58.0" prefWidth="207.0" />
          </children>
       </Pane>
    </children>
