@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
@@ -56,12 +57,15 @@ public class ReportsGUI {
     }
     
     public void ViewBttClick(ActionEvent event) {
+    	Alert alert = new Alert(Alert.AlertType.WARNING);
         // Get the selected month and year from the ComboBox
         String selectedMonth = getMonthNumber(months.getValue());
         String selectedYear = years.getValue();
         
         if(selectedMonth == null|| selectedYear == null) {
-        	Displayarea.setText("You must select a month and a year!");
+        	alert.setTitle("Not selected month or year");
+            alert.setContentText("You must select a month and a year!");
+            alert.showAndWait();
         	return;
         }
         
@@ -73,7 +77,9 @@ public class ReportsGUI {
             StringBuilder reportBuilder = new StringBuilder();
 
             if (ChatClient.FullBorrowRep == null || ChatClient.FullBorrowRep.isEmpty()) {
-                Displayarea.setText("No information to display.");
+            	alert.setTitle("Information");
+                alert.setContentText("No information to display.");
+                alert.showAndWait();
             } else {
                 // Add a title for the report
                 reportBuilder.append("### Borrow Report for ")
@@ -118,7 +124,9 @@ public class ReportsGUI {
             // Build a single string to display all status report entries
             StringBuilder reportBuilder = new StringBuilder();
             if (ChatClient.FullStatusRep == null || ChatClient.FullStatusRep.isEmpty()) {
-                Displayarea.setText("No information to display.");
+            	alert.setTitle("Information");
+                alert.setContentText("No information to display.");
+                alert.showAndWait();
             } else {
                 // Create headers with proper spacing
                 reportBuilder.append(String.format("%-25s %-15s %-15s\n", "Subscriber Name", "ID", "Status"));

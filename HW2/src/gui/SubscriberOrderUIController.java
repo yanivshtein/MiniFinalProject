@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -31,9 +32,6 @@ public class SubscriberOrderUIController {
     @FXML
     private DialogPane errorMsg = null;
     
-    @FXML
-    private DialogPane errorMsg2 = null;
-
     @FXML
     private Button sendOrderBtn = null;
 
@@ -58,7 +56,6 @@ public class SubscriberOrderUIController {
     }
     
     private void handleDoubleClick(MouseEvent event) {
-    	errorMsg2.setContentText("");
         if (event.getClickCount() == 2) {
             selectedBook = booksListView.getSelectionModel().getSelectedItem();
             if (selectedBook != null) {            	
@@ -99,40 +96,51 @@ public class SubscriberOrderUIController {
     }
     
     public void getSendBtn(ActionEvent event) throws IOException {
-    	errorMsg2.setContentText(""); 
-    	if (!bookName.getText().isEmpty())
+    	Alert alert = new Alert(Alert.AlertType.WARNING);
+    	if (selectedBook!=null) {
+    		bookNameGot=selectedBook;
+    	}
+    	else
     		bookNameGot = bookName.getText();
-        else
-        	bookNameGot = selectedBook;     
+
         if (bookNameGot==null || bookNameGot.isEmpty()) {
-            errorMsg.setContentText("Oops! 😞 You must enter a book name.");
-            return;
+        	alert.setTitle("Missing Field");
+            alert.setContentText("Oops! 😞 You must enter a book name.");
+            alert.showAndWait();
+            return;	 
         }
         
         // check if subscriber's status is frozen
         ClientGUIConnectionController.chat.acceptFromController(5, subID, "");
         if (ChatClient.isFrozen == true) {
-            errorMsg.setContentText("Uh-oh! 😬 Your account is FROZEN!");
-            return;
+        	alert.setTitle("Frozen Account");
+            alert.setContentText("Uh-oh! 😬 Your account is FROZEN!");
+            alert.showAndWait();
+            return;	 
         }
         
         ClientGUIConnectionController.chat.acceptFromController(6, 0, bookNameGot);
         if (ChatClient.isExist== false) {
-        	errorMsg.setContentText("Sorry! 📚 we dont have this book in our Library");
-        	return;
+        	alert.setTitle("Not exists book");
+            alert.setContentText("Sorry! 📚 we dont have this book in our Library");
+            alert.showAndWait();
+            return;	
         }
         if (ChatClient.isAvailable == true) { // which means there is an available copy of the book -> cant order
-            errorMsg.setContentText("Yey! 📚 An available copy of this book already exists in the library.");
-            errorMsg2.setContentText("Go borrow it!");
-            return;
+        	alert.setTitle("Available copy exists");
+            alert.setContentText("Go borrow it! 📚 An available copy of this book already exists in the library.");
+            alert.showAndWait();
+            return;	
         }
         
         // add column in the Orders table in the DB and in the activityhistory
         ClientGUIConnectionController.chat.acceptFromController(7, subID, bookNameGot);
         // check if the number of copies of the book already been ordered
         if (ChatClient.isCan == false) {
-            errorMsg.setContentText("Whoops! 😅 The number of orders and copies are equal, so you can't place another order.");
-            return;
+        	alert.setTitle("Number of orders equals copys");
+            alert.setContentText("Whoops! 😅 The number of orders and copies are equal, so you can't place another order.");
+            alert.showAndWait();
+            return;	
         }
         errorMsg.setContentText("Awesome! 🎉 You're all set! Your order has been successfully placed!");
     }

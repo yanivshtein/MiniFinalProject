@@ -10,7 +10,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -21,7 +23,7 @@ public class SubscriberExtensionController {
 	 private ListView<String> booksListView;
 	 
 	 @FXML
-	 private DialogPane msg;
+	 private Label msg;
 	 
 	 private String selectedBook;
 	 
@@ -42,27 +44,34 @@ public class SubscriberExtensionController {
 	        if (event.getClickCount() == 2) {
 	            selectedBook = booksListView.getSelectionModel().getSelectedItem();
 	            if (selectedBook != null) {
-	                msg.setContentText("You have selected the Book: " + selectedBook + ", press 'Extend' to send");
+	                msg.setText("Book Selected: " + selectedBook);
 	            }
 	        }
 	  }
 	 
 	 public void getExtendBtn (ActionEvent event) throws IOException {
 		 int subID = ChatClient.sub1.getSubscriber_id();
+		 Alert alert = new Alert(Alert.AlertType.WARNING);
 		 if (selectedBook==null) {
-	            msg.setContentText("Oops! 😞 You must press on a book name.");
-	            return;
-	        }
+			 alert.setTitle("Missing Field");
+             alert.setContentText("Oops! 😞 You must press on a book name.");
+             alert.showAndWait();
+             return;	            
+	     }
 		 ClientGUIConnectionController.chat.acceptFromController(24, subID, selectedBook);
 		 if (ChatClient.isSeven == false) {
-	            msg.setContentText("Uh-oh! 😬 There are more than 7 days until the return date");
-	            return;
+			 alert.setTitle("More than seven days");
+             alert.setContentText("Uh-oh! 😬 There are more than 7 days until the return date");
+             alert.showAndWait();
+             return;	         
 	     }
 		 if (ChatClient.orderExists == true) {
-	            msg.setContentText("Sorry! 😬 Someone else is waiting for this book");
-	            return;
+			 alert.setTitle("Order exists");
+             alert.setContentText("Sorry! 😬 Someone else is waiting for this book");
+             alert.showAndWait();
+             return;	 	        
 	     }
-		 msg.setContentText("Great! 🎉 You have your book for 7 more days, Have Fun!");		 
+		 msg.setText("Great! 🎉 You have your book for 14 more days, Have Fun!");		 
 	 }
 	 
 	 public void getReturnBtn(ActionEvent event) throws IOException {

@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.ListView;
@@ -48,11 +49,11 @@ public class LibrarianUpdateGUI {
 
 	@FXML
 	private DialogPane ChangesSavedPop;
-
+	Alert alert = new Alert(Alert.AlertType.WARNING);
 	private String TempStatus, selectedBook;
 	private Boolean statusCheck = null;
 	private ArrayList<String> borrowHistory;
-
+	
 	@FXML
 	private void initialize() {
 	    RelevantBooks.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -68,12 +69,16 @@ public class LibrarianUpdateGUI {
 	    }
 
 	    if(statusCheck == null) {
-	    	ChangesSavedPop.setContentText("Subscriber not found.");
+	    	alert.setTitle("Not found");
+            alert.setContentText("Subscriber not found.");
+            alert.showAndWait();
 	        return;
 	    	
 	    }
 	    else if (statusCheck) {
-	        ChangesSavedPop.setContentText("The account is frozen. It is not possible to extend the borrow.");
+	    	alert.setTitle("Frozen account");
+            alert.setContentText("The account is frozen. It is not possible to extend the borrow.");
+            alert.showAndWait();
 	        return;
 	    }
 	    
@@ -86,11 +91,8 @@ public class LibrarianUpdateGUI {
 	    ArrayList<String> booksNearDeadline = ChatClient.booksNearDeadline;
 
 	    if (booksNearDeadline == null || booksNearDeadline.isEmpty()) {
-	        System.out.println("No relevant books found.");
 	        return;
 	    }
-
-	    System.out.println(booksNearDeadline.toString());
 
 	    // Populate bookNames and deadlines
 	    for (int i = 0; i < booksNearDeadline.size(); i += 2) {
@@ -125,7 +127,9 @@ public class LibrarianUpdateGUI {
     	if(statusCheck)
 			return;
         if (!DateValidation(OldRetDate.getText(), NewRetDate.getText())) {
-            ChangesSavedPop.setContentText("Invalid New Date! - Must be both after the old date and within 2 weeks!");
+        	alert.setTitle("Invalid date");
+            alert.setContentText("Invalid New Date! - Must be both after the old date and within 2 weeks!");
+            alert.showAndWait();
             return;
         }
             
@@ -134,13 +138,17 @@ public class LibrarianUpdateGUI {
         if (ChatClient.bool) {
             ChangesSavedPop.setContentText("Updated successfully");
         } else {
-            ChangesSavedPop.setContentText("Update failed - Book already extended or reserved by another user");
+        	alert.setTitle("Update failed");
+            alert.setContentText("Update failed - Book already extended or reserved by another user");
+            alert.showAndWait();
         }
     }
 
     private boolean DateValidation(String oldDateStr, String newDateStr) {
         if (oldDateStr == null || newDateStr == null || oldDateStr.isEmpty() || newDateStr.isEmpty()) {
-            ChangesSavedPop.setContentText("Error: One or both date strings are null or empty.");
+        	alert.setTitle("Empty string");
+            alert.setContentText("Error: One or both date strings are null or empty.");
+            alert.showAndWait();
             return false;
         }
 
@@ -155,7 +163,9 @@ public class LibrarianUpdateGUI {
             // Check if new date is after old date AND within 14 days
             return diffInDays < 14 && newDate.after(oldDate);
         } catch (ParseException e) {
-            ChangesSavedPop.setContentText("Error parsing dates: " + e.getMessage());
+        	alert.setTitle("Parsing date");
+            alert.setContentText("Error parsing dates: \" + e.getMessage()");
+            alert.showAndWait();
             return false;
         }
     }

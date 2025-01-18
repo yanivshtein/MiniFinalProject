@@ -15,14 +15,12 @@
          <children>
             <Label layoutX="51.0" layoutY="94.0" prefHeight="21.0" prefWidth="95.0" text="Book Name:" />
             <TextField fx:id="bookName" layoutX="235.0" layoutY="89.0" prefHeight="31.0" prefWidth="262.0" />
-            <Button fx:id="sendOrderBtn" layoutX="506.0" layoutY="268.0" mnemonicParsing="false" onAction="#getSendBtn" prefHeight="41.0" prefWidth="123.0" text="Send Order" />
+            <Button fx:id="sendOrderBtn" layoutX="404.0" layoutY="421.0" mnemonicParsing="false" onAction="#getSendBtn" prefHeight="41.0" prefWidth="123.0" text="Send Order" />
             <Button fx:id="exitBtn" layoutX="781.0" layoutY="526.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="31.0" prefWidth="87.0" text="Exit" />
             <Button fx:id="returnBtn" layoutX="587.0" layoutY="526.0" mnemonicParsing="false" onAction="#getReturnBtn" text="Return to HomePage" />
-            <DialogPane fx:id="errorMsg" layoutX="67.0" layoutY="316.0" prefHeight="21.0" prefWidth="562.0" />
-            <Label fx:id="title" layoutX="261.0" layoutY="35.0" prefHeight="21.0" prefWidth="87.0" text="Book Order" />
-            <ListView fx:id="booksListView" layoutX="74.0" layoutY="146.0" prefHeight="285.0" prefWidth="293.0" />
-            <DialogPane fx:id="errorMsg" layoutX="51.0" layoutY="439.0" prefHeight="67.0" prefWidth="829.0" />
-            <DialogPane fx:id="errorMsg2" layoutX="51.0" layoutY="499.0" prefHeight="0.0" prefWidth="345.0" />
+            <Label fx:id="title" layoutX="407.0" layoutY="26.0" prefHeight="41.0" prefWidth="181.0" text="Book Order" />
+            <ListView fx:id="booksListView" layoutX="74.0" layoutY="146.0" prefHeight="176.0" prefWidth="293.0" />
+            <DialogPane fx:id="errorMsg" layoutX="51.0" layoutY="334.0" prefHeight="67.0" prefWidth="829.0" />
          </children>
       </Pane>
       <TitledPane animated="false" layoutX="-251.0" layoutY="-166.0" text="untitled" />

@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
@@ -25,6 +26,7 @@ public class ViewHistoryGUI {
 
 	
 	public void getViewBtn(ActionEvent event) throws IOException {
+		Alert alert = new Alert(Alert.AlertType.WARNING);
 	    // Send the request to the server for the activity history
 		ClientGUIConnectionController.chat.accept("watch activity history", "", "", ClientGUILoginController.email);
 	    
@@ -33,7 +35,9 @@ public class ViewHistoryGUI {
 	    
 	    // Check if activityHistory is empty
 	    if (activityHistory == null || activityHistory.isEmpty()) {
-	        HistoryView.setText("No activity history found.");
+	    	alert.setTitle("Activity History");
+            alert.setContentText("No activity history has been found");
+            alert.showAndWait();
 	        return;
 	    }
 

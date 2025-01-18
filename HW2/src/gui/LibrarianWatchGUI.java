@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.ListView;
@@ -58,9 +59,11 @@ public class LibrarianWatchGUI {
 	public void ViewDetBtt(ActionEvent event) throws IOException {
 		ClientGUIConnectionController.chat.accept("select", subID.getText(), "", "");
 		Subscriber1 sub = ChatClient.s1;
-
+		Alert alert = new Alert(Alert.AlertType.WARNING);
 		if (sub.getSubscriber_id() == 0) {
-			Bview.setText("Subscriber not found.");
+			alert.setTitle("Not found");
+            alert.setContentText("Oops! 😞 Subscriber not found");
+            alert.showAndWait();
 			name.clear();
 			phone_number.clear();
 			email.clear();

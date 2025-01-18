@@ -171,7 +171,7 @@ public class SearchBookGUIController {
 			
 		} else if (ChatClient.bookAvailability == 0) {
             alert.setTitle("Error");
-            alert.setContentText("The book is in the library but currently out of stock, estimated return date is:"+ChatClient.deadlineDate);
+            alert.setContentText("The book is in the library but currently out of stock, estimated return date is: "+ChatClient.deadlineDate);
             alert.showAndWait();
 		} else if (ChatClient.bookAvailability > 0) {
 			errorMsg.setText("The book is available on shelf A. Copies left: " + ChatClient.bookAvailability);
