@@ -75,7 +75,6 @@ public class ClientGUIUpdateDetailsController {
 
 
 	public void getUpdatedBtn(ActionEvent event) throws IOException{
-		System.out.println(subId);
 		String email =Email.getText();
 		String phone =Phone.getText();
 		   Alert alert = new Alert(Alert.AlertType.WARNING);
