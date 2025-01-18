@@ -42,11 +42,7 @@ public class mysqlConnection {
 
 		try {
 
-<<<<<<< HEAD
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "Aa123456");
-=======
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "!vex123S");
->>>>>>> main
 
 			System.out.println("SQL connection succeed");
 		} catch (SQLException ex) {
@@ -451,7 +447,7 @@ public class mysqlConnection {
 	        try (ResultSet rs = ps.executeQuery()) {
 	            while (rs.next()) {
 	            	borrowHistory.add(String.format(
-	                        "%s,%s,Return Date: __-__-____,%s,Status: Not returned yet",
+	                        "%s,%s,Return Date: __-__-____,%s,Not returned yet",
 	                        rs.getString("BookName"), rs.getString("BorrowDate"),
 	                        rs.getString("deadline")));
 	            }

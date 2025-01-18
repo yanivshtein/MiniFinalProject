@@ -89,11 +89,11 @@ public class ReportsGUI {
                 // Create headers with matching spacing
                 // Adjust widths so that data columns line up
                 reportBuilder.append(
-                    String.format("%-15s %-25s %-15s %-15s %-15s %-10s\n",
+                    String.format("%-15s %-35s %-15s %-15s %-15s %-10s\n",
                                   "Subscriber ID", "Book Name", "Borrow Date", 
                                   "Return Date", "Deadline", "Status"));
                 // Create a separator line matching the total width above
-                reportBuilder.append("-".repeat(95)).append("\n");
+                reportBuilder.append("-".repeat(115)).append("\n");
 
                 // Format each row with aligned columns
                 // Assuming data in ChatClient.FullBorrowRep is in the same order: 
@@ -108,7 +108,7 @@ public class ReportsGUI {
                     String status     = parts[5].substring(parts[5].indexOf(":") + 2);
 
                     reportBuilder.append(
-                        String.format("%-15s %-25s %-15s %-15s %-15s %-10s\n",
+                        String.format("%-15s %-35s %-15s %-15s %-15s %-10s\n",
                                       subId, bookName, borrowDate, 
                                       returnDate, deadline, status)
                     );
@@ -127,6 +127,7 @@ public class ReportsGUI {
             	alert.setTitle("Information");
                 alert.setContentText("No information to display.");
                 alert.showAndWait();
+                return;
             } else {
                 // Create headers with proper spacing
                 reportBuilder.append(String.format("%-25s %-15s %-15s\n", "Subscriber Name", "ID", "Status"));
@@ -173,6 +174,12 @@ public class ReportsGUI {
                 // Display the formatted report in the text area
                 Displayarea.setText(reportBuilder.toString());
             }
+        }
+        else {
+        	alert.setTitle("Information");
+            alert.setContentText("You must select a report type!");
+            alert.showAndWait();
+            return;
         }
 
 
