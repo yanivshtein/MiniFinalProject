@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -48,17 +49,19 @@ public class ClientGUIUpdateDetailsController {
 	
 	@FXML
 	private Label subName = null;
+	String subId;
 	
 	
 	
 	@FXML
 	private void initialize() {
-		ClientGUIConnectionController.chat.accept("select", ClientGUILoginController.email, "", ""); //retrieve Subscriber info
-		Subscriber1 sub = ChatClient.s1; 
-		IdName.setText(ClientGUILoginController.email);
-		subName.setText(sub.getSubscriber_name());
-		Phone.setText(sub.getSubscriber_phone_number());
-		Email.setText(sub.getSubscriber_email());
+	 //retrieve Subscriber info
+		subId=Integer.toString(ChatClient.sub1.getSubscriber_id());
+		ClientGUIConnectionController.chat.accept("select",subId, "", "");
+		IdName.setText(Integer.toString(ChatClient.s1.getSubscriber_id()));
+		subName.setText(ChatClient.s1.getSubscriber_name());
+		Phone.setText(ChatClient.s1.getSubscriber_phone_number());
+		Email.setText(ChatClient.s1.getSubscriber_email());
 	} 
 	
 	public void start(Stage primaryStage) throws Exception {
@@ -72,8 +75,19 @@ public class ClientGUIUpdateDetailsController {
 
 
 	public void getUpdatedBtn(ActionEvent event) throws IOException{
+		System.out.println(subId);
+		String email =Email.getText();
+		String phone =Phone.getText();
+		   Alert alert = new Alert(Alert.AlertType.WARNING);
+		if(email.isEmpty()|| phone.isEmpty()) {
+            alert.setTitle("Missing Fields");
+            alert.setHeaderText("Some fields are missing");
+            alert.setContentText("Please fill in the following fields");
+            alert.showAndWait();
+            return;	
+		}
+		ClientGUIConnectionController.chat.accept("update",subId, Phone.getText(), Email.getText());
 		afterUpdate.setContentText("Updated");
-		ClientGUIConnectionController.chat.accept("update", ClientGUILoginController.email, Phone.getText(), Email.getText());
 	}
 	
 	public void getExitBtn(ActionEvent event) throws IOException {
