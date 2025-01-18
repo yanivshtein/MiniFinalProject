@@ -73,7 +73,6 @@ public class LibrarianUpdateGUI {
             alert.setContentText("Subscriber not found.");
             alert.showAndWait();
 	        return;
-	    	
 	    }
 	    else if (statusCheck) {
 	    	alert.setTitle("Frozen account");
@@ -81,7 +80,6 @@ public class LibrarianUpdateGUI {
             alert.showAndWait();
 	        return;
 	    }
-	    
 
 	    ArrayList<String> bookNames = new ArrayList<>();
 	    ArrayList<String> deadlines = new ArrayList<>();
@@ -91,6 +89,11 @@ public class LibrarianUpdateGUI {
 	    ArrayList<String> booksNearDeadline = ChatClient.booksNearDeadline;
 
 	    if (booksNearDeadline == null || booksNearDeadline.isEmpty()) {
+	    	alert.setTitle("No relevant books found.");
+            alert.setContentText("No relevant books found.");
+            alert.showAndWait();
+	        RelevantBooks.getItems().clear();  // Clear the ListView if no relevant books are found
+
 	        return;
 	    }
 
@@ -118,6 +121,7 @@ public class LibrarianUpdateGUI {
 	        }
 	    });
 	}
+
 
 		
 
