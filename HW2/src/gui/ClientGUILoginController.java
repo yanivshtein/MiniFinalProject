@@ -20,6 +20,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import server.EchoServer;
@@ -54,8 +56,26 @@ public class ClientGUILoginController {
 	@FXML
 	private TextField password = null;
 	
+	@FXML
+	private ImageView picL = null;
+	
+	@FXML
+	private ImageView picS = null;
+	
 	
 
+	@FXML
+    public void initialize() {
+        // Check if the image is already set by Scene Builder (no need to do this unless you need to update it)
+        if (picL.getImage() == null) {
+            // Optionally set a default image or handle error
+            picL.setImage(new Image("/resources/LibrarianPic.png"));
+        }
+        if (picS.getImage() == null) {
+            // Optionally set a default image or handle error
+            picS.setImage(new Image("/resources/UserPic.png"));
+        }
+    }
 
 
 
