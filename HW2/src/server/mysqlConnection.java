@@ -1046,6 +1046,7 @@ public class mysqlConnection {
 			e.printStackTrace();
 		}
 		deleteOrders(ordersToDelete); // call the method to delete the non taken orders from the DB
+		addDeletedToInventory(ordersToDelete); //add the books that didnt pick to the copysAvailable in 'books'
 	}
 	public void notifyBeforeReturnDeadline() {
 	    // SQL query to fetch subscribers with books borrowed and whose deadline is the next day
@@ -1228,4 +1229,18 @@ public class mysqlConnection {
 			
 		}
 	}
+	
+	public void addDeletedToInventory(Map<Integer, String> ordersToDelete) {
+	    String query = "UPDATE books SET copysAvailable = copysAvailable + 1 WHERE bookName = ?";
+	    try (PreparedStatement stmt = conn.prepareStatement(query)) {
+	        // Loop through the values of the map (book names)
+	        for (String bookName : ordersToDelete.values()) {
+	            stmt.setString(1, bookName);
+	            stmt.executeUpdate();
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+
 }

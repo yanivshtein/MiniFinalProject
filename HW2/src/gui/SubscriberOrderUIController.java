@@ -59,7 +59,7 @@ public class SubscriberOrderUIController {
         if (event.getClickCount() == 2) {
             selectedBook = booksListView.getSelectionModel().getSelectedItem();
             if (selectedBook != null) {            	
-            	errorMsg.setContentText("You have selected the Book: " + selectedBook + ", press 'Send Order' to send");
+            	errorMsg.setContentText("You have selected the Book: " + selectedBook + ", press 'Place Order' to send");
             }
         }
   }
