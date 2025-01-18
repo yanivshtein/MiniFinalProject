@@ -9,7 +9,7 @@
 
 <AnchorPane prefHeight="429.0" prefWidth="475.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ClientGUIUpdateDetailsController">
    <children>
-      <Pane fx:id="phoneNumber" prefHeight="517.0" prefWidth="578.0">
+      <Pane fx:id="phoneNumber" prefHeight="462.0" prefWidth="497.0">
          <children>
             <Button fx:id="update" layoutX="59.0" layoutY="322.0" mnemonicParsing="false" onAction="#getUpdatedBtn" text="Update Subscriber" />
             <Label layoutX="64.0" layoutY="141.0" text="ID:" />
@@ -18,12 +18,12 @@
             <Label layoutX="63.0" layoutY="277.0" text="Email:" />
             <TextField fx:id="Phone" layoutX="134.0" layoutY="231.0" />
             <TextField fx:id="Email" layoutX="134.0" layoutY="273.0" />
-            <Button fx:id="exitBtn" layoutX="446.0" layoutY="396.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="40.0" prefWidth="80.0" text="EXIT" />
+            <Button fx:id="exitBtn" layoutX="365.0" layoutY="396.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="40.0" prefWidth="80.0" text="EXIT" />
             <Label fx:id="IdName" layoutX="144.0" layoutY="141.0" text="Label" />
             <Label fx:id="subName" layoutX="144.0" layoutY="190.0" text="Label" />
             <Button fx:id="Return" layoutX="38.0" layoutY="396.0" mnemonicParsing="false" onAction="#getReturnBtn" prefHeight="40.0" prefWidth="177.0" text="Return to Home Page" />
             <Label fx:id="afterUpdate" layoutX="405.0" layoutY="305.0" />
-            <Label layoutX="138.0" layoutY="55.0" text="Update subscriber">
+            <Label fx:id="updatesub" layoutX="38.0" layoutY="51.0" text="Update subscriber">
                <font>
                   <Font size="36.0" />
                </font>

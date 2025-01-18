@@ -79,3 +79,23 @@
     -fx-padding: 10px;
     -fx-text-fill: #333; /* Dark text for contrast */
 }
+#addNewSub {
+    -fx-font-size: 30px; 
+    -fx-font-weight: bold; 
+    -fx-text-fill: #555; 
+}
+#SearchBook {
+    -fx-font-size: 30px; 
+    -fx-font-weight: bold; 
+    -fx-text-fill: #555; 
+}
+#borrowaBook {
+    -fx-font-size: 30px; 
+    -fx-font-weight: bold; 
+    -fx-text-fill: #555; 
+}
+#updatesub {
+    -fx-font-size: 30px; 
+    -fx-font-weight: bold; 
+    -fx-text-fill: #555; 
+}

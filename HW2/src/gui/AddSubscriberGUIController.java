@@ -59,7 +59,7 @@ public class AddSubscriberGUIController {
     
     public void saveBtn(ActionEvent event) {
         StringBuilder missingFields = new StringBuilder();
-
+        Alert alert = new Alert(Alert.AlertType.WARNING);
         // Check which fields are empty and append them to the missingFields message
         if (name.getText().isEmpty()) {
             missingFields.append("Name, ");
@@ -73,19 +73,29 @@ public class AddSubscriberGUIController {
         if (password.getText().isEmpty()) {
             missingFields.append("Password, ");
         }
-
+        
         // If there are missing fields, show a warning message
         if (missingFields.length() > 0) {
             // Remove the trailing comma and space
             missingFields.setLength(missingFields.length() - 2);
-
-            Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Missing Fields");
             alert.setHeaderText("Some fields are missing");
             alert.setContentText("Please fill in the following fields: " + missingFields.toString());
             alert.showAndWait();
             return;
         } else {
+        	if(email.getText().indexOf("@") == -1) {
+                alert.setTitle("Error");
+                alert.setContentText("Please enter a valid email");
+                alert.showAndWait();  
+                return;
+        	}
+        	if(phoneNumber.getText().length()!=10) {
+                alert.setTitle("Error");
+                alert.setContentText("Please enter a valid phone number");
+                alert.showAndWait();
+                return;
+        	}
             // If all fields are filled, proceed with the action
             String status = "active";
             int randomId = ThreadLocalRandom.current().nextInt(1, 100000);
