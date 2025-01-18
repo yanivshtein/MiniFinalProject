@@ -42,7 +42,7 @@ public class mysqlConnection {
 
 		try {
 
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "Aa123456");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "Sheli123");
 
 
 
@@ -1166,12 +1166,12 @@ public class mysqlConnection {
 		
 		ArrayList<String> frozenSubscribers = new ArrayList<String>();
 		
-		String getSubscribersID = "SELECT subscriber_id FROM subscriber WHERE subscription_status = 'Frozen'";
+		String getSubscribersID = "SELECT subscriber_id FROM subscriber WHERE subscription_status = 'frozen'";
 		
 		String getReturnDates = "SELECT MAX(ActionDate) AS LastActionDate FROM activityhistory WHERE SubscriberID = ? "
 				+ "AND ActionType = 'Return'";
 		
-		String updateSubscribersStatus = "UPDATE subscriber SET subscription_status = 'Active' WHERE subscriber_id=?";
+		String updateSubscribersStatus = "UPDATE subscriber SET subscription_status = 'active' WHERE subscriber_id=?";
 		
 		PreparedStatement updateStatus = null;
 		ResultSet returnDates = null;
