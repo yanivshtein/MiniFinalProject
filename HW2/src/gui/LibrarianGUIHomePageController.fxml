@@ -8,12 +8,12 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="514.0" prefWidth="486.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LibrarianGUIHomePageController">
    <children>
-      <Label layoutX="32.0" layoutY="44.0" prefHeight="35.0" prefWidth="74.0" text="Hello">
+      <Label layoutX="32.0" layoutY="44.0" prefHeight="35.0" prefWidth="189.0" text="Good morning,">
          <font>
             <Font size="24.0" />
          </font></Label>
       <Text layoutX="39.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-      <Label fx:id="librarianName" layoutX="131.0" layoutY="53.0" text="Label" />
+      <Label fx:id="librarianName" layoutX="192.0" layoutY="53.0" text="Label" />
       <Button fx:id="addSub" layoutX="41.0" layoutY="140.0" mnemonicParsing="false" onAction="#getAddSubBtn" prefHeight="25.0" prefWidth="151.0" text="Add subscriber" />
       <Button fx:id="borrowBook" layoutX="41.0" layoutY="215.0" mnemonicParsing="false" onAction="#BorrowingBookBtn" prefHeight="25.0" prefWidth="151.0" text="Borrowing a book" />
       <Button fx:id="returnBook" layoutX="258.0" layoutY="215.0" mnemonicParsing="false" onAction="#returnBookbttn" prefHeight="25.0" prefWidth="151.0" text="Return a book" />

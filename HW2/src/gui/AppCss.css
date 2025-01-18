@@ -41,6 +41,14 @@
     -fx-cursor: hand;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 4, 0, 0, 2);
 }
+/* Completely transparent DialogPane */
+.dialog-pane {
+    -fx-background-color: transparent; /* Fully transparent background */
+    -fx-border-color: transparent; /* No border for a seamless look */
+    -fx-padding: 10px;
+    -fx-text-fill: #333; /* Dark text for contrast */
+}
+
 
 .button:hover {
     -fx-background-color: linear-gradient(to bottom, #c8b6a6, #8d7b68); /* Darker gradient on hover */
