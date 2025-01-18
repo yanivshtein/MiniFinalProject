@@ -116,7 +116,7 @@ public class LibrarianWatchGUI {
 
 		// Create a new scene and apply the stylesheet
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(getClass().getResource("/gui/LibrarianGUIHomePageController.css").toExternalForm());
+		scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 
 		// Create a new stage for the new page
 		Stage newStage = new Stage();
@@ -139,7 +139,7 @@ public class LibrarianWatchGUI {
 		Pane root = loader.load(getClass().getResource("/gui/LibrarianReturnGUI.fxml").openStream());
 
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(getClass().getResource("/gui/LibrarianReturnGUI.css").toExternalForm());
+		scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 		primaryStage.setTitle("Librarian Return GUI");
 
 		primaryStage.setScene(scene);

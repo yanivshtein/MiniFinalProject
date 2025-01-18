@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import logic.ClientInfo;
@@ -35,13 +36,13 @@ public class ServerGUI {
     private TextField connStatus = null;
     
     @FXML
-    private DialogPane serverRun = null;
+    private Label serverRun = null;
 
 
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/gui/ServerGUI.fxml"));
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/gui/ServerGUI.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
         primaryStage.setTitle("Server GUI");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -50,7 +51,7 @@ public class ServerGUI {
  // This method is called on button click (Run Server)
     public void runServer(ActionEvent event) {
         String port = "5555"; // Default port
-        serverRun.setContentText("Server is listening...");
+        serverRun.setText("Server is listening...");
         EchoServer sv = ServerUI.runServer(port);
         
         // Add listener for connection events

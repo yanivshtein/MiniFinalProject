@@ -38,7 +38,7 @@ public class ClientGUIHomePageController {
 	public void start(Stage primaryStage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("/gui/ClientGUIHomePage.fxml"));
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIHomePage.css").toExternalForm());
+		scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 		primaryStage.setTitle("Login Screen");
 		primaryStage.setScene(scene);
 		
@@ -53,7 +53,7 @@ public class ClientGUIHomePageController {
         Pane root = loader.load(getClass().getResource("/gui/ClientGUIUpdateDetails.fxml").openStream());
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIUpdateDetails.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
         primaryStage.setTitle("Client Second GUI");
 
         primaryStage.setScene(scene);
@@ -70,7 +70,7 @@ public class ClientGUIHomePageController {
 	    Parent root = loader.load();
 	    
 	    Scene scene = new Scene(root);
-	    scene.getStylesheets().add(getClass().getResource("/gui/ViewHistoryGUI.css").toExternalForm());
+	    scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 	    
 	    Stage primaryStage = new Stage();
 	    primaryStage.setTitle("View History");
@@ -87,7 +87,7 @@ public class ClientGUIHomePageController {
 	    Parent root = loader.load();
 	    
 	    Scene scene = new Scene(root);
-	    scene.getStylesheets().add(getClass().getResource("/gui/SearchBookGUIController.css").toExternalForm());
+	    scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 	    
 	    Stage primaryStage = new Stage();
 	    primaryStage.setTitle("Search");
@@ -104,7 +104,7 @@ public class ClientGUIHomePageController {
 	    Parent root = loader.load();
 	    
 	    Scene scene = new Scene(root);
-	    scene.getStylesheets().add(getClass().getResource("/gui/SubscriberOrderUI.css").toExternalForm());
+	    scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 	    
 	    Stage primaryStage = new Stage();
 	    primaryStage.setTitle("Order");
@@ -121,7 +121,7 @@ public class ClientGUIHomePageController {
 	    Parent root = loader.load();
 	    
 	    Scene scene = new Scene(root);
-	    scene.getStylesheets().add(getClass().getResource("/gui/SubscriberExtension.css").toExternalForm());
+	    scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 	    
 	    Stage primaryStage = new Stage();
 	    primaryStage.setTitle("Extension");
@@ -138,7 +138,7 @@ public class ClientGUIHomePageController {
 	    Parent root = loader.load();
 	    
 	    Scene scene = new Scene(root);
-	    //scene.getStylesheets().add(getClass().getResource("/gui/SubscriberMessages.css").toExternalForm());
+	    scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 	    
 	    Stage primaryStage = new Stage();
 	    primaryStage.setTitle("My Messages");
@@ -154,7 +154,7 @@ public class ClientGUIHomePageController {
         Pane root = loader.load(getClass().getResource("/gui/ClientGUILogin.fxml").openStream());
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/gui/ClientGUILogin.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
         primaryStage.setTitle("Login");
 
         primaryStage.setScene(scene);

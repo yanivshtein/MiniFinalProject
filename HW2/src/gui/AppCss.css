@@ -1,20 +1,22 @@
 /* General body styles for clean, minimalistic design */
 .root {
-    -fx-background-image: url('/common/SmartLibrary.jpg'); /* Your background image */
+    -fx-background-image: url('/resources/SmartLibrary.jpg'); /* Your background image */
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
     -fx-background-position: center;
     -fx-padding: 20px;
-    -fx-font-family: "Segoe UI", Arial, sans-serif;
+     -fx-font-family: "Comic Sans MS", cursive, "Segoe UI", Arial, sans-serif;
+    -fx-font-size: 14px; /* Base font size */
 }
 
 /* Form and button styling */
 .text-field {
     -fx-background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
     -fx-border-color: #dcdcdc; /* Light border for minimal effect */
-    -fx-border-radius: 5px;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
     -fx-font-size: 14px;
-    -fx-padding: 10px;
+    -fx-padding: 5px;
     -fx-text-fill: #333; /* Dark text for contrast */
 }
 
@@ -29,7 +31,7 @@
 
 /* Button Styling */
 .button {
-    -fx-background-color: linear-gradient(to bottom, #d9b99b, #e4d5b7); /* Subtle gradient */
+    -fx-background-color: linear-gradient(to bottom, #a4907c, #c8b6a6);  /* Subtle gradient */
     -fx-text-fill: white;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
@@ -41,7 +43,7 @@
 }
 
 .button:hover {
-    -fx-background-color: linear-gradient(to bottom, #d9b99b, #e4d5b7); /* Darker green on hover */
+    -fx-background-color: linear-gradient(to bottom, #c8b6a6, #8d7b68); /* Darker gradient on hover */
 }
 
 /* Close button with red background */
