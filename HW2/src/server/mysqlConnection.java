@@ -45,7 +45,7 @@ public class mysqlConnection {
 
 
 
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "yaniv1234");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "Aa123456");
 
 
 			System.out.println("SQL connection succeed");
@@ -410,56 +410,67 @@ public class mysqlConnection {
 	    ArrayList<String> borrowHistory = new ArrayList<>();
 
 	    // Query for Borrowed and Returned Books
-	    String query1 = "SELECT br1.SubscriberID, br1.BookName, MIN(br1.ActionDate) AS BorrowDate, "
-	            + "MIN(br2.ActionDate) AS ReturnDate, br1.deadline , br2.additionalInfo "
-	            + "FROM activityhistory br1 JOIN activityhistory br2 "
-	            + "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName "
-	            + "AND br1.ActionType = 'Borrow' AND br2.ActionType = 'Return' AND br1.ActionDate < br2.ActionDate "
-	            + "WHERE br1.SubscriberID = ? "
-	            + "GROUP BY br1.SubscriberID, br1.BookName, br1.deadline , br2.additionalInfo";
+	    String query1 = "SELECT br1.BookName, MIN(br1.ActionDate) AS BorrowDate, " +
+	            "MIN(br2.ActionDate) AS ReturnDate, br1.deadline, br2.additionalInfo " +
+	            "FROM activityhistory br1 JOIN activityhistory br2 " +
+	            "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName " +
+	            "AND br1.ActionType = 'Borrow' AND br2.ActionType = 'Return' " +
+	            "AND br1.ActionDate < br2.ActionDate " +
+	            "WHERE br1.SubscriberID = ? " +
+	            "GROUP BY br1.BookName, br1.deadline, br2.additionalInfo " +
+	            "ORDER BY BorrowDate ASC";
 
 	    try (PreparedStatement ps = conn.prepareStatement(query1)) {
-	        // Set the SubscriberID parameter for the query
 	        ps.setInt(1, subscriberID);
-
 	        try (ResultSet rs = ps.executeQuery()) {
 	            while (rs.next()) {
-	                // Check if the book was returned late or on time
-	                String lateStatus = rs.getString("additionalInfo");
+	                String bookName = rs.getString("BookName");
+	                String borrowDate = rs.getString("BorrowDate");
+	                String returnDate = rs.getString("ReturnDate");
+	                String deadline = rs.getString("deadline");
+	                String additionalInfo = rs.getString("additionalInfo");
 
-	                // Add the information to the list, including the late status
 	                borrowHistory.add(String.format(
-	                        "%s,%s,%s,%s,%s",
-	                        rs.getString("BookName"), rs.getString("BorrowDate"),
-	                        rs.getString("ReturnDate"), rs.getString("Deadline"), lateStatus));
+	                        "%s, %s, %s, %s, %s",
+	                        bookName, borrowDate, returnDate, deadline, additionalInfo));
 	            }
 	        }
+	    } catch (SQLException e) {
+	        System.err.println("Error fetching borrowed books with returns: " + e.getMessage());
+	        throw e;
 	    }
 
 	    // Query for Borrowed but Not Returned Books
-	    String query2 = "SELECT br1.SubscriberID, br1.BookName, MIN(br1.ActionDate) AS BorrowDate, br1.deadline "
-	            + "FROM activityhistory br1 LEFT JOIN activityhistory br2 "
-	            + "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName "
-	            + "AND br2.ActionType = 'Return' " + "WHERE br1.ActionType = 'Borrow' AND br2.ActionType IS NULL "
-	            + "AND br1.SubscriberID = ? "
-	            + "GROUP BY br1.SubscriberID, br1.BookName, br1.deadline";
+	    String query2 = "SELECT br1.BookName, MIN(br1.ActionDate) AS BorrowDate, br1.deadline " +
+	            "FROM activityhistory br1 LEFT JOIN activityhistory br2 " +
+	            "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName " +
+	            "AND br2.ActionType = 'Return' " +
+	            "WHERE br1.ActionType = 'Borrow' AND br2.ActionType IS NULL " +
+	            "AND br1.SubscriberID = ? " +
+	            "GROUP BY br1.BookName, br1.deadline " +
+	            "ORDER BY BorrowDate ASC";
 
 	    try (PreparedStatement ps = conn.prepareStatement(query2)) {
-	        // Set the SubscriberID parameter for the query
 	        ps.setInt(1, subscriberID);
-
 	        try (ResultSet rs = ps.executeQuery()) {
 	            while (rs.next()) {
-	            	borrowHistory.add(String.format(
-	                        "%s,%s,Return Date: __-__-____,%s,Not returned yet",
-	                        rs.getString("BookName"), rs.getString("BorrowDate"),
-	                        rs.getString("deadline")));
+	                String bookName = rs.getString("BookName");
+	                String borrowDate = rs.getString("BorrowDate");
+	                String deadline = rs.getString("deadline");
+
+	                borrowHistory.add(String.format(
+	                        "%s, %s, __-__-____, %s, Not returned yet",
+	                        bookName, borrowDate, deadline));
 	            }
 	        }
+	    } catch (SQLException e) {
+	        System.err.println("Error fetching borrowed but not returned books: " + e.getMessage());
+	        throw e;
 	    }
 
 	    return borrowHistory;
 	}
+
 
 
 	public boolean ChangeReturnDate(int subscriberId, String BookName, String OldDate, String NewDate,
