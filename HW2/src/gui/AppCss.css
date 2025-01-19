@@ -79,3 +79,9 @@
     -fx-padding: 10px;
     -fx-text-fill: #333; /* Dark text for contrast */
 }
+
+#title {
+    -fx-font-size: 30px; 
+    -fx-font-weight: bold; 
+    -fx-text-fill: #555; 
+}

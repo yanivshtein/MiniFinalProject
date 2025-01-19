@@ -13,8 +13,8 @@
             <ListView fx:id="booksListView" layoutX="68.0" layoutY="124.0" prefHeight="200.0" prefWidth="378.0" />
             <Label layoutX="14.0" layoutY="75.0" text="Choose a book from the list to extend:" />
             <Button layoutX="229.0" layoutY="395.0" mnemonicParsing="false" onAction="#getExtendBtn" text="Extend" />
-            <Button layoutX="261.0" layoutY="456.0" mnemonicParsing="false" onAction="#getReturnBtn" text="Return to HomePage" />
-            <Button layoutX="440.0" layoutY="456.0" mnemonicParsing="false" onAction="#getExitBtn" text="Exit" />
+            <Button layoutX="38.0" layoutY="456.0" mnemonicParsing="false" onAction="#getReturnBtn" text="Return to HomePage" />
+            <Button layoutX="440.0" layoutY="456.0" mnemonicParsing="false" onAction="#getExitBtn" text="EXIT" />
             <Label fx:id="msg" layoutX="28.0" layoutY="337.0" prefHeight="21.0" prefWidth="479.0" />
          </children>
       </Pane>

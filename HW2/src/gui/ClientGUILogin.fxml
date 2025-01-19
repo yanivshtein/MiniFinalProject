@@ -14,7 +14,7 @@
       <Pane layoutY="6.0" prefHeight="371.0" prefWidth="482.0">
          <children>
             <Button fx:id="enter" layoutX="53.0" layoutY="167.0" mnemonicParsing="false" onAction="#getEnterBtn" text="enter" />
-            <Button fx:id="exit" layoutX="357.0" layoutY="167.0" mnemonicParsing="false" onAction="#getExitBtn" text="Exit" />
+            <Button fx:id="exit" layoutX="357.0" layoutY="167.0" mnemonicParsing="false" onAction="#getExitBtn" text="EXIT" />
             <Label layoutX="44.0" layoutY="37.0" text="Email:" />
             <TextField fx:id="userName" layoutX="119.0" layoutY="30.0" prefHeight="31.0" prefWidth="207.0" />
             <Label layoutX="44.0" layoutY="75.0" text="Password:" />

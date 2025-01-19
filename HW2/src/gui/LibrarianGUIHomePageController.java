@@ -31,7 +31,7 @@ public class LibrarianGUIHomePageController {
 	public static String BringLibName;
 	
 	@FXML
-	private Label librarianName = null;
+	private Label title = null;
 	
 	@FXML
 	private Button addSub = null;
@@ -65,7 +65,7 @@ public class LibrarianGUIHomePageController {
 	@FXML
 	private void initialize() {
 	    // Set librarian name
-	    librarianName.setText(ChatClient.lib.getLibrarian_name());
+	    title.setText("Hello, " + ChatClient.lib.getLibrarian_name());
 	    
 	    // Get the current time
 	    LocalDateTime now = LocalDateTime.now();
@@ -74,7 +74,7 @@ public class LibrarianGUIHomePageController {
 	    int currentHour = now.getHour();
 	    
 	    // Optionally set a default value for librarian's name (if required)
-	    BringLibName = librarianName.getText();
+	    BringLibName = ChatClient.lib.getLibrarian_name();
 
 	 
 	        // If it's between 6 AM and 6 PM, set the sun image, else set the moon image
@@ -295,7 +295,7 @@ public class LibrarianGUIHomePageController {
 	    scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 	    
 	    Stage primaryStage = new Stage();
-	    primaryStage.setTitle("Waiting Orders");
+	    primaryStage.setTitle("Messages");
 	    primaryStage.setScene(scene);
 	    primaryStage.show();
 	}

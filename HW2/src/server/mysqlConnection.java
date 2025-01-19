@@ -42,7 +42,11 @@ public class mysqlConnection {
 
 		try {
 
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "Aa123456");
+
+
+
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "yaniv1234");
+
 
 			System.out.println("SQL connection succeed");
 		} catch (SQLException ex) {
@@ -275,7 +279,7 @@ public class mysqlConnection {
 	}
 
 	public String canExtend(int id, String bookName) {
-		String query = "SELECT deadline FROM activityhistory WHERE SubscriberID = ? AND BookName = ? AND ActionType = 'Borrow';";
+		String query = "SELECT deadline FROM activityhistory WHERE SubscriberID = ? AND BookName = ? AND ActionType = 'Borrow' AND hasReturned = 0;";
 		try {
 			PreparedStatement stmt = conn.prepareStatement(query);
 			stmt.setInt(1, id);
@@ -1037,6 +1041,7 @@ public class mysqlConnection {
 			e.printStackTrace();
 		}
 		deleteOrders(ordersToDelete); // call the method to delete the non taken orders from the DB
+		addDeletedToInventory(ordersToDelete); //add the books that didnt pick to the copysAvailable in 'books'
 	}
 	public void notifyBeforeReturnDeadline() {
 	    // SQL query to fetch subscribers with books borrowed and whose deadline is the next day
@@ -1237,6 +1242,19 @@ public class mysqlConnection {
 	        }
 	    }
 	    return count;
+	}
+	
+	public void addDeletedToInventory(Map<Integer, String> ordersToDelete) {
+	    String query = "UPDATE books SET copysAvailable = copysAvailable + 1 WHERE bookName = ?";
+	    try (PreparedStatement stmt = conn.prepareStatement(query)) {
+	        // Loop through the values of the map (book names)
+	        for (String bookName : ordersToDelete.values()) {
+	            stmt.setString(1, bookName);
+	            stmt.executeUpdate();
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
 
 }
