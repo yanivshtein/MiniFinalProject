@@ -27,7 +27,7 @@ public class ClientGUIHomePageController {
 	private Button send = null;
 	
 	@FXML
-	private Label subName = null;
+	private Label title = null;
 	
 	@FXML
 	private Button LogOut = null;
@@ -37,7 +37,7 @@ public class ClientGUIHomePageController {
 	
 	@FXML
 	private void initialize() {
-		subName.setText(ChatClient.sub1.getSubscriber_name());
+		title.setText("Hello, " + ChatClient.sub1.getSubscriber_name());
 		
 		// If it's between 6 AM and 6 PM, set the sun image, else set the moon image
         LocalDateTime now = LocalDateTime.now();

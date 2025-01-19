@@ -24,9 +24,6 @@ public class ClientGUIConnectionController {
 	@FXML
 	private TextField serverIP = null;
 
-
-
-
 	@FXML
 	private Button exit = null;
 
@@ -42,33 +39,33 @@ public class ClientGUIConnectionController {
 	}
 
 	public void getConnectBtn(ActionEvent event) throws IOException {
-		try {
-			Thread.sleep(10);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		Alert alert = new Alert(Alert.AlertType.WARNING);
-		try {
-			chat = new ClientConsole(serverIP.getText(), 5555);
-			if (chat.connected) {
-				FXMLLoader loader = new FXMLLoader();
-				((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
-				Stage primaryStage = new Stage();
-				Pane root = loader.load(getClass().getResource("/gui/ClientGUILogin.fxml").openStream());
-
-				Scene scene = new Scene(root);
-				scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
-				primaryStage.setTitle("Login Page");
-
-				primaryStage.setScene(scene);
-				primaryStage.show();
-
-			}
-		} catch (Exception e) {
+		if (serverIP.getText().trim().isEmpty()) {
 			alert.setTitle("Error");
-            alert.setContentText("Wrong IP");
-            alert.showAndWait();
+			alert.setContentText("Please enter IP");
+			alert.showAndWait();
+		} else {
+			try {
+				chat = new ClientConsole(serverIP.getText(), 5555);
+				if (chat.connected) {
+					FXMLLoader loader = new FXMLLoader();
+					((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
+					Stage primaryStage = new Stage();
+					Pane root = loader.load(getClass().getResource("/gui/ClientGUILogin.fxml").openStream());
+
+					Scene scene = new Scene(root);
+					scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
+					primaryStage.setTitle("Login Page");
+
+					primaryStage.setScene(scene);
+					primaryStage.show();
+
+				}
+			} catch (Exception e) {
+				alert.setTitle("Error");
+				alert.setContentText("Wrong IP");
+				alert.showAndWait();
+			}
 		}
 	}
 

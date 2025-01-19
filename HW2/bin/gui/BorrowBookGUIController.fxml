@@ -9,7 +9,7 @@
 
 <Pane fx:id="booksListView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="477.0" prefWidth="688.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.BorrowBookGUIController">
    <children>
-      <Label layoutX="32.0" layoutY="45.0" prefHeight="53.0" prefWidth="249.0" text="Borrow a book">
+      <Label fx:id="title" layoutX="32.0" layoutY="45.0" prefHeight="53.0" prefWidth="249.0" text="Borrow a book">
          <font>
             <Font size="36.0" />
          </font></Label>
@@ -22,12 +22,12 @@
       <Text layoutX="165.0" layoutY="137.0" strokeType="OUTSIDE" strokeWidth="0.0" />
       <TextField fx:id="id" layoutX="213.0" layoutY="120.0" />
       <TextField fx:id="bookName" layoutX="213.0" layoutY="179.0" />
-      <Button fx:id="borrow" layoutX="106.0" layoutY="311.0" mnemonicParsing="false" onAction="#borrowBtn" text="Borrow" />
-      <Button fx:id="return1" layoutX="33.0" layoutY="378.0" mnemonicParsing="false" onAction="#getReturnBtn" text="Return" />
-      <Button fx:id="exit" layoutX="611.0" layoutY="378.0" mnemonicParsing="false" onAction="#getExitBtn" text="Exit" />
+      <Button fx:id="borrow" layoutX="62.0" layoutY="311.0" mnemonicParsing="false" onAction="#borrowBtn" text="Borrow" />
+      <Button fx:id="return1" layoutX="24.0" layoutY="384.0" mnemonicParsing="false" onAction="#getReturnBtn" prefHeight="53.0" prefWidth="183.0" text="Return to Home Page" />
+      <Button fx:id="exit" layoutX="526.0" layoutY="384.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="53.0" prefWidth="99.0" text="Exit" />
       <Label layoutX="53.0" layoutY="237.0" text="Barcode:" />
       <TextField fx:id="barCode" layoutX="213.0" layoutY="233.0" />
-      <Button fx:id="barcode" layoutX="417.0" layoutY="233.0" mnemonicParsing="false" onAction="#BarCodeBtn" text="scan" />
+      <Button fx:id="barcode" layoutX="399.0" layoutY="233.0" mnemonicParsing="false" onAction="#BarCodeBtn" text="Scan barcode" />
       <Label fx:id="msg" layoutX="235.0" layoutY="277.0" prefHeight="34.0" prefWidth="231.0" text="" />
    </children>
 </Pane>
