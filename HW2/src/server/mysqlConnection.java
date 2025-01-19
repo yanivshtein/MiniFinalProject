@@ -619,63 +619,54 @@ public class mysqlConnection {
 
 	}
 
-	public ArrayList<String> BringBorrowRepInfo(String SelectedMonth, String SelectedYear) throws SQLException {
-	    ArrayList<String> FullBorrowRep = new ArrayList<>();
-	    FullBorrowRep.add("borrow report");
+	public ArrayList<String> BringBorrowRepInfo(String selectedMonth, String selectedYear) throws SQLException {
+        ArrayList<String> FullBorrowRep = new ArrayList<>();
+        FullBorrowRep.add("borrow report");
 
-	    // Query for Borrowed and Returned Books, ordered by BorrowDate
-	    String query1 = "SELECT br1.SubscriberID, br1.BookName, MIN(br1.ActionDate) AS BorrowDate, "
-	            + "MIN(br2.ActionDate) AS ReturnDate, br1.deadline , br2.additionalInfo "
-	            + "FROM activityhistory br1 JOIN activityhistory br2 "
-	            + "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName "
-	            + "AND br1.ActionType = 'Borrow' AND br2.ActionType = 'Return' AND br1.ActionDate < br2.ActionDate "
-	            + "WHERE DATE_FORMAT(br1.ActionDate, '%Y-%m') = ? "
-	            + "GROUP BY br1.SubscriberID, br1.BookName, br1.deadline , br2.additionalInfo "
-	            + "ORDER BY BorrowDate"; // Sort by BorrowDate (earliest first)
+        String selectedDate = selectedYear + "-" + selectedMonth;
 
-	    try (PreparedStatement ps = conn.prepareStatement(query1)) {
-	        // Set the SelectedMonth parameter for the query
-	        ps.setString(1, SelectedYear + "-" + SelectedMonth);
+        String query = 
+        	    "SELECT br1.SubscriberID, br1.BookName, " +
+        	    "MIN(br1.ActionDate) AS BorrowDate, " +
+        	    "COALESCE(MIN(br2.ActionDate), '__-__-____ __') AS ReturnDate, " +
+        	    "br1.deadline, " +
+        	    "COALESCE(MAX(br2.additionalInfo), 'Not returned yet') AS Status " + // Using MAX to ensure aggregation
+        	    "FROM activityhistory br1 " +
+        	    "LEFT JOIN activityhistory br2 " +
+        	    "ON br1.SubscriberID = br2.SubscriberID " +
+        	    "AND br1.BookName = br2.BookName " +
+        	    "AND br2.ActionType = 'Return' " +
+        	    "AND br1.ActionDate < br2.ActionDate " +
+        	    "WHERE br1.ActionType = 'Borrow' " +
+        	    "AND DATE_FORMAT(br1.ActionDate, '%Y-%m') = ? " +
+        	    "GROUP BY br1.SubscriberID, br1.BookName, br1.deadline " +
+        	    "ORDER BY br1.SubscriberID";
 
-	        try (ResultSet rs = ps.executeQuery()) {
-	            while (rs.next()) {
-	                // Check if the book was returned late or on time
-	                String lateStatus = rs.getString("additionalInfo");
 
-	                // Add the information to the list, including the late status
-	                FullBorrowRep.add(String.format(
-	                        "Subscriber ID: %s , Book Name: %s , Borrow Date: %s , Return Date: %s , Deadline: %s , Status: %s",
-	                        rs.getString("SubscriberID"), rs.getString("BookName"), rs.getString("BorrowDate"),
-	                        rs.getString("ReturnDate"), rs.getString("Deadline"), lateStatus));
-	            }
-	        }
-	    }
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, selectedDate);
 
-	    // Query for Borrowed but Not Returned Books, ordered by BorrowDate
-	    String query2 = "SELECT br1.SubscriberID, br1.BookName, MIN(br1.ActionDate) AS BorrowDate, br1.deadline "
-	            + "FROM activityhistory br1 LEFT JOIN activityhistory br2 "
-	            + "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName "
-	            + "AND br2.ActionType = 'Return' " + "WHERE br1.ActionType = 'Borrow' AND br2.ActionType IS NULL "
-	            + "AND DATE_FORMAT(br1.ActionDate, '%Y-%m') = ? "
-	            + "GROUP BY br1.SubscriberID, br1.BookName, br1.deadline "
-	            + "ORDER BY BorrowDate"; // Sort by BorrowDate (earliest first)
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    FullBorrowRep.add(String.format(
+                        "Subscriber ID: %s , Book Name: %s , Borrow Date: %s , Return Date: %s , Deadline: %s , Status: %s",
+                        rs.getString("SubscriberID"), 
+                        rs.getString("BookName"), 
+                        rs.getString("BorrowDate"), 
+                        rs.getString("ReturnDate"), 
+                        rs.getString("Deadline"), 
+                        rs.getString("Status")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("Error fetching borrow report", e);
+        }
 
-	    try (PreparedStatement ps = conn.prepareStatement(query2)) {
-	        // Set the SelectedMonth parameter for the query
-	        ps.setString(1, SelectedYear + "-" + SelectedMonth);
+        return FullBorrowRep;
+    }
 
-	        try (ResultSet rs = ps.executeQuery()) {
-	            while (rs.next()) {
-	                FullBorrowRep.add(String.format(
-	                        "Subscriber ID: %s , Book Name: %s , Borrow Date: %s , Return Date: __-__-____ __ , Deadline: %s , Status: Not returned yet",
-	                        rs.getString("SubscriberID"), rs.getString("BookName"), rs.getString("BorrowDate"),
-	                        rs.getString("deadline")));
-	            }
-	        }
-	    }
-
-	    return FullBorrowRep;
-	}
 
 
 	public ArrayList<String> BringStatusRepInfo(String selectedMonth, String selectedYear) throws SQLException {
@@ -1228,4 +1219,24 @@ public class mysqlConnection {
 			
 		}
 	}
+
+	public int getNewSubscriberCount(String selectedMonth, String selectedYear) throws SQLException {
+	    String query = "SELECT COUNT(*) AS total_new_subscribers " +
+	                   "FROM subscriber " +
+	                   "WHERE DATE_FORMAT(join_date, '%Y-%m') = ?";
+
+	    String selectedDate = selectedYear + "-" + selectedMonth;
+	    int count = 0;
+
+	    try (PreparedStatement ps = conn.prepareStatement(query)) {
+	        ps.setString(1, selectedDate);
+	        try (ResultSet rs = ps.executeQuery()) {
+	            if (rs.next()) {
+	                count = rs.getInt("total_new_subscribers");
+	            }
+	        }
+	    }
+	    return count;
+	}
+
 }

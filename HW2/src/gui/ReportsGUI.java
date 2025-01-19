@@ -8,21 +8,36 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
+import javafx.scene.text.Font;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class ReportsGUI {
 
     @FXML
+    private VBox statusReportContainer;
+    @FXML
+    private PieChart statusChart;
+    @FXML
+    private Text activeText, frozenText, totalText;
+    @FXML
     private RadioButton borrowRep = null;
     @FXML
     private RadioButton statusRep = null;
     @FXML
-    private ComboBox<String> months = null;  // Specify type String for ComboBox
+    private ComboBox<String> months = null;
+    @FXML
+    private ComboBox<String> years = null;
     @FXML
     private TextArea Displayarea = null;
     @FXML
@@ -31,174 +46,87 @@ public class ReportsGUI {
     private Button ExitBtt = null;
     @FXML
     private Button ReturnBtn = null;
-    
     @FXML
-    private ComboBox<String> years = null;  // Specify type String for ComboBox
+    private Pane mainPane;  // Pane to hold graphical elements
 
-    // This method will be called when the FXML file is loaded
     public void initialize() {
-        // List of months to populate in the ComboBox
         String[] monthsArray = {
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
         };
-        
-        String[] yearsArray = {
-        	    "2020", "2021", "2022", "2023", "2024", "2025"
-        	    
-        	};
 
-        
-        // Add the months to the ComboBox
+        String[] yearsArray = {
+            "2020", "2021", "2022", "2023", "2024", "2025"
+        };
+
         months.getItems().addAll(monthsArray);
         years.getItems().addAll(yearsArray);
-        
-        Displayarea.setStyle("-fx-font-family: 'Courier New'; -fx-font-size: 12;");
+
     }
-    
+
     public void ViewBttClick(ActionEvent event) {
-    	Alert alert = new Alert(Alert.AlertType.WARNING);
-        // Get the selected month and year from the ComboBox
+        Alert alert = new Alert(Alert.AlertType.WARNING);
         String selectedMonth = getMonthNumber(months.getValue());
         String selectedYear = years.getValue();
-        
-        if(selectedMonth == null|| selectedYear == null) {
-        	alert.setTitle("Not selected month or year");
+
+        if (selectedMonth == null || selectedYear == null) {
+            alert.setTitle("Selection Error");
             alert.setContentText("You must select a month and a year!");
-            alert.showAndWait();
-        	return;
-        }
-        
-        if (borrowRep.isSelected()) {
-            // Request a borrow report from server
-            ClientGUIConnectionController.chat.reports_accept("create borrow report", selectedMonth, selectedYear );
-
-            // Build a string to display all borrow report entries
-            StringBuilder reportBuilder = new StringBuilder();
-
-            if (ChatClient.FullBorrowRep == null || ChatClient.FullBorrowRep.isEmpty()) {
-            	alert.setTitle("Information");
-                alert.setContentText("No information to display.");
-                alert.showAndWait();
-            } else {
-                // Add a title for the report
-                reportBuilder.append("### Borrow Report for ")
-                             .append(selectedMonth).append("/").append(selectedYear)
-                             .append(" ###\n\n");
-
-                // Create headers with matching spacing
-                // Adjust widths so that data columns line up
-                reportBuilder.append(
-                    String.format("%-15s %-35s %-15s %-15s %-15s %-10s\n",
-                                  "Subscriber ID", "Book Name", "Borrow Date", 
-                                  "Return Date", "Deadline", "Status"));
-                // Create a separator line matching the total width above
-                reportBuilder.append("-".repeat(115)).append("\n");
-
-                // Format each row with aligned columns
-                // Assuming data in ChatClient.FullBorrowRep is in the same order: 
-                // subscriberId, bookName, borrowDate, returnDate, deadline, status
-                for (int i = 1; i < ChatClient.FullBorrowRep.size(); i++) {
-                    String[] parts = ChatClient.FullBorrowRep.get(i).split(" , ");
-                    String subId      = parts[0].substring(parts[0].indexOf(":") + 2);
-                    String bookName   = parts[1].substring(parts[1].indexOf(":") + 2);
-                    String borrowDate = parts[2].substring(parts[2].indexOf(":") + 2);
-                    String returnDate = parts[3].substring(parts[3].indexOf(":") + 2);
-                    String deadline   = parts[4].substring(parts[4].indexOf(":") + 2);
-                    String status     = parts[5].substring(parts[5].indexOf(":") + 2);
-
-                    reportBuilder.append(
-                        String.format("%-15s %-35s %-15s %-15s %-15s %-10s\n",
-                                      subId, bookName, borrowDate, 
-                                      returnDate, deadline, status)
-                    );
-                }
-
-                // Display the formatted report in the text area
-                Displayarea.setText(reportBuilder.toString());
-            }
-        }
-        else if (statusRep.isSelected()) {
-            ClientGUIConnectionController.chat.reports_accept("create status report", selectedMonth, selectedYear);
-
-            // Build a single string to display all status report entries
-            StringBuilder reportBuilder = new StringBuilder();
-            if (ChatClient.FullStatusRep == null || ChatClient.FullStatusRep.isEmpty()) {
-            	alert.setTitle("Information");
-                alert.setContentText("No information to display.");
-                alert.showAndWait();
-                return;
-            } else {
-                // Create headers with proper spacing
-                reportBuilder.append(String.format("%-25s %-15s %-15s\n", "Subscriber Name", "ID", "Status"));
-                reportBuilder.append("-".repeat(55) + "\n"); // Separator line after headers
-
-                int activeCount = 0;
-                int frozenCount = 0;
-
-                // Count active and frozen subscribers
-                for (int i = 1; i < ChatClient.FullStatusRep.size(); i++) {  // Note change to i < FullStatusRep.size()
-                    // Parse the entry string to extract the subscriber's name, ID, and status
-                    String[] parts = ChatClient.FullStatusRep.get(i).split(" , ");
-                    String name = parts[0].substring(parts[0].indexOf(":") + 2).trim();  // Trim to avoid leading/trailing spaces
-                    String id = parts[1].substring(parts[1].indexOf(":") + 2).trim();
-                    String status = parts[2].substring(parts[2].indexOf(":") + 2).trim();
-
-                    // Count active and frozen subscribers
-                    if (status.equalsIgnoreCase("Active")) {
-                        activeCount++;
-                    } else if (status.equalsIgnoreCase("Frozen")) {
-                        frozenCount++;
-                    }
-
-                    // Append the formatted row to the report with padding to ensure columns remain aligned
-                    reportBuilder.append(String.format("%-25s %-15s %-15s\n", name, id, status));
-                }
-
-                // Calculate percentages
-                int totalSubscribers = activeCount + frozenCount;
-                double activePercentage = totalSubscribers > 0 ? (double) activeCount / totalSubscribers * 100 : 0;
-                double frozenPercentage = totalSubscribers > 0 ? (double) frozenCount / totalSubscribers * 100 : 0;
-                
-                StringBuilder temp = new StringBuilder();
-                temp.append("### Status Report for " + selectedMonth + "/" + selectedYear + " ###\n\n");
-                temp.append("Summary:\n");
-                temp.append(String.format("Active Subscribers: %d (%.2f%%)\n", activeCount, activePercentage));
-                temp.append(String.format("Frozen Subscribers: %d (%.2f%%)\n", frozenCount, frozenPercentage));
-                temp.append(String.format("Total Subscribers: %d\n\n\n", totalSubscribers));
-
-
-                // Add the summary at the beginning
-                reportBuilder.insert(0, temp.toString());
-
-                // Display the formatted report in the text area
-                Displayarea.setText(reportBuilder.toString());
-            }
-        }
-        else {
-        	alert.setTitle("Information");
-            alert.setContentText("You must select a report type!");
             alert.showAndWait();
             return;
         }
 
+        try {
+            Stage stage = new Stage();
 
+            if (borrowRep.isSelected()) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/BorrowReportView.fxml"));
+                Parent root = loader.load();
+                BorrowReportViewController controller = loader.getController();
+                controller.loadBorrowReport(selectedMonth, selectedYear);
 
+                stage.setTitle("Borrow Report");
+                stage.setScene(new Scene(root));
+                stage.show();
+
+            } else if (statusRep.isSelected()) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/StatusReportView.fxml"));
+                Parent root = loader.load();
+                StatusReportViewController controller = loader.getController();
+                controller.loadStatusReport(selectedMonth, selectedYear);
+
+                stage.setTitle("Status Report");
+                stage.setScene(new Scene(root));
+                stage.show();
+            }
+            else {
+            	 alert.setTitle("Selection Error");
+                 alert.setContentText("You must select a report type!");
+                 alert.showAndWait();
+                 return;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            alert.setTitle("Error");
+            alert.setContentText("Failed to load report window.");
+            alert.showAndWait();
+        }
     }
+
+
+
+
     public void getExitBtn(ActionEvent event) throws IOException {
-		System.exit(0);
-	}
-    
+        System.exit(0);
+    }
 
     public void BorrowTimeRepClick(ActionEvent event) {
-    	statusRep.setSelected(false);
-    	
+        statusRep.setSelected(false);
     }
-    
+
     public void SubStatusRepClick(ActionEvent event) {
-    	borrowRep.setSelected(false);
-    	
-    	
+        borrowRep.setSelected(false);
     }
 
     public void start(Stage primaryStage) throws Exception {
@@ -209,48 +137,36 @@ public class ReportsGUI {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-    
-    
+
     public String getMonthNumber(String monthName) {
         String[] monthsArray = {
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
         };
 
-        // Loop through the array to find the index of the month
         for (int i = 0; i < monthsArray.length; i++) {
             if (monthsArray[i].equalsIgnoreCase(monthName)) {
-                // Format the month number with leading zero if necessary
-                return String.format("%02d", i + 1);  // Adds leading zero if the month number is single digit
+                return String.format("%02d", i + 1);
             }
         }
-
-        return null;  
+        return null;
     }
-    
+
     public void ReturnButton(ActionEvent event) throws IOException {
-        // Get the current stage from the event source
+        // Get the current stage
         Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
 
-        // Load the FXML file for the new page
+        // Load the new FXML file only once
         Parent root = FXMLLoader.load(getClass().getResource("/gui/LibrarianGUIHomePageController.fxml"));
-
-        // Create a new scene and apply the stylesheet
         Scene scene = new Scene(root);
+
+        // Apply stylesheet
         scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 
-        // Create a new stage for the new page
-        Stage newStage = new Stage();
-        newStage.setTitle("Librarian Watch and Update GUI");
-        newStage.setScene(scene);
-
-        // Hide the current stage
-        currentStage.hide();
-
-        // Show the new stage
-        newStage.show();
+        // Set the scene on the current stage and show it
+        currentStage.setTitle("Librarian Home Page");
+        currentStage.setScene(scene);
+        currentStage.show();
     }
-
-
 
 }
