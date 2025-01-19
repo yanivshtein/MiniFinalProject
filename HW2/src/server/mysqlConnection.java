@@ -42,6 +42,9 @@ public class mysqlConnection {
 
 		try {
 
+
+
+
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "yaniv1234");
 
 
@@ -276,7 +279,7 @@ public class mysqlConnection {
 	}
 
 	public String canExtend(int id, String bookName) {
-		String query = "SELECT deadline FROM activityhistory WHERE SubscriberID = ? AND BookName = ? AND ActionType = 'Borrow';";
+		String query = "SELECT deadline FROM activityhistory WHERE SubscriberID = ? AND BookName = ? AND ActionType = 'Borrow' AND hasReturned = 0;";
 		try {
 			PreparedStatement stmt = conn.prepareStatement(query);
 			stmt.setInt(1, id);
