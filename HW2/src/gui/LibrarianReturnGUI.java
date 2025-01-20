@@ -31,8 +31,11 @@ import javafx.util.Duration;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 
+/**
+ * Controller for the Librarian Return GUI.
+ * Manages book return processes, including validation and updates.
+ */
 public class LibrarianReturnGUI {
-
 	
 	@FXML
 	private TextField subscriberId=null;
@@ -82,9 +85,11 @@ public class LibrarianReturnGUI {
 	
 	private ArrayList<String> borrowersBorrowHistory;
 	
-	public void sendButton(ActionEvent event) {		// method that sends information to the controller to return the book to the library
-		
-		 
+	/**
+     * Sends the book return information to the controller.
+     * Validates the process before sending.
+     */
+	public void sendButton(ActionEvent event) {		// method that sends information to the controller to return the book to the library				 
 		if (!isChecked) {
 	        alertMessege.setContentText("You must check if the borrow exists before returning the book.");
 	        alertMessege.setAlertType(AlertType.ERROR);
@@ -115,8 +120,7 @@ public class LibrarianReturnGUI {
 
 			return;
 		}
-		
-		
+				
 		BookName = ChatClient.bookName;
 		System.out.println("book name is: "+BookName);
 		// get current time in a format of yyyy-MM-dd
@@ -130,36 +134,23 @@ public class LibrarianReturnGUI {
 		System.out.println("formatted and replace local date is:"+currentDate);
 		System.out.println("formatted and replace deadline is:"+deadlineString);
 		
-		try {
-			
-			long daysLate = currentDate.toEpochDay()- deadlineDate.toEpochDay();
-		
-		
-		if (daysLate<=0) {
-			
-			ClientGUIConnectionController.chat.returnBook_accept("INSERT", BorrowerId, BookName,false,false,difference);
-			
-			
+		try {			
+			long daysLate = currentDate.toEpochDay()- deadlineDate.toEpochDay();				
+		if (daysLate<=0) {			
+			ClientGUIConnectionController.chat.returnBook_accept("INSERT", BorrowerId, BookName,false,false,difference);						
 		}
-		else if(daysLate<7) {
-			
-			ClientGUIConnectionController.chat.returnBook_accept("INSERT", BorrowerId, BookName,true,false,difference);
-
-			
+		else if(daysLate<7) {			
+			ClientGUIConnectionController.chat.returnBook_accept("INSERT", BorrowerId, BookName,true,false,difference);			
 		}
 		else if(daysLate>=7) {
-			ClientGUIConnectionController.chat.returnBook_accept("INSERT", BorrowerId, BookName,true,true,difference);
-
-			
+			ClientGUIConnectionController.chat.returnBook_accept("INSERT", BorrowerId, BookName,true,true,difference);			
 		}
 		if (ChatClient.bool==false) {
 			alertMessege.setContentText("Error need to check if exist borrow first");	
 		 	alertMessege.setAlertType(AlertType.ERROR);
 		 	alertMessege.show();
-			return;
-			
-		}
-		
+			return;			
+		}		
 		if(ChatClient.isFrozen) {	
 			showLabelTextForDuration(sendMsg, "Return operation successfully finished!", 3000); // Show text for 3 seconds
 			alertMessege.setContentText("The subscriber’s status card has been frozen");	
@@ -181,6 +172,12 @@ public class LibrarianReturnGUI {
 		//checkButton.setDisable(true);
 	}
 	
+	/**
+	 * This method displays a given text on a label for a specified duration, after which the label text is cleared.
+	 * @param label The Label control where the text will be displayed.
+	 * @param text The text to display on the label.
+	 * @param durationInMillis The duration for which the text should be displayed, in milliseconds.
+	 */
 	public void showLabelTextForDuration(Label label, String text , int durationInMillis) {
 		
 		label.setText(text);
@@ -189,9 +186,11 @@ public class LibrarianReturnGUI {
 		timeline.setCycleCount(1);
 		timeline.play();
 	}
-	public void checkBttn(ActionEvent event) {		// method that get information from the data the controller to return the book to the library
-		
-		
+	
+	/**
+     * Validates if a borrow record exists in the database.
+     */
+	public void checkBttn(ActionEvent event) {		// method that get information from the data the controller to return the book to the library			
 		String actionDate = null;
 		String Deadline = null;
 		String BorrowerId;
@@ -244,7 +243,12 @@ public class LibrarianReturnGUI {
 		deadline.setText(Deadline);
 	}
 	
-	
+	/**
+	 * This method handles the action of returning to the librarian's home page.
+	 * @param event The ActionEvent triggered by the button click.
+
+	 * @throws IOException If an I/O error occurs during the loading of the FXML or CSS files.
+	 */
 	public void retButton(ActionEvent event) throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
@@ -259,6 +263,9 @@ public class LibrarianReturnGUI {
         primaryStage.show();
 	}
 	
+	/**
+     * Displays a subscriber's borrowing history.
+     */
 	public void viewBorrowersHistoryButton(ActionEvent event) {
 		StringBuilder history = new StringBuilder();
 		
@@ -289,14 +296,9 @@ public class LibrarianReturnGUI {
 		        alertMessege.setAlertType(AlertType.ERROR);
 		        alertMessege.show(); // Show the error alert
 		        return; // Stop further execution
-		}
-		
-		
-		ClientGUIConnectionController.chat.accept("watch borrow history", getSubscribersId.getText(), "", "");
-	
-		
-		borrowersBorrowHistory = ChatClient.borrowHistory;
-		
+		}				
+		ClientGUIConnectionController.chat.accept("watch borrow history", getSubscribersId.getText(), "", "");			
+		borrowersBorrowHistory = ChatClient.borrowHistory;		
 		if(borrowersBorrowHistory.isEmpty()) {	
 			alertMessege.setContentText("There is no borrow history.");	
 		 	alertMessege.setAlertType(AlertType.INFORMATION);
@@ -321,6 +323,9 @@ public class LibrarianReturnGUI {
 	
 	//when in the barcode the book was scanned we enable the button
 	
+	/**
+     * Updates the book name field based on the barcode scan.
+     */
 	public void barcodeButton (ActionEvent event) {
 		int bookId = Integer.parseInt(bookID.getText());
 		ClientGUIConnectionController.chat.acceptBarCode(bookId);

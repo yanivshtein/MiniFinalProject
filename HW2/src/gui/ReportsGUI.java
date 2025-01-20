@@ -22,6 +22,10 @@ import javafx.scene.text.Font;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+/**
+ * Controller class for the Reports GUI.
+ * Allows librarians to generate and view various reports, including borrow reports and status reports.
+ */
 public class ReportsGUI {
 
     @FXML
@@ -49,6 +53,9 @@ public class ReportsGUI {
     @FXML
     private Pane mainPane;  // Pane to hold graphical elements
 
+    /**
+     * Initializes the controller by populating the month and year selection boxes.
+     */
     public void initialize() {
         String[] monthsArray = {
             "January", "February", "March", "April", "May", "June",
@@ -64,6 +71,12 @@ public class ReportsGUI {
 
     }
 
+    /**
+     * Handles the action for the "View Report" button.
+     * Generates the selected report based on the user's choices.
+     *
+     * @param event the action event triggered by clicking the "View Report" button.
+     */
     public void ViewBttClick(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         String selectedMonth = getMonthNumber(months.getValue());
@@ -114,21 +127,41 @@ public class ReportsGUI {
         }
     }
 
-
-
-
+    /**
+     * Exits the application when the "Exit" button is clicked.
+     *
+     * @param event the action event triggered by clicking the "Exit" button.
+     */
     public void getExitBtn(ActionEvent event) throws IOException {
         System.exit(0);
     }
 
+    /**
+     * Handles the action when the "Borrow Report" radio button is selected.
+     * Ensures that the "Status Report" radio button is deselected.
+     *
+     * @param event the action event triggered by selecting the "Borrow Report" radio button.
+     */
     public void BorrowTimeRepClick(ActionEvent event) {
         statusRep.setSelected(false);
     }
 
+    /**
+     * Handles the action when the "Status Report" radio button is selected.
+     * Ensures that the "Borrow Report" radio button is deselected.
+     *
+     * @param event the action event triggered by selecting the "Status Report" radio button.
+     */
     public void SubStatusRepClick(ActionEvent event) {
         borrowRep.setSelected(false);
     }
 
+    /**
+     * Starts the Reports GUI by loading the FXML layout and displaying it in a new window.
+     *
+     * @param primaryStage the primary stage for this application.
+     * @throws Exception if an error occurs while loading the FXML file or initializing the scene.
+     */
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/gui/ReportsGUI.fxml"));
         Scene scene = new Scene(root);
@@ -138,6 +171,12 @@ public class ReportsGUI {
         primaryStage.show();
     }
 
+    /**
+     * Converts a month name to its corresponding number (e.g., "January" -> "01").
+     *
+     * @param monthName the name of the month.
+     * @return the month number as a string, or null if the month name is invalid.
+     */
     public String getMonthNumber(String monthName) {
         String[] monthsArray = {
             "January", "February", "March", "April", "May", "June",
@@ -152,6 +191,13 @@ public class ReportsGUI {
         return null;
     }
 
+    /**
+     * Handles the action for the "Return" button.
+     * Navigates back to the Librarian Home Page.
+     *
+     * @param event the action event triggered by clicking the "Return" button.
+     * @throws IOException if an error occurs while loading the FXML file.
+     */
     public void ReturnButton(ActionEvent event) throws IOException {
         // Get the current stage
         Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();

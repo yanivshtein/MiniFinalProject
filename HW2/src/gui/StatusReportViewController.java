@@ -6,6 +6,11 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/**
+ * Controller class for the Status Report View.
+ * Handles the logic for displaying subscriber status reports in a pie chart format,
+ * along with statistical details.
+ */
 public class StatusReportViewController {
 
     @FXML
@@ -17,20 +22,23 @@ public class StatusReportViewController {
     @FXML
     private PieChart statusReportChart;
 
-    public void loadStatusReport(String month, String year) {
-    	
+    /**
+     * Loads the status report for a given month and year.
+     * Fetches the data from the server, processes it, and updates the UI components.
+     *
+     * @param month the month for which the report is generated.
+     * @param year  the year for which the report is generated.
+     */
+    public void loadStatusReport(String month, String year) {    	
         ClientGUIConnectionController.chat.reports_accept("create status report", month, year);
         ClientGUIConnectionController.chat.reports_accept("how many joined", month, year);
-
         if (ChatClient.FullStatusRep == null || ChatClient.FullStatusRep.isEmpty()) {
             showAlert("No information to display.");
             closeWindow();
             return;
         }
-
         int activeCount = 0;
         int frozenCount = 0;
-
         for (String record : ChatClient.FullStatusRep) {
             String[] parts = record.split(" , ");
             if (parts.length >= 3) {
@@ -71,7 +79,11 @@ public class StatusReportViewController {
         chartOverlayText.setStyle("-fx-font-size: 14px; -fx-fill: black;");
     }
 
-
+    /**
+     * Displays an alert dialog with the given message.
+     *
+     * @param message the message to be displayed in the alert dialog.
+     */
     private void showAlert(String message) {
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
         alert.setTitle("Information");
@@ -79,6 +91,9 @@ public class StatusReportViewController {
         alert.showAndWait();
     }
 
+    /**
+     * Closes the current window.
+     */
     @FXML
     private void closeWindow() {
         Stage stage = (Stage) statusReportTitle.getScene().getWindow();

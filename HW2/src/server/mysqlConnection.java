@@ -321,10 +321,11 @@ public class mysqlConnection {
     public void addOrder(String bookName, int id) {
         String addQuery = "INSERT INTO orders (time, bookName, subID) VALUES (?, ?, ?);";
         LocalDateTime now = LocalDateTime.now();
-        Timestamp timestamp = Timestamp.valueOf(now);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDateTime = now.format(formatter);
         try {
             PreparedStatement stmt = conn.prepareStatement(addQuery);
-            stmt.setTimestamp(1, timestamp);
+            stmt.setString(1, formattedDateTime);
             stmt.setString(2, bookName);
             stmt.setInt(3, id);
             stmt.executeUpdate();
@@ -1146,9 +1147,9 @@ public class mysqlConnection {
 	 * @return {@code true} if the arrival time was successfully updated, {@code false} otherwise.
 	 */
 	public boolean addArrivalTimeToOrders(String bookName) {
-		int subID = 0;
+		int subID = 0; 
 		String query = "SELECT subID FROM orders WHERE bookName = ? AND time = "
-				+ "(SELECT MIN(time) FROM orders WHERE bookName = ?);";
+				+ "(SELECT MIN(time) FROM orders WHERE bookName = ?);"; //MIN(TIME) -> First come First Served
 		String updateQuery = "UPDATE orders SET arrivalTime = CURDATE() WHERE subID = ?;";
 		try {
 			PreparedStatement stmt = conn.prepareStatement(query);

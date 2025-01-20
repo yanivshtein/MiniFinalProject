@@ -18,6 +18,10 @@ import logic.ClientInfo;
 import server.EchoServer;
 import server.ServerUI;
 
+/**
+ * Controller class for the Server GUI.
+ * Provides functionality to run the server, display connection information, and handle server-related actions.
+ */
 public class ServerGUI {
 
     @FXML
@@ -38,7 +42,12 @@ public class ServerGUI {
     @FXML
     private Label serverRun = null;
 
-
+    /**
+     * Starts the Server GUI by loading the FXML layout and displaying it in a new window.
+     *
+     * @param primaryStage the primary stage for this application.
+     * @throws Exception if an error occurs while loading the FXML file or initializing the scene.
+     */
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/gui/ServerGUI.fxml"));
         Scene scene = new Scene(root);
@@ -48,7 +57,12 @@ public class ServerGUI {
         primaryStage.show();
     }
 
- // This method is called on button click (Run Server)
+    /**
+     * Runs the server on the default port (5555) and updates the GUI to display server status.
+     * Adds listeners to monitor client connection and disconnection events.
+     * 
+     * @param event the action event triggered by clicking the "Run Server" button.
+     */
     public void runServer(ActionEvent event) {
         String port = "5555"; // Default port
         serverRun.setText("Server is listening...");
@@ -76,6 +90,12 @@ public class ServerGUI {
         
     }
     
+    /**
+     * Handles the action for the "Exit" button.
+     * Terminates the application.
+     *
+     * @param event the action event triggered by clicking the "Exit" button.
+     */
     public void getCloseBtn(ActionEvent event) {
     	System.out.println("Exit");	
 		System.exit(0);
