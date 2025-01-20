@@ -90,11 +90,12 @@ public class AddSubscriberGUIController {
                 alert.showAndWait();  
                 return;
         	}
-        	if(phoneNumber.getText().length()!=10) {
-                alert.setTitle("Error");
-                alert.setContentText("Please enter a valid phone number");
-                alert.showAndWait();
-                return;
+        	String cleanedText = phoneNumber.getText().replaceAll("[^\\d]", ""); 
+        	if (cleanedText.length() != 10 || !cleanedText.matches("\\d+")) {
+        	    alert.setTitle("Error");
+        	    alert.setContentText("Please enter a valid phone number");
+        	    alert.showAndWait();
+        	    return;
         	}
             // If all fields are filled, proceed with the action
             String status = "active";

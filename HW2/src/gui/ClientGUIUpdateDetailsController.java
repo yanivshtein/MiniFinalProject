@@ -85,6 +85,19 @@ public class ClientGUIUpdateDetailsController {
             alert.showAndWait();
             return;	
 		}
+    	if(email.indexOf("@") == -1) {
+            alert.setTitle("Error");
+            alert.setContentText("Please enter a valid email");
+            alert.showAndWait();  
+            return;
+    	}
+    	String cleanedText = phone.replaceAll("[^\\d]", ""); 
+    	if (cleanedText.length() != 10 || !cleanedText.matches("\\d+")) {
+    	    alert.setTitle("Error");
+    	    alert.setContentText("Please enter a valid phone number");
+    	    alert.showAndWait();
+    	    return;
+    	}
 		ClientGUIConnectionController.chat.accept("update",subId, Phone.getText(), Email.getText());
 		afterUpdate.setText("Updated");
 	}
