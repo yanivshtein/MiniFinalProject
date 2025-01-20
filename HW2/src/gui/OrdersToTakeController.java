@@ -17,6 +17,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+/**
+ * Controller class for handling subscriber orders to be taken.
+ * Allows librarians to view and manage book orders for specific subscribers.
+ */
 public class OrdersToTakeController {
 
 	private int ID;
@@ -33,6 +37,12 @@ public class OrdersToTakeController {
 
 	Alert alert = new Alert(Alert.AlertType.WARNING);
 	
+	/**
+     * Fetches and displays the list of orders for the specified subscriber ID.
+     *
+     * @param event Action event triggered by clicking the "Show Orders" button.
+     * @throws IOException if an error occurs during the process.
+     */
 	public void getShowOrders(ActionEvent event) throws IOException {		
 		if(subID.getText().isEmpty()) {
             alert.setTitle("Missing Field");
@@ -71,6 +81,11 @@ public class OrdersToTakeController {
 		ordersListView.setOnMouseClicked(this::handleDoubleClick); // call handleDoubleClick method
 	}
 
+	/**
+     * Handles the double-click event on a book in the list view.
+     *
+     * @param event Mouse event triggered by double-clicking a book in the list.
+     */
 	private void handleDoubleClick(MouseEvent event) {
 		if (event.getClickCount() == 2) {
 			selectedBook = ordersListView.getSelectionModel().getSelectedItem();
@@ -80,6 +95,12 @@ public class OrdersToTakeController {
 		}
 	}
 
+	/**
+     * Borrows the selected book for the subscriber and updates the system.
+     *
+     * @param event Action event triggered by clicking the "Borrow" button.
+     * @throws IOException if an error occurs during the process.
+     */
 	public void getBorrowBtn(ActionEvent event) throws IOException {
 		if (selectedBook==null) {
 			alert.setTitle("Not selected");
@@ -92,6 +113,12 @@ public class OrdersToTakeController {
 		ClientGUIConnectionController.chat.acceptFromController(28, ID, selectedBook);
 	}
 	
+	 /**
+     * Returns to the librarian home page.
+     *
+     * @param event Action event triggered by clicking the "Return" button.
+     * @throws IOException if an error occurs while loading the home page.
+     */
 	 public void getReturnBtn(ActionEvent event) throws IOException {
 		    // Close the current window
 		    ((Node) event.getSource()).getScene().getWindow().hide();
@@ -109,6 +136,12 @@ public class OrdersToTakeController {
 		    primaryStage.show();
 		}
 	 
+	 /**
+     * Exits the application.
+     *
+     * @param event Action event triggered by clicking the "Exit" button.
+     * @throws IOException if an error occurs during the process.
+     */
 	 public void getExitBtn(ActionEvent event) throws IOException {
 	        System.exit(0);
 	    }

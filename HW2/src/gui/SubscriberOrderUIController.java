@@ -21,6 +21,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+/**
+ * Controller class for the Subscriber Order UI.
+ * This class handles book orders, book selection, and interactions with the server for the subscriber.
+ */
 public class SubscriberOrderUIController {
 
     @FXML
@@ -49,12 +53,21 @@ public class SubscriberOrderUIController {
     int subID = ChatClient.sub1.getSubscriber_id();
     private ObservableList<String> booksData;
 
+    /**
+     * Initializes the UI by loading the list of books and setting up autocomplete functionality.
+     */
     public void initialize() {
         loadBooks();
         setupAutoComplete();
         booksListView.setOnMouseClicked(event -> handleDoubleClick(event));
     }
     
+    /**
+     * Handles double-click events on the list of books.
+     * Sets the selected book and updates the error message dialog.
+     *
+     * @param event the mouse event triggered by clicking on the list view.
+     */
     private void handleDoubleClick(MouseEvent event) {
         if (event.getClickCount() == 2) {
             selectedBook = booksListView.getSelectionModel().getSelectedItem();
@@ -64,6 +77,10 @@ public class SubscriberOrderUIController {
         }
   }
     
+    /**
+     * Loads the list of books from the server and populates the ListView.
+     * If no books are available, a placeholder message is displayed.
+     */
     private void loadBooks() {    	
         // Request the books from the server
     	ClientGUIConnectionController.chat.acceptAllTheBooks(18);
@@ -78,6 +95,10 @@ public class SubscriberOrderUIController {
         booksListView.setItems(booksData);
     }
 
+    /**
+     * Sets up autocomplete functionality for the book name text field.
+     * Filters the ListView based on the text entered by the user.
+     */
     private void setupAutoComplete() {
         bookName.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null || newValue.isEmpty()) {
@@ -95,6 +116,13 @@ public class SubscriberOrderUIController {
         });
     }
     
+    /**
+     * Handles the action for placing a book order.
+     * Validates the selected book, checks the subscriber's status, and sends the order request to the server.
+     *
+     * @param event the action event triggered by clicking the "Place Order" button.
+     * @throws IOException if an error occurs during communication with the server.
+     */
     public void getSendBtn(ActionEvent event) throws IOException {
     	Alert alert = new Alert(Alert.AlertType.WARNING);
     	if (selectedBook!=null) {
@@ -145,6 +173,13 @@ public class SubscriberOrderUIController {
         errorMsg.setContentText("Awesome! 🎉 You're all set! Your order has been successfully placed!");
     }
 
+    /**
+     * Handles the action for the "Return" button.
+     * Navigates back to the Client Home Page.
+     *
+     * @param event the action event triggered by clicking the "Return" button.
+     * @throws IOException if an error occurs while loading the home page FXML.
+     */
     public void getReturnBtn(ActionEvent event) throws IOException {
 	    // Close the current window
 	    ((Node) event.getSource()).getScene().getWindow().hide();
@@ -162,6 +197,13 @@ public class SubscriberOrderUIController {
 	    primaryStage.show();
 	}
     
+    /**
+     * Handles the action for the "Exit" button.
+     * Closes the application.
+     *
+     * @param event the action event triggered by clicking the "Exit" button.
+     * @throws IOException if an error occurs during the exit process.
+     */
     public void getExitBtn(ActionEvent event) throws IOException {
         System.exit(0);
     }
