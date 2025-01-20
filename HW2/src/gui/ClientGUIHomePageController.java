@@ -1,6 +1,7 @@
 package gui;
 
 import java.io.IOException;
+
 import java.time.LocalDateTime;
 
 import client.ChatClient;
@@ -17,6 +18,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+/**
+ * Controller class for the Client Home Page GUI.
+ * Handles user interactions such as navigating to different pages, updating the home page, and logging out.
+ */
 public class ClientGUIHomePageController {
 
 	
@@ -35,6 +40,10 @@ public class ClientGUIHomePageController {
 	@FXML
 	private ImageView picSunOrMoon = null;
 	
+    /**
+     * Initializes the home page by setting the title with the subscriber's name
+     * and choosing an image (sun or moon) based on the time of day.
+     */
 	@FXML
 	private void initialize() {
 		title.setText("Hello, " + ChatClient.sub1.getSubscriber_name());
@@ -55,7 +64,12 @@ public class ClientGUIHomePageController {
         }
 	}
 	
-	
+    /**
+     * Starts the Client Home Page GUI by loading the corresponding FXML file.
+     *
+     * @param primaryStage The primary stage for displaying the home page UI.
+     * @throws Exception If there is an error during the initialization.
+     */
 	public void start(Stage primaryStage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("/gui/ClientGUIHomePage.fxml"));
 		Scene scene = new Scene(root);
@@ -66,7 +80,12 @@ public class ClientGUIHomePageController {
 		primaryStage.show();
 	}
 	
-	
+    /**
+     * Navigates to the Update Details page when the "Update Details" button is clicked.
+     *
+     * @param event The ActionEvent triggered by the button click.
+     * @throws IOException If there is an error loading the next FXML file.
+     */
 	public void getUpdateDetails(ActionEvent event) throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
@@ -82,6 +101,12 @@ public class ClientGUIHomePageController {
 		
 	}
 	
+    /**
+     * Navigates to the View History page when the "View History" button is clicked.
+     *
+     * @param event The ActionEvent triggered by the button click.
+     * @throws IOException If there is an error loading the next FXML file.
+     */
 	public void getViewHistory(ActionEvent event) throws IOException {
 	    // Hiding primary window
 	    ((Node) event.getSource()).getScene().getWindow().hide();
@@ -99,6 +124,12 @@ public class ClientGUIHomePageController {
 	    primaryStage.show();
 	}
 	
+    /**
+     * Navigates to the Search Book page when the "Search Book" button is clicked.
+     *
+     * @param event The ActionEvent triggered by the button click.
+     * @throws IOException If there is an error loading the next FXML file.
+     */
 	public void getSearch (ActionEvent event) throws IOException {
 		// Hiding primary window
 	    ((Node) event.getSource()).getScene().getWindow().hide();
@@ -116,6 +147,12 @@ public class ClientGUIHomePageController {
 	    primaryStage.show();
 	}
 
+    /**
+     * Navigates to the Order page when the "Order" button is clicked.
+     *
+     * @param event The ActionEvent triggered by the button click.
+     * @throws IOException If there is an error loading the next FXML file.
+     */
 	public void getOrder (ActionEvent event) throws IOException {
 		// Hiding primary window
 	    ((Node) event.getSource()).getScene().getWindow().hide();
@@ -133,6 +170,12 @@ public class ClientGUIHomePageController {
 	    primaryStage.show();
 	}
 	
+    /**
+     * Navigates to the Extension page when the "Extension" button is clicked.
+     *
+     * @param event The ActionEvent triggered by the button click.
+     * @throws IOException If there is an error loading the next FXML file.
+     */
 	public void getExtension (ActionEvent event) throws IOException {
 		// Hiding primary window
 	    ((Node) event.getSource()).getScene().getWindow().hide();
@@ -150,6 +193,12 @@ public class ClientGUIHomePageController {
 	    primaryStage.show();
 	}
 	
+    /**
+     * Navigates to the Subscriber Messages page when the "My Messages" button is clicked.
+     *
+     * @param event The ActionEvent triggered by the button click.
+     * @throws IOException If there is an error loading the next FXML file.
+     */
 	public void getSubMessages (ActionEvent event) throws IOException {
 		// Hiding primary window
 	    ((Node) event.getSource()).getScene().getWindow().hide();
@@ -167,6 +216,13 @@ public class ClientGUIHomePageController {
 	    primaryStage.show();
 	}		
 
+
+    /**
+     * Logs the user out and navigates back to the login screen.
+     *
+     * @param event The ActionEvent triggered by the button click.
+     * @throws IOException If there is an error loading the next FXML file.
+     */
 	public void getLogOutBtn(ActionEvent event) throws IOException{
 		ChatClient.sub1 = null;
 		FXMLLoader loader = new FXMLLoader();
@@ -182,6 +238,11 @@ public class ClientGUIHomePageController {
         primaryStage.show();
 	}
 	
+    /**
+     * Exits the application when the "Exit" button is clicked.
+     *
+     * @param event The ActionEvent triggered by the button click.
+     */
 	public void getExitBtn(ActionEvent event) {
 		System.out.println("exit");
 		System.exit(0);

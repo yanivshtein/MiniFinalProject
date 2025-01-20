@@ -1,5 +1,6 @@
 package gui;
 import java.io.IOException;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -26,6 +27,11 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
 
+/**
+ * Controller class for the Librarian Home Page GUI.
+ * Handles the actions and navigation between different librarian functionalities
+ * such as borrowing a book, adding a subscriber, viewing reports, and logging out.
+ */
 public class LibrarianGUIHomePageController {
 	
 	public static String BringLibName;
@@ -62,6 +68,11 @@ public class LibrarianGUIHomePageController {
 	@FXML
 	private Button  messagesBtn = null;
 	
+    /**
+     * Initializes the librarian's home page with the librarian's name and
+     * sets the appropriate background image based on the current time of day.
+     */
+
 	@FXML
 	private void initialize() {
 	    // Set librarian name
@@ -88,12 +99,24 @@ public class LibrarianGUIHomePageController {
     }
 	
 
-		
+    /**
+     * Handles the action when the exit button is clicked. 
+     * Exits the client application.
+     * 
+     * @param event The ActionEvent triggered by the exit button.
+     * @throws IOException If there is an error during the shutdown.
+     */	
 	public void getExitBtn(ActionEvent event) throws IOException {
 		System.out.println("Exit client");
 		System.exit(0);
 	}
 	
+    /**
+     * Starts a new stage to display the Librarian Home Page GUI.
+     * 
+     * @param primaryStage The primary stage to display the GUI.
+     * @throws Exception If there is an error loading the FXML file.
+     */
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/gui/LibrarianGUIHomePageController.fxml"));
         Scene scene = new Scene(root);
@@ -102,6 +125,14 @@ public class LibrarianGUIHomePageController {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+    
+    /**
+     * Handles the action when the logout button is clicked. 
+     * Logs out the librarian and redirects to the login page.
+     * 
+     * @param event The ActionEvent triggered by the logout button.
+     * @throws IOException If there is an error during the logout process.
+     */
 	public void getLogOutBtn(ActionEvent event) throws IOException{
 		ChatClient.lib = null;
 		FXMLLoader loader = new FXMLLoader();
@@ -116,6 +147,13 @@ public class LibrarianGUIHomePageController {
         primaryStage.setScene(scene);
         primaryStage.show();
 	}
+	
+    /**
+     * Opens the borrowing book page when the borrow book button is clicked.
+     * 
+     * @param event The ActionEvent triggered by the borrow book button.
+     * @throws IOException If there is an error loading the borrowing book page.
+     */
 	public void BorrowingBookBtn(ActionEvent event) throws IOException{
 		FXMLLoader loader = new FXMLLoader();
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
@@ -129,6 +167,13 @@ public class LibrarianGUIHomePageController {
         primaryStage.setScene(scene);
         primaryStage.show();
 	}
+	
+    /**
+     * Opens the search book page when the search book button is clicked.
+     * 
+     * @param event The ActionEvent triggered by the search book button.
+     * @throws IOException If there is an error loading the search book page.
+     */
 	public void SearchBookBtn(ActionEvent event) throws IOException{
 		FXMLLoader loader = new FXMLLoader();
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
@@ -145,7 +190,12 @@ public class LibrarianGUIHomePageController {
 	
 	
 	
-	
+    /**
+     * Opens the librarian watch page when the watch button is clicked.
+     * 
+     * @param event The ActionEvent triggered by the watch button.
+     * @throws IOException If there is an error loading the librarian watch page.
+     */
 	public void getLibrarianWatch(ActionEvent event) throws IOException {
 		 try {
 		        ((Node) event.getSource()).getScene().getWindow().hide(); // Hide the current window
@@ -174,7 +224,12 @@ public class LibrarianGUIHomePageController {
 		    }
 	}
 	
-	
+    /**
+     * Opens the librarian update page when the update button is clicked.
+     * 
+     * @param event The ActionEvent triggered by the update button.
+     * @throws IOException If there is an error loading the librarian update page.
+     */
 	public void getLibrarianUpdate(ActionEvent event) throws IOException {
 		 try {
 		        ((Node) event.getSource()).getScene().getWindow().hide(); // Hide the current window
@@ -205,7 +260,12 @@ public class LibrarianGUIHomePageController {
 	
 	
 	
-	
+    /**
+     * Opens the reports page when the reports button is clicked.
+     * 
+     * @param event The ActionEvent triggered by the reports button.
+     * @throws IOException If there is an error loading the reports page.
+     */
 	
 	public void getReportsGUIBtn(ActionEvent event) throws IOException {
 	    try {
@@ -236,6 +296,12 @@ public class LibrarianGUIHomePageController {
 	    }
 	}
 
+    /**
+     * Opens the add subscriber page when the add subscriber button is clicked.
+     * 
+     * @param event The ActionEvent triggered by the add subscriber button.
+     * @throws IOException If there is an error loading the add subscriber page.
+     */
 
 	public void getAddSubBtn(ActionEvent event) throws IOException{
 		FXMLLoader loader = new FXMLLoader();
@@ -251,6 +317,12 @@ public class LibrarianGUIHomePageController {
         primaryStage.show();
 	}
 	
+    /**
+     * Opens the librarian return book page when the return book button is clicked.
+     * 
+     * @param event The ActionEvent triggered by the return book button.
+     * @throws IOException If there is an error loading the return book page.
+     */
 	public void returnBookbttn(ActionEvent event) throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
@@ -265,6 +337,12 @@ public class LibrarianGUIHomePageController {
         primaryStage.show();
 	}
 	
+    /**
+     * Opens the orders page when the orders button is clicked.
+     * 
+     * @param event The ActionEvent triggered by the orders button.
+     * @throws IOException If there is an error loading the orders page.
+     */
 	public void getOrders (ActionEvent event) throws IOException {
 		// Hiding primary window
 	    ((Node) event.getSource()).getScene().getWindow().hide();
@@ -282,7 +360,13 @@ public class LibrarianGUIHomePageController {
 	    primaryStage.show();
 	}
 	
-	
+
+    /**
+     * Opens the messages page when the messages button is clicked.
+     * 
+     * @param event The ActionEvent triggered by the messages button.
+     * @throws IOException If there is an error loading the messages page.
+     */
 	public void getMessages(ActionEvent event) throws IOException {
 		// Hiding primary window
 	    ((Node) event.getSource()).getScene().getWindow().hide();

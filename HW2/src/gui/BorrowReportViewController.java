@@ -7,6 +7,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/**
+ * Controller for the Borrow Report View.
+ * Displays a detailed borrowing report based on the month and year specified by the user.
+ */
 public class BorrowReportViewController {
 
     @FXML
@@ -14,7 +18,13 @@ public class BorrowReportViewController {
 
     @FXML
     private TextArea borrowReportContent;
-
+    
+    /**
+     * Loads and displays the borrow report for the specified month and year.
+     *
+     * @param month The month for which the report is generated.
+     * @param year  The year for which the report is generated.
+     */
     public void loadBorrowReport(String month, String year) {
         // Request report from the server
         ClientGUIConnectionController.chat.reports_accept("create borrow report", month, year);
@@ -55,13 +65,20 @@ public class BorrowReportViewController {
     }
 
 
+    /**
+     * Displays an information alert with the specified message.
+     *
+     * @param message The message to be displayed in the alert.
+     */
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Information");
         alert.setContentText(message);
         alert.showAndWait();
     }
-
+    /**
+     * Closes the current window.
+     */
     @FXML
     private void closeWindow() {
         Stage stage = (Stage) borrowReportTitle.getScene().getWindow();
