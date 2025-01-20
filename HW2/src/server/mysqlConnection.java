@@ -685,129 +685,55 @@ public class mysqlConnection {
 
 
 	public ArrayList<String> BringStatusRepInfo(String selectedMonth, String selectedYear) throws SQLException {
-		// Input validation
-		if (selectedMonth == null || selectedYear == null) {
-			throw new IllegalArgumentException("Selected month and year cannot be null.");
-		}
+	    if (selectedMonth == null || selectedYear == null) {
+	        throw new IllegalArgumentException("Selected month and year cannot be null.");
+	    }
 
-		// Initialize list to store subscribers who are late with submissions
-		ArrayList<Integer> LateSubs = new ArrayList<>();
+	    ArrayList<String> statusReport = new ArrayList<>();
 
-		// First query: Find subscribers who are more than 7 days late in the selected
-		// month
-		String query1 = "SELECT SubscriberID " + "FROM activityhistory " + "WHERE additionalInfo LIKE '% days late' "
-				+ "AND CAST(SUBSTRING_INDEX(additionalInfo, ' ', 1) AS UNSIGNED) > 7 "
-				+ "AND DATE_FORMAT(ActionDate, '%Y-%m') = ?";
-		try (PreparedStatement ps = conn.prepareStatement(query1)) {
-			String selectedDate = selectedYear + "-" + selectedMonth;
-			ps.setString(1, selectedDate);
+	    String selectedDate = selectedYear + "-" + selectedMonth;
 
-			// Execute query and collect late subscriber IDs
-			try (ResultSet rs = ps.executeQuery()) {
-				while (rs.next()) {
-					int subscriberID = rs.getInt("SubscriberID");
-					LateSubs.add(subscriberID);
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	    // Query to fetch join dates and freeze dates dynamically
+	    String query = "SELECT " +
+	                   "DATE_FORMAT(s.join_date, '%Y-%m-%d') AS join_date, " +
+	                   "COALESCE((SELECT DATE_FORMAT(a.ActionDate, '%Y-%m-%d') " +
+	                   "          FROM activityhistory a " +
+	                   "          WHERE a.SubscriberID = s.subscriber_id " +
+	                   "          AND a.additionalInfo LIKE '% days late' " +
+	                   "          AND CAST(SUBSTRING_INDEX(a.additionalInfo, ' ', 1) AS UNSIGNED) > 7 " +
+	                   "          AND DATE_FORMAT(a.ActionDate, '%Y-%m') = ? " +
+	                   "          ORDER BY a.ActionDate ASC LIMIT 1), 'None') AS freeze_date " +
+	                   "FROM subscriber s " +
+	                   "WHERE DATE_FORMAT(s.join_date, '%Y-%m') <= ? " +
+	                   "ORDER BY s.join_date";
 
-		// Initialize list to store subscribers who are on time
-		ArrayList<Integer> OnTimeSubs = new ArrayList<>();
+	    try (PreparedStatement ps = conn.prepareStatement(query)) {
+	        ps.setString(1, selectedDate);
+	        ps.setString(2, selectedDate);
 
-		// Second query: Find subscribers who are NOT late (complement of late
-		// subscribers)
-		String query2 = "SELECT subscriber_id " + "FROM subscriber " + "WHERE subscriber_id NOT IN ("
-				+ " SELECT SubscriberID " + " FROM activityhistory " + " WHERE additionalInfo LIKE '% days late' "
-				+ " AND CAST(SUBSTRING_INDEX(additionalInfo, ' ', 1) AS UNSIGNED) > 7 " + " AND DATE_FORMAT(ActionDate"
-				+ ", '%Y-%m') = ?" + ")";
-		try (PreparedStatement ps = conn.prepareStatement(query2)) {
-			String selectedDate = selectedYear + "-" + selectedMonth;
-			ps.setString(1, selectedDate);
+	        try (ResultSet rs = ps.executeQuery()) {
+	            while (rs.next()) {
+	                String joinDate = rs.getString("join_date");
+	                String freezeDate = rs.getString("freeze_date");
 
-			// Execute query and collect on-time subscriber IDs
-			try (ResultSet rs = ps.executeQuery()) {
-				while (rs.next()) {
-					int subscriberID = rs.getInt("subscriber_id");
-					OnTimeSubs.add(subscriberID);
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	                // Format and add to report
+	                StringBuilder recordBuilder = new StringBuilder();
+	                recordBuilder.append("Join Date: ").append(joinDate);
 
-		// Initialize ArrayList to store the final formatted results
-		ArrayList<String> statusReport = new ArrayList<>();
-		statusReport.add("status report");
+	                if (!"None".equals(freezeDate)) {
+	                    recordBuilder.append(" , Freeze Date: ").append(freezeDate);
+	                }
 
-		// Process late subscribers (Frozen status)
-		// Build dynamic IN clause for late subscribers query
-		String query3 = "SELECT subscriber_name, subscriber_id FROM subscriber WHERE subscriber_id IN (";
-		for (int i = 0; i < LateSubs.size(); i++) {
-			query3 += "?";
-			if (i < LateSubs.size() - 1) {
-				query3 += ", ";
-			}
-		}
-		query3 += ")";
-
-		// Execute query for late subscribers if any exist
-		if (!LateSubs.isEmpty()) {
-			try (PreparedStatement ps = conn.prepareStatement(query3)) {
-				// Set parameters for IN clause
-				for (int i = 0; i < LateSubs.size(); i++) {
-					ps.setInt(i + 1, LateSubs.get(i));
-				}
-
-				// Process results and add formatted strings to statusReport
-				try (ResultSet rs = ps.executeQuery()) {
-					while (rs.next()) {
-						String subscriberName = rs.getString("subscriber_name");
-						int subscriberId = rs.getInt("subscriber_id");
-						statusReport.add(
-								"Subscriber name: " + subscriberName + " , ID: " + subscriberId + " , Status: Frozen");
-					}
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-
-		// Process on-time subscribers (Active status)
-		// Build dynamic IN clause for on-time subscribers query
-		String query4 = "SELECT subscriber_name, subscriber_id FROM subscriber WHERE subscriber_id IN (";
-		for (int i = 0; i < OnTimeSubs.size(); i++) {
-			query4 += "?";
-			if (i < OnTimeSubs.size() - 1) {
-				query4 += ", ";
-			}
-		}
-		query4 += ")";
-
-		// Execute query for on-time subscribers if any exist
-		if (!OnTimeSubs.isEmpty()) {
-			try (PreparedStatement ps = conn.prepareStatement(query4)) {
-				// Set parameters for IN clause
-				for (int i = 0; i < OnTimeSubs.size(); i++) {
-					ps.setInt(i + 1, OnTimeSubs.get(i));
-				}
-
-				// Process results and add formatted strings to statusReport
-				try (ResultSet rs = ps.executeQuery()) {
-					while (rs.next()) {
-						String subscriberName = rs.getString("subscriber_name");
-						int subscriberId = rs.getInt("subscriber_id");
-						statusReport.add(
-								"Subscriber name: " + subscriberName + " , ID: " + subscriberId + " , Status: Active");
-					}
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return statusReport;
+	                statusReport.add(recordBuilder.toString());
+	            }
+	        }
+	    }
+	    
+        System.out.println(statusReport.toString());
+	    return statusReport;
 	}
+
+
 
 	public String BringBarCodeBookName(int bookId) throws SQLException {
 		String bookName = "";
