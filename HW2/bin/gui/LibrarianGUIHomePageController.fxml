@@ -21,7 +21,7 @@
       <Button fx:id="GetReports" layoutX="300.0" layoutY="289.0" mnemonicParsing="false" onAction="#getReportsGUIBtn" prefHeight="25.0" prefWidth="151.0" text="View Reports" />
       <Button layoutX="300.0" layoutY="364.0" mnemonicParsing="false" onAction="#getOrders" text="Waiting Orders" />
       <Button fx:id="messagesBtn" layoutX="219.0" layoutY="425.0" mnemonicParsing="false" onAction="#getMessages" text="Messages" />
-      <Button layoutX="42.0" layoutY="289.0" mnemonicParsing="false" onAction="#getLibrarianWatch" prefHeight="25.0" prefWidth="151.0" text="Watch Reader Card" />
+      <Button layoutX="42.0" layoutY="289.0" mnemonicParsing="false" onAction="#getLibrarianWatch" prefHeight="26.0" prefWidth="160.0" text="Watch Reader Card" />
       <Button layoutX="41.0" layoutY="364.0" mnemonicParsing="false" onAction="#getLibrarianUpdate" prefHeight="25.0" prefWidth="151.0" text="Manual Extension" />
       <ImageView fx:id="picSunOrMoon" fitHeight="83.0" fitWidth="108.0" layoutX="212.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
 

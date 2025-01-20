@@ -15,7 +15,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
-
+/**
+ * Controller class for the View History GUI.
+ * This class handles the logic for displaying activity history and returning to the home page.
+ */
 public class ViewHistoryGUI {
 	
 	@FXML
@@ -24,7 +27,13 @@ public class ViewHistoryGUI {
 	@FXML
 	private Button ret = null;
 
-	
+	/**
+     * Handles the action for the "View" button.
+     * Sends a request to the server to retrieve the user's activity history and displays it in the text area.
+     *
+     * @param event the action event triggered by clicking the "View" button.
+     * @throws IOException if an error occurs while communicating with the server or updating the UI.
+     */
 	public void getViewBtn(ActionEvent event) throws IOException {
 		Alert alert = new Alert(Alert.AlertType.WARNING);
 	    // Send the request to the server for the activity history
@@ -65,6 +74,13 @@ public class ViewHistoryGUI {
 	    HistoryView.setText(historyMatrix.toString());
 	}
 	
+	/**
+     * Handles the action for the "Return" button.
+     * Closes the current window and navigates back to the Client Home Page.
+     *
+     * @param event the action event triggered by clicking the "Return" button.
+     * @throws IOException if an error occurs while loading the home page FXML.
+     */
 	public void getReturnBtn(ActionEvent event) throws IOException {
 	    // Close the current window
 	    ((Node) event.getSource()).getScene().getWindow().hide();
@@ -81,7 +97,4 @@ public class ViewHistoryGUI {
 	    primaryStage.setScene(scene);
 	    primaryStage.show();
 	}
-
-
-
 }

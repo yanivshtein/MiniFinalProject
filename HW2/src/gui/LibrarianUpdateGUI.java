@@ -26,8 +26,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
 
-
-
+/**
+ * Controller class for the Librarian Update GUI.
+ * Enables librarians to manage subscriber book returns and extensions.
+ */
 public class LibrarianUpdateGUI {
 	@FXML
 	private Pane pane;
@@ -54,20 +56,27 @@ public class LibrarianUpdateGUI {
 	private Boolean statusCheck = null;
 	private ArrayList<String> borrowHistory;
 	
+	/**
+     * Initializes the GUI components and event listeners.
+     */
 	@FXML
 	private void initialize() {
 	    RelevantBooks.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 	    });
 	}
 
-	public void ViewRelevantBooksclick(ActionEvent event) throws IOException {
-		
+	/**
+     * Handles the action for viewing relevant books that are near their deadline.
+     * 
+     * @param event The triggered action event.
+     * @throws IOException If an error occurs during server communication.
+     */
+	public void ViewRelevantBooksclick(ActionEvent event) throws IOException {		
 		if(subID1.getText().isEmpty()) {
 			alert.setTitle("No ID Was Entered");
             alert.setContentText("You must enter an ID!");
             alert.showAndWait();
-	        return;
-			
+	        return;			
 		}
 	    // Check if the frozen status has already been evaluated
 	    if (statusCheck == null || statusCheck == true) { 
@@ -130,11 +139,12 @@ public class LibrarianUpdateGUI {
 	    });
 	}
 
-
-		
-
- 
-    
+	 /**
+     * Validates the entered dates and saves changes for book extension.
+     * 
+     * @param event The triggered action event.
+     * @throws IOException If an error occurs during server communication.
+     */
     public void SaveChangBtt(ActionEvent event) throws IOException {
     	if(statusCheck)
 			return;
@@ -156,6 +166,13 @@ public class LibrarianUpdateGUI {
         }
     }
 
+    /**
+     * Validates the entered dates for book extension.
+     * 
+     * @param oldDateStr The old return date.
+     * @param newDateStr The new return date.
+     * @return True if the new date is valid; otherwise, false.
+     */
     private boolean DateValidation(String oldDateStr, String newDateStr) {
         if (oldDateStr == null || newDateStr == null || oldDateStr.isEmpty() || newDateStr.isEmpty()) {
         	alert.setTitle("Empty string");
@@ -182,7 +199,12 @@ public class LibrarianUpdateGUI {
         }
     }
    
-    
+    /**
+     * Handles the action for returning to the home page.
+     * 
+     * @param event The triggered action event.
+     * @throws IOException If an error occurs during navigation.
+     */
     public void ReturnButton(ActionEvent event) throws IOException {
         // Get the current stage from the event source
         Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -206,9 +228,12 @@ public class LibrarianUpdateGUI {
         newStage.show();
     }
 
-
-
-	
+    /**
+     * Handles the action for opening the return book GUI.
+     * 
+     * @param event The triggered action event.
+     * @throws IOException If an error occurs during navigation.
+     */
 	public void returnBookBtt(ActionEvent event) throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 
@@ -225,9 +250,13 @@ public class LibrarianUpdateGUI {
 		
 	}
 	
+	/**
+     * Exits the application.
+     * 
+     * @param event The triggered action event.
+     */
 	 public void getExitBtn(ActionEvent event) throws IOException {
 			System.exit(0);
-		}
-	 
+		}	 
 }
 	
