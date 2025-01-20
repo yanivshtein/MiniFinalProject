@@ -367,7 +367,7 @@ public class EchoServer extends AbstractServer {
 			case 19: //Retrieves a status report of subscribers for a given month and year.
 				ArrayList<String> statusRepDet = null;
 				try {
-					statusRepDet = SQLinstance.BringStatusRepInfo((String) arr.get(1), (String) arr.get(2));
+					statusRepDet = SQLinstance.bringStatusRepInfo((String) arr.get(1), (String) arr.get(2));
 				} catch (SQLException e) {
 					e.printStackTrace();
 					statusRepDet = new ArrayList<>();

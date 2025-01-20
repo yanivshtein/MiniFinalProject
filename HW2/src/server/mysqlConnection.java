@@ -684,7 +684,7 @@ public class mysqlConnection {
 
 
 
-	public ArrayList<String> BringStatusRepInfo(String selectedMonth, String selectedYear) throws SQLException {
+	public ArrayList<String> bringStatusRepInfo(String selectedMonth, String selectedYear) throws SQLException {
 	    if (selectedMonth == null || selectedYear == null) {
 	        throw new IllegalArgumentException("Selected month and year cannot be null.");
 	    }
@@ -693,16 +693,15 @@ public class mysqlConnection {
 
 	    String selectedDate = selectedYear + "-" + selectedMonth;
 
-	    // Query to fetch join dates and freeze dates dynamically
+	    // Query to fetch join dates and relevant freeze dates dynamically
 	    String query = "SELECT " +
 	                   "DATE_FORMAT(s.join_date, '%Y-%m-%d') AS join_date, " +
-	                   "COALESCE((SELECT DATE_FORMAT(a.ActionDate, '%Y-%m-%d') " +
-	                   "          FROM activityhistory a " +
-	                   "          WHERE a.SubscriberID = s.subscriber_id " +
-	                   "          AND a.additionalInfo LIKE '% days late' " +
-	                   "          AND CAST(SUBSTRING_INDEX(a.additionalInfo, ' ', 1) AS UNSIGNED) > 7 " +
-	                   "          AND DATE_FORMAT(a.ActionDate, '%Y-%m') = ? " +
-	                   "          ORDER BY a.ActionDate ASC LIMIT 1), 'None') AS freeze_date " +
+	                   "COALESCE((SELECT DATE_FORMAT(MIN(f.start_date), '%Y-%m-%d') " +
+	                   "          FROM frozen_subs f " +
+	                   "          WHERE f.subscriber_id = s.subscriber_id " +
+	                   "          AND DATE_FORMAT(f.start_date, '%Y-%m') <= ? " +
+	                   "          AND (f.finish_date IS NULL OR DATE_FORMAT(f.finish_date, '%Y-%m') >= ?) " +
+	                   "          ORDER BY f.start_date ASC LIMIT 1), 'None') AS freeze_date " +
 	                   "FROM subscriber s " +
 	                   "WHERE DATE_FORMAT(s.join_date, '%Y-%m') <= ? " +
 	                   "ORDER BY s.join_date";
@@ -710,6 +709,7 @@ public class mysqlConnection {
 	    try (PreparedStatement ps = conn.prepareStatement(query)) {
 	        ps.setString(1, selectedDate);
 	        ps.setString(2, selectedDate);
+	        ps.setString(3, selectedDate);
 
 	        try (ResultSet rs = ps.executeQuery()) {
 	            while (rs.next()) {
@@ -719,9 +719,9 @@ public class mysqlConnection {
 	                // Format and add to report
 	                StringBuilder recordBuilder = new StringBuilder();
 	                recordBuilder.append("Join Date: ").append(joinDate);
-
+	                
 	                if (!"None".equals(freezeDate)) {
-	                    recordBuilder.append(" , Freeze Date: ").append(freezeDate);
+	                    recordBuilder.append(", Freeze Date: ").append(freezeDate);
 	                }
 
 	                statusReport.add(recordBuilder.toString());
@@ -729,9 +729,10 @@ public class mysqlConnection {
 	        }
 	    }
 	    
-        System.out.println(statusReport.toString());
+	    System.out.println(statusReport.toString());
 	    return statusReport;
 	}
+
 
 
 
