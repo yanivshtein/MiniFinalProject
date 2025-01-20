@@ -383,10 +383,12 @@ public class EchoServer extends AbstractServer
 	            	 
 	            	String Borrowerid = (String)arr.get(1); //subscriber ID is in the second position of the array
 		          	String Bookname = (String)arr.get(2);
+		          	Boolean boolReturn;
 		          	arrToSend.add(21);
 				try {
-					arrToSend.add(SQLinstance.getBorrowDateAndReturnDate(Borrowerid, Bookname));
-					
+					boolReturn=arrToSend.add(SQLinstance.getBorrowDateAndReturnDate(Borrowerid, Bookname));
+					// add true/false boolean to check if there
+					arrToSend.add(boolReturn);
 					client.sendToClient(arrToSend);
 				} catch (SQLException | IOException e) {
 					
@@ -417,8 +419,9 @@ public class EchoServer extends AbstractServer
 	            		 if(returnLate)
 	            			 lateDifference.append(" Late");
 	            	 }
+	            	 //System.out.println("");
 	            	 boolean orderExists = SQLinstance.addArrivalTimeToOrders(this.bookName); //add the arrival time to orders table	           	 
-	         		 Boolean bookIncrement = false;	// Initialized freezeSuccess to true because 
+	         		 Boolean bookIncrement = true;	// Initialized freezeSuccess to true because 
 	            	 Boolean freezeSuccess = true;	// of the AND action at sendToClient
 	            	 Boolean insertRowToActivity = false; // so if it won't happen then it will still pass.
 	            	 arrToSend.add(22);
@@ -432,7 +435,7 @@ public class EchoServer extends AbstractServer
 
 		            	 }
 		            	 if(freeze==true){
-		            		 freezeSuccess = SQLinstance.updateSubscriberStatusToFrozen(this.subscriberID,"Frozen");
+		            		 freezeSuccess = SQLinstance.updateSubscriberStatusToFrozen(this.subscriberID,"frozen");
 		            		 
 		            		 if(freezeSuccess) 
 		            			 arrToSend.add("FROZEN");
@@ -451,7 +454,7 @@ public class EchoServer extends AbstractServer
 		            	 
 		            	 if (orderExists == false) { //which means no one has ordered this book then we can add the copy to the inventory
 		            		 bookIncrement = SQLinstance.incrimentBookAvailability(this.bookName);
-		            		 
+		            		 // the problem is here because it has a false
 		            	 }		            	
 		            	 arrToSend.add(bookIncrement && freezeSuccess && insertRowToActivity);
 		            	 

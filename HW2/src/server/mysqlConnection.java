@@ -826,20 +826,13 @@ public class mysqlConnection {
 	    ArrayList<String> borrowAndReturnDate = new ArrayList<>();
 	    PreparedStatement ps = conn.prepareStatement(
 	    		"SELECT ActionDate, deadline " +
-	    		"FROM activityhistory t1 " +
-	    		"WHERE SubscriberID = ? " +
-	    		"  AND BookName = ? " +
-	    		"  AND ActionType = 'Borrow' " +
-	    		"  AND NOT EXISTS ( " +
-	    		"      SELECT 1 " +
-	    		"      FROM activityhistory t2 " +
-	    		"      WHERE t2.SubscriberID = t1.SubscriberID " +
-	    		"        AND t2.BookName = t1.BookName " +
-	    		"        AND t2.ActionType = 'Return' " +
-	    		"        AND t2.ActionDate > t1.ActionDate " +
-	    		"  ) " +
-	    		"ORDER BY ActionDate ASC " +
-	    		"LIMIT 1"
+	    	            "FROM activityhistory " +
+	    	            "WHERE SubscriberID = ? " +
+	    	            "  AND BookName = ? " +
+	    	            "  AND ActionType = 'Borrow' " +
+	    	            "  AND hasReturned = 0 " +
+	    	            "ORDER BY ActionDate ASC " +
+	    	            "LIMIT 1"
 	    );
 
 	    ps.setString(1, borrowerId);
@@ -865,7 +858,7 @@ public class mysqlConnection {
 	public Boolean checkIfBorrowerFound(String borrowerId, String bookName) throws SQLException {
 
 		PreparedStatement ps = conn.prepareStatement(
-				"SELECT EXISTS(SELECT * FROM activityhistory where SubscriberID=? AND BookName=? AND ActionType='Borrow')");
+				"SELECT EXISTS(SELECT * FROM activityhistory where SubscriberID=? AND BookName=? AND ActionType='Borrow' AND hasReturned=0)");
 		ps.setString(1, borrowerId);
 		ps.setString(2, bookName);
 		ResultSet rs = ps.executeQuery();
@@ -907,18 +900,59 @@ public class mysqlConnection {
 
 		int borrowerIdAsInt = Integer.parseInt(borrowerId);
 		int rowsAffected = 0;
+		ResultSet resultSet;
 		LocalDate actionDate = LocalDate.now();
 		String insertQuary = "INSERT INTO activityhistory (SubScriberID, BookName, ActionType, ActionDate,"
 				+ "additionalInfo) VALUES (?,?,?,?,?)";
 		PreparedStatement ps = conn.prepareStatement(insertQuary);
-
+		
 		ps.setInt(1, borrowerIdAsInt);
 		ps.setString(2, bookName);
 		ps.setString(3, "Return");
 		ps.setDate(4, Date.valueOf(actionDate));
 		ps.setString(5, dateDifference);
-
+		//ps.setInt(6, 1);
 		rowsAffected = ps.executeUpdate();
+		
+		if(rowsAffected==0) {
+			return false;
+		}
+		String selectQuery="SELECT ActionID "
+				+ "FROM activityhistory "
+				+ "WHERE SubscriberID = ? "
+				+ "  AND BookName = ? AND ActionType = 'Borrow' AND hasReturned = 0 ORDER BY ActionID ASC";
+		
+		PreparedStatement select = conn.prepareStatement(selectQuery);
+		
+		select.setInt(1, borrowerIdAsInt);
+		select.setString(2, bookName);
+		
+		resultSet = select.executeQuery();
+		// resultSet is in row 1
+		System.out.println("Result Set row is:"+resultSet.getRow());
+		//System.out.println("Result Set string is:"+resultSet.getString("ActionID"));
+
+		if (!resultSet.next()) {
+			System.out.println("No ActionID found");
+	        return false; // Empty list
+		}
+		String updateQuery = "UPDATE activityhistory "
+				+ "SET hasReturned = 1 "
+				+ "WHERE SubscriberID = ? "
+				+ "  AND BookName = ? "
+				+ "  AND ActionID = ?";
+		
+		PreparedStatement update=conn.prepareStatement(updateQuery);
+		
+		update.setInt(1, borrowerIdAsInt);
+		update.setString(2, bookName);
+		update.setInt(3, resultSet.getInt("ActionID"));
+		
+		
+		rowsAffected = update.executeUpdate();
+//		String selectQuery = "SELECT ActionID FROM activityhistory WHERE SubscriberID=? AND BookName=?";
+//		
+//		String updateQuary = "UPDATE activityhistory SET hasReturned=1 WHERE SubscriberID=? AND BookName AND ActionID=?";
 
 		return rowsAffected > 0;
 	}
@@ -1254,20 +1288,14 @@ public class mysqlConnection {
 		// i have a problem here
 		ArrayList<String> subCurrentBorrowedBooks = new ArrayList<String>();
 		ResultSet resultSet = null;
-		String query= "SELECT t1.BookName, MAX(t1.ActionDate) AS LastBorrowDate " +
-                "FROM activityhistory t1 " +
-                "LEFT JOIN activityhistory t2 " +
-                "  ON t1.SubscriberID = t2.SubscriberID " +
-                "  AND t1.BookName = t2.BookName " +
-                "  AND t2.ActionType = 'Return' " +
-                "  AND t2.ActionDate >= t1.ActionDate " +
-                "WHERE t1.SubscriberID = ? " +
-                "  AND t1.ActionType = 'Borrow' " +
-                "  AND t2.ActionID IS NULL " +
-                "GROUP BY t1.BookName " +
-                "ORDER BY LastBorrowDate DESC";
+		String query= "SELECT BookName"
+				+ " FROM activityhistory "
+				+ " WHERE SubscriberID = ?"
+				+ "  AND ActionType = 'Borrow'"
+				+"   AND hasReturned = 0";
 
-		
+	
+				
 		PreparedStatement ps = conn.prepareStatement(query);
 		
 		ps.setInt(1,subscriberId);

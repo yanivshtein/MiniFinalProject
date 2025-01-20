@@ -95,7 +95,7 @@ public class LibrarianReturnGUI {
 	
 	
 	public void sendButton(ActionEvent event) {		// method that sends information to the controller to return the book to the library
-		
+		LocalDate deadlineDate;
 		 String errorType;
 		
 		errorType=checkBttn();
@@ -112,7 +112,11 @@ public class LibrarianReturnGUI {
 	        alertMessege.setAlertType(AlertType.ERROR);
 	        alertMessege.show(); // Show the error alert
 			return;
-		
+		case "Action Date And deadline is NULL":
+			alertMessege.setContentText("Action Date and deadline is null");
+	        alertMessege.setAlertType(AlertType.ERROR);
+	        alertMessege.show(); // Show the error alert
+	        return;
 		default:	// if the check is successfully finished
 			break;
 		}
@@ -157,8 +161,22 @@ public class LibrarianReturnGUI {
 		DateTimeFormatter dateFormatter= DateTimeFormatter.ofPattern("yyyy-MM-dd");
 //		String formattedCurrentDate = localDate.format(dateFormatter);
 		String deadlineString= deadline.getText();
-		LocalDate deadlineDate=LocalDate.parse(deadlineString, dateFormatter);
-		Period difference = Period.between( deadlineDate,currentDate);
+		
+		if (deadlineString == null || deadlineString.isEmpty()) {
+		    alertMessege.setContentText("Deadline is missing or invalid.");
+		    alertMessege.setAlertType(AlertType.ERROR);
+		    alertMessege.show();
+		    return;
+		}
+		
+		try {
+			deadlineDate = LocalDate.parse(deadlineString, dateFormatter);
+		} catch (DateTimeParseException e) {
+		    alertMessege.setContentText("Deadline date format is invalid. Please use yyyy-MM-dd.");
+		    alertMessege.setAlertType(AlertType.ERROR);
+		    alertMessege.show();
+		    return;
+		}		Period difference = Period.between( deadlineDate,currentDate);
 		
 		System.out.println("formatted and replace local date is:"+currentDate);
 		System.out.println("formatted and replace deadline is:"+deadlineString);
@@ -253,9 +271,20 @@ public class LibrarianReturnGUI {
 			isChecked = false;
 			return "Borrow does not exist";
 		}
+		
+		// because we added the column hasRetruned in the activity history 
+		// so the error Book "has already returned book" won't happen because we update
+		// the borrow in the column hasReturned field to 1 so he won't appear in the exist
+		// query
 		BookName = ChatClient.bookName;
 		// if there is a match then select the borrow date and deadline.
 		ClientGUIConnectionController.chat.returnBook_accept("SELECT DATE",BorrowerId,BookName,false,false,null);
+		
+		// The action date and deadline returning null
+		if(ChatClient.ActionDateAndDeadline==null) {
+			System.err.println("ERROR:After selecting, Action Date And deadline is NULL");
+			return "Action Date And deadline is NULL";
+		}
 		
 		for (String date : ChatClient.ActionDateAndDeadline) {	// get action date and deadline
 			if(index ==0)
@@ -290,22 +319,29 @@ public class LibrarianReturnGUI {
 	
 	public void viewBorrowersHistoryButton(ActionEvent event) {
 		
-		if(getSubscribersId==null) {
+		if (getSubscribersId == null || getSubscribersId.getText().trim().isEmpty()) {
 			alertMessege.setContentText("Enter Subscriber's ID.");
 	        alertMessege.setAlertType(AlertType.ERROR);
 	        alertMessege.show(); // Show the error alert
 	        return; // Stop further execution
 		}
 		
+		ClientGUIConnectionController.chat.accept("select", getSubscribersId.getText(), "", "");
 		
-		
+		if(ChatClient.s1.getSubscriber_id()==0) {
+			alertMessege.setContentText("There is no subscriber with this ID in the database.");
+	        alertMessege.setAlertType(AlertType.ERROR);
+	        alertMessege.show(); // Show the error alert
+	        return; // Stop further execution
+		}
 		 ClientGUIConnectionController.chat.returnBook_accept("SELECT_CURRENT_BORROWED_BOOKS_BY_ID", getSubscribersId.getText(), "", null, null, null);
 		
 		  
     	 if(ChatClient.subCurrentBorrowedBooks.isEmpty()) {
     		 
-    		alertMessege.setContentText("The subscriber has no currently borrowed books in the library’s database.");	
+    		alertMessege.setContentText("No currently borrowed books found.");	
     		alertMessege.setAlertType(AlertType.ERROR);
+    		
     		alertMessege.show();
     		return;
     			

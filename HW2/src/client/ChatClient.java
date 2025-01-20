@@ -35,7 +35,7 @@ public class ChatClient extends AbstractClient {
 	public static ArrayList<String> FullBorrowRep , FullStatusRep;
 	public static Boolean bool, isFrozen , isAvailable, isCan, isExist, isSeven, orderExists;
 	public static boolean awaitResponse = false;
-	public static ArrayList<String> ActionDateAndDeadline;
+	public static ArrayList<String> ActionDateAndDeadline = new ArrayList<>();
 	public static Integer bookAvailability=0, subID;
 	public static String deadlineDate="";
 	public static String statusSub="";
@@ -214,7 +214,8 @@ public class ChatClient extends AbstractClient {
 			break;
 		case 21:
 			 ActionDateAndDeadline = (ArrayList<String>)arr.get(1);
-			break;
+			 bool = (Boolean)arr.get(2);
+			 break;
 		case 22:
 			
 			  bool=(Boolean) arr.get(2);
