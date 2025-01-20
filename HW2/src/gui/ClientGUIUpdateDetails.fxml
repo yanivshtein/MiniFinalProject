@@ -23,7 +23,7 @@
             <Label fx:id="subName" layoutX="144.0" layoutY="190.0" text="Label" />
             <Button fx:id="Return" layoutX="38.0" layoutY="396.0" mnemonicParsing="false" onAction="#getReturnBtn" prefHeight="40.0" prefWidth="177.0" text="Return to Home Page" />
             <Label fx:id="afterUpdate" layoutX="405.0" layoutY="305.0" />
-            <Label fx:id="updatesub" layoutX="38.0" layoutY="51.0" text="Update subscriber">
+            <Label fx:id="title" layoutX="38.0" layoutY="51.0" text="Update subscriber">
                <font>
                   <Font size="36.0" />
                </font>

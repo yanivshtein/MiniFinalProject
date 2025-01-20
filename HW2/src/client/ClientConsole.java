@@ -206,8 +206,14 @@ public class ClientConsole implements ChatIF
     try
     {
         ArrayList<Object> arr1 = new ArrayList<>();
+        
+        if(str.equals("how many joined")) {
+        	arr1.add(32);
+            arr1.add(selectedMonth);
+            arr1.add(selectedYear);
+        }
 
-        if(str.equals("create borrow report")) {
+        else if(str.equals("create borrow report")) {
             arr1.add(11);
             arr1.add(selectedMonth);
             arr1.add(selectedYear);
