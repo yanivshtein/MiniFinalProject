@@ -79,7 +79,7 @@ public class LibrarianReturnGUI {
 
 	private String BookName;
 	
-	private boolean isChecked = false;
+	//private boolean isChecked = false;
 	
 	private ArrayList<String> borrowersBorrowedBooks;
 	
@@ -142,16 +142,16 @@ public class LibrarianReturnGUI {
 		
 		
 		// check if the book has already returned by the subscriber
-		ClientGUIConnectionController.chat.returnBook_accept("CHECK_BOOK_RETURNED", BorrowerId, BookName, null, null, null);
-		
-		// if the book already returned then show message 
-		if (ChatClient.bool==true) {
-			
-			alertMessege.setContentText("Book has already returned!");	
-		 	alertMessege.setAlertType(AlertType.ERROR);
-		 	alertMessege.show();
-			return;
-		}
+//		ClientGUIConnectionController.chat.returnBook_accept("CHECK_BOOK_RETURNED", BorrowerId, BookName, null, null, null);
+//		
+//		// if the book already returned then show message 
+//		if (ChatClient.bool==true) {
+//			
+//			alertMessege.setContentText("Book has already returned!");	
+//		 	alertMessege.setAlertType(AlertType.ERROR);
+//		 	alertMessege.show();
+//			return;
+//		}
 		
 		
 		BookName = ChatClient.bookName;
@@ -172,9 +172,10 @@ public class LibrarianReturnGUI {
 		try {
 			deadlineDate = LocalDate.parse(deadlineString, dateFormatter);
 		} catch (DateTimeParseException e) {
-		    alertMessege.setContentText("Deadline date format is invalid. Please use yyyy-MM-dd.");
-		    alertMessege.setAlertType(AlertType.ERROR);
-		    alertMessege.show();
+			e.printStackTrace();
+//		    alertMessege.setContentText("Deadline date format is invalid. Please use yyyy-MM-dd.");
+//		    alertMessege.setAlertType(AlertType.ERROR);
+//		    alertMessege.show();
 		    return;
 		}		Period difference = Period.between( deadlineDate,currentDate);
 		
@@ -186,41 +187,41 @@ public class LibrarianReturnGUI {
 			long daysLate = currentDate.toEpochDay()- deadlineDate.toEpochDay();
 		
 		
-		if (daysLate<=0) {
+			if (daysLate<=0) {
 			
-			ClientGUIConnectionController.chat.returnBook_accept("INSERT", BorrowerId, BookName,false,false,difference);
+				ClientGUIConnectionController.chat.returnBook_accept("INSERT", BorrowerId, BookName,false,false,difference);
 			
 			
-		}
-		else if(daysLate<7) {
+			}
+			else if(daysLate<7) {
 			
-			ClientGUIConnectionController.chat.returnBook_accept("INSERT", BorrowerId, BookName,true,false,difference);
+				ClientGUIConnectionController.chat.returnBook_accept("INSERT", BorrowerId, BookName,true,false,difference);
 
 			
-		}
-		else if(daysLate>=7) {
-			ClientGUIConnectionController.chat.returnBook_accept("INSERT", BorrowerId, BookName,true,true,difference);
+			}
+			else if(daysLate>=7) {
+				ClientGUIConnectionController.chat.returnBook_accept("INSERT", BorrowerId, BookName,true,true,difference);
 
 			
-		}
-		if (ChatClient.bool==false) {
-			alertMessege.setContentText("Error need to check if exist borrow first");	
-		 	alertMessege.setAlertType(AlertType.ERROR);
-		 	alertMessege.show();
-			return;
-			
-		}
+			}
+//		if (ChatClient.bool==false) {
+//			alertMessege.setContentText("Error need to check if exist borrow first");	
+//		 	alertMessege.setAlertType(AlertType.ERROR);
+//		 	alertMessege.show();
+//			return;
+//			
+//		}
 		
-		if(ChatClient.isFrozen) {	
-			showLabelTextForDuration(sendMsg, "Return operation successfully finished!", 3000); // Show text for 3 seconds
-			alertMessege.setContentText("The subscriber’s status card has been frozen");	
-		 	alertMessege.setAlertType(AlertType.INFORMATION);
-		 	alertMessege.show();
-		}
+			if(ChatClient.isFrozen) {	
+				showLabelTextForDuration(sendMsg, "Return operation successfully finished!", 3000); // Show text for 3 seconds
+				alertMessege.setContentText("The subscriber’s status card has been frozen");	
+				alertMessege.setAlertType(AlertType.INFORMATION);
+				alertMessege.show();
+			}
 		
-		else {
+			else {
 			showLabelTextForDuration(sendMsg, "Return operation successfully finished!", 3000); // Show text for 3 seconds
-		}
+			}
 
 		}catch (DateTimeParseException e) {
 //			alertMessege.setContentText("Error need to check if exist borrow first");	
@@ -268,7 +269,7 @@ public class LibrarianReturnGUI {
 			bookArriveDate.setText("");		// set labels to show them in GUI
 			deadline.setText("");
 			
-			isChecked = false;
+			//isChecked = false;
 			return "Borrow does not exist";
 		}
 		
@@ -281,10 +282,10 @@ public class LibrarianReturnGUI {
 		ClientGUIConnectionController.chat.returnBook_accept("SELECT DATE",BorrowerId,BookName,false,false,null);
 		
 		// The action date and deadline returning null
-		if(ChatClient.ActionDateAndDeadline==null) {
-			System.err.println("ERROR:After selecting, Action Date And deadline is NULL");
-			return "Action Date And deadline is NULL";
-		}
+//		if(ChatClient.ActionDateAndDeadline==null) {
+//			System.err.println("ERROR:After selecting, Action Date And deadline is NULL");
+//			return "Action Date And deadline is NULL";
+//		}
 		
 		for (String date : ChatClient.ActionDateAndDeadline) {	// get action date and deadline
 			if(index ==0)
@@ -295,7 +296,7 @@ public class LibrarianReturnGUI {
 			index++;
 		}
 		
-		isChecked = true;
+		//isChecked = true;
 		// show the borrow date and deadline in the labels
 		bookArriveDate.setText(actionDate);		// set labels to show them in GUI
 		deadline.setText(Deadline);
@@ -322,6 +323,7 @@ public class LibrarianReturnGUI {
 		if (getSubscribersId == null || getSubscribersId.getText().trim().isEmpty()) {
 			alertMessege.setContentText("Enter Subscriber's ID.");
 	        alertMessege.setAlertType(AlertType.ERROR);
+	        ShowBorrowedBooks.getItems().clear();
 	        alertMessege.show(); // Show the error alert
 	        return; // Stop further execution
 		}
@@ -331,6 +333,7 @@ public class LibrarianReturnGUI {
 		if(ChatClient.s1.getSubscriber_id()==0) {
 			alertMessege.setContentText("There is no subscriber with this ID in the database.");
 	        alertMessege.setAlertType(AlertType.ERROR);
+	        ShowBorrowedBooks.getItems().clear();
 	        alertMessege.show(); // Show the error alert
 	        return; // Stop further execution
 		}
@@ -341,7 +344,7 @@ public class LibrarianReturnGUI {
     		 
     		alertMessege.setContentText("No currently borrowed books found.");	
     		alertMessege.setAlertType(AlertType.ERROR);
-    		
+    		ShowBorrowedBooks.getItems().clear();
     		alertMessege.show();
     		return;
     			
