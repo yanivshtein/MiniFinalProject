@@ -72,6 +72,7 @@ public class AddSubscriberGUIController {
 	 * @param event The ActionEvent triggered by the Save button.
 	 */
     public void saveBtn(ActionEvent event) {
+    	 afterUpdate.setText("");
         StringBuilder missingFields = new StringBuilder();
         Alert alert = new Alert(Alert.AlertType.WARNING);
         // Check which fields are empty and append them to the missingFields message
