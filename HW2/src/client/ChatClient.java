@@ -302,11 +302,8 @@ public class ChatClient extends AbstractClient {
 	{
 		if (obj instanceof ArrayList<?>) {
 			ArrayList<Object> arr1 = (ArrayList<Object>) obj;
-			// int needWait = (Integer)arr1.get(0);
 			try {
 				awaitResponse = true;
-				// if (needWait==11) //dont need to wait for response from the server
-				// awaitResponse=false;
 				sendToServer(arr1);
 				while (awaitResponse) {
 					try {

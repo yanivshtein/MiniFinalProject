@@ -26,6 +26,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
 
+/**
+ * Controller class for the Librarian Watch GUI.
+ * Enables librarians to view and manage subscriber details and borrowing history.
+ */
 public class LibrarianWatchGUI {
 	@FXML
 	private Pane pane;
@@ -51,11 +55,19 @@ public class LibrarianWatchGUI {
 
 	private ArrayList<String> borrowHistory;
 	
-	public void initialize() {
-        
+	/**
+     * Initializes the GUI by setting styles and any necessary setup logic.
+     */
+	public void initialize() {       
 		Bview.setStyle("-fx-font-family: 'Courier New'; -fx-font-size: 12;");
     }
 
+	/**
+     * Handles the "View Details" button click to fetch and display subscriber details.
+     *
+     * @param event The action event triggered by the button click.
+     * @throws IOException If an I/O error occurs.
+     */
 	public void ViewDetBtt(ActionEvent event) throws IOException {
 		ClientGUIConnectionController.chat.accept("select", subID.getText(), "", "");
 		Subscriber1 sub = ChatClient.s1;
@@ -87,7 +99,7 @@ public class LibrarianWatchGUI {
         System.out.println(borrowHistory.toString());
 
 		// Print the table header
-		Bview.setText(String.format("%-35s %-20s %-20s %-20s %-20s", "Book Name", "Borrow Date", "Return Date" , "Deadline" ,"Addition Information"));
+		Bview.setText(String.format("%-40s %-20s %-20s %-20s %-20s", "Book Name", "Borrow Date", "Return Date" , "Deadline" ,"Addition Information"));
 		Bview.appendText("\n-----------------------------------------------------------------------------------------------------------------------");
 
 		// Print each row of activity history
@@ -102,7 +114,7 @@ public class LibrarianWatchGUI {
 				String ExIssues = parts[4].trim();
 
 				// Print the row in table format
-				Bview.appendText(String.format("\n%-35s %-20s %-20s %-20s %-20s", bookName, BorrowDate, ReturnDate , deadline ,ExIssues ));
+				Bview.appendText(String.format("\n%-40s %-20s %-20s %-20s %-20s", bookName, BorrowDate, ReturnDate , deadline ,ExIssues ));
 			}
 		}
 		
@@ -110,6 +122,12 @@ public class LibrarianWatchGUI {
 		
 	}
 
+	/**
+     * Navigates back to the librarian's home page.
+     *
+     * @param event The action event triggered by the button click.
+     * @throws IOException If an I/O error occurs.
+     */
 	public void ReturnButton(ActionEvent event) throws IOException {
 		// Get the current stage from the event source
 		Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -133,6 +151,12 @@ public class LibrarianWatchGUI {
 		newStage.show();
 	}
 
+	/**
+     * Opens the return book page.
+     *
+     * @param event The action event triggered by the button click.
+     * @throws IOException If an I/O error occurs.
+     */
 	public void returnBookBtt(ActionEvent event) throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 
@@ -149,7 +173,12 @@ public class LibrarianWatchGUI {
 		primaryStage.show();
 
 	}
-
+	
+	/**
+     * Exits the application.
+     *
+     * @param event The action event triggered by the button click.
+     */
 	public void getExitBtn(ActionEvent event) throws IOException {
 		System.exit(0);
 	}
