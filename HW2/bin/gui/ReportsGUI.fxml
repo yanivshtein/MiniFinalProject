@@ -4,23 +4,27 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="672.0" prefWidth="781.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ReportsGUI">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="571.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ReportsGUI">
    <children>
-      <Label layoutX="32.0" layoutY="45.0" prefHeight="17.0" prefWidth="207.0" />
-      <Text layoutX="39.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select report type:" />
-      <RadioButton fx:id="borrowRep" layoutX="170.0" layoutY="48.0" mnemonicParsing="false" onAction="#BorrowTimeRepClick" text="Borrow time report" />
-      <RadioButton fx:id="statusRep" layoutX="170.0" layoutY="87.0" mnemonicParsing="false" onAction="#SubStatusRepClick" text="Subscriber status report" />
-      <Text layoutX="384.0" layoutY="106.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select report month " />
-      <ComboBox fx:id="months" layoutX="540.0" layoutY="88.0" prefWidth="150.0" />
-      <TextArea fx:id="Displayarea" layoutX="43.0" layoutY="215.0" prefHeight="218.0" prefWidth="696.0" />
-      <Button fx:id="Viewbtt" layoutX="324.0" layoutY="161.0" mnemonicParsing="false" onAction="#ViewBttClick" prefHeight="32.0" prefWidth="120.0" text="View report" />
-      <Text layoutX="384.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select report year " />
-      <ComboBox fx:id="years" layoutX="540.0" layoutY="49.0" prefWidth="150.0" />
-      <Button fx:id="ReturnBtn" layoutX="156.0" layoutY="527.0" mnemonicParsing="false" onAction="#ReturnButton" prefHeight="32.0" prefWidth="271.0" text="Return to the previous page" />
-      <Button fx:id="ExitBtt" layoutX="521.0" layoutY="527.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="32.0" prefWidth="94.0" text="EXIT" />
+      <Label layoutX="17.0" layoutY="74.0" prefHeight="30.0" prefWidth="300.0" style="-fx-font-size: 22px; -fx-font-weight: bold;" text="Library Reports" />
+      
+      <Text layoutX="17.0" layoutY="213.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select report type:" />
+      <RadioButton fx:id="borrowRep" layoutX="96.0" layoutY="226.0" mnemonicParsing="false" onAction="#BorrowTimeRepClick" text="Borrow time report" />
+      <RadioButton fx:id="statusRep" layoutX="96.0" layoutY="256.0" mnemonicParsing="false" onAction="#SubStatusRepClick" text="Subscriber status report" />
+      
+      <Text layoutX="479.0" layoutY="273.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select report month " />
+      <ComboBox fx:id="months" layoutX="610.0" layoutY="257.0" prefWidth="150.0" />
+      
+      <Text layoutX="479.0" layoutY="249.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select report year " />
+      <ComboBox fx:id="years" layoutX="610.0" layoutY="227.0" prefWidth="150.0" />
+
+      <Button fx:id="Viewbtt" layoutX="310.0" layoutY="338.0" mnemonicParsing="false" onAction="#ViewBttClick" prefHeight="32.0" prefWidth="120.0" text="View report" />
+
+      <Button fx:id="ReturnBtn" layoutX="50.0" layoutY="509.0" mnemonicParsing="false" onAction="#ReturnButton" prefHeight="32.0" prefWidth="271.0" text="Return to home page" />
+      <Button fx:id="ExitBtt" layoutX="600.0" layoutY="509.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="32.0" prefWidth="94.0" text="EXIT" />
+      <Text layoutX="396.0" layoutY="212.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select a preferred date:" />
    </children>
 </Pane>

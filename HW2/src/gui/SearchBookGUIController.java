@@ -24,6 +24,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+/**
+ * Controller class for the "Search Book" GUI.
+ * Allows users to search for books by name, author, or genre and displays the search results.
+ */
 public class SearchBookGUIController {
 	@FXML
 	private Button search = null;
@@ -32,7 +36,7 @@ public class SearchBookGUIController {
 	private TextField bookName = null;
 
 	@FXML
-	private DialogPane errorMsg = null;
+	private Label errorMsg = null;
 
 	@FXML
 	private Button return1 = null;
@@ -54,6 +58,10 @@ public class SearchBookGUIController {
 
 	private ObservableList<String> booksData;
 
+	/**
+     * Initializes the controller by loading books, setting up autocomplete for book search,
+     * and configuring event handlers for user interaction.
+     */
 	public void initialize() {
 		loadBooks();
 		setupAutoComplete();
@@ -76,6 +84,9 @@ public class SearchBookGUIController {
 	    });
 	}
 
+	/**
+     * Loads all available books into the list view by requesting data from the server.
+     */
 	private void loadBooks() {
 		ClientGUIConnectionController.chat.acceptAllTheBooks(18);
 		ArrayList<String> bookNames = ChatClient.allbooks;
@@ -88,9 +99,11 @@ public class SearchBookGUIController {
 		booksData = FXCollections.observableArrayList(bookNames);
 		booksListView.setItems(booksData);
 	}
-
+	/**
+     * Sets up autocomplete functionality for the book search fields.
+     * Filters the list view based on user input in the text fields.
+     */
 	private void setupAutoComplete() {
-
 		bookName.textProperty().addListener((observable, oldValue, newValue) -> {
 			genere.setSelected(false);
 			authorName.setSelected(false);
@@ -138,53 +151,94 @@ public class SearchBookGUIController {
 		});
 	}
 
+	/**
+     * Handles the action of selecting the "Author" radio button.
+     * Ensures only one radio button can be selected at a time.
+     *
+     * @param event the action event triggered by clicking the "Author" radio button.
+     */
 	public void authorRadioButton(ActionEvent event) {
 		genere.setSelected(false);
 	}
 
+	/**
+     * Handles the action of selecting the "Genre" radio button.
+     * Ensures only one radio button can be selected at a time.
+     *
+     * @param event the action event triggered by clicking the "Genre" radio button.
+     */
 	public void genreRadioButton(ActionEvent event) {
 		authorName.setSelected(false);
 	}
 
+	/**
+     * Starts the "Search Book" GUI.
+     *
+     * @param primaryStage the primary stage for the application.
+     * @throws Exception if an error occurs while loading the FXML file or initializing the scene.
+     */
 	public void start(Stage primaryStage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("/gui/SearchBookGUIController.fxml"));
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(getClass().getResource("/gui/SearchBookGUIController.css").toExternalForm());
+		scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 		primaryStage.setTitle("Search a book");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
 
+	 /**
+     * Handles the action of the "Search" button.
+     * Validates the book name field and checks the availability of the specified book.
+     *
+     * @param event the action event triggered by clicking the "Search" button.
+     */
 	public void searchBtn(ActionEvent event) {
 		Alert alert = new Alert(Alert.AlertType.WARNING);
 		if(bookName.getText().isEmpty()) {
             alert.setTitle("Missing Field");
             alert.setContentText("Please fill the name of the book");
             alert.showAndWait();
+            return;
 		}else {
 		ClientGUIConnectionController.chat.acceptSearchBook(14, bookName.getText());
 		if (ChatClient.bookAvailability == -1) {
             alert.setTitle("Error");
             alert.setContentText("The book is not in the library");
             alert.showAndWait();
+            return;
 			
 		} else if (ChatClient.bookAvailability == 0) {
             alert.setTitle("Error");
-            alert.setContentText("The book is in the library but currently out of stock, estimated return date is:"+ChatClient.deadlineDate);
+            alert.setContentText("The book is in the library but currently out of stock, estimated return date is: "+ChatClient.deadlineDate);
             alert.showAndWait();
+            return;
 		} else if (ChatClient.bookAvailability > 0) {
-			errorMsg.setContentText("The book is available on shelf A. Copies left: " + ChatClient.bookAvailability);
+			errorMsg.setText("The book is available on shelf A. Copies left: " + ChatClient.bookAvailability);
 		} else {
-			errorMsg.setContentText("ERROR");
+			errorMsg.setText("ERROR");
 		}
 		}
 	}
 
+	/**
+     * Handles the action for the "Exit" button.
+     * Closes the application.
+     *
+     * @param event the action event triggered by clicking the "Exit" button.
+     * @throws IOException if an error occurs during the exit process.
+     */
 	public void getExitBtn(ActionEvent event) throws IOException {
 		System.out.println("Exit client");
 		System.exit(0);
 	}
 
+	/**
+     * Handles the action for the "Return" button.
+     * Navigates back to the appropriate home page based on the user's role.
+     *
+     * @param event the action event triggered by clicking the "Return" button.
+     * @throws IOException if an error occurs while loading the FXML file.
+     */
 	public void getReturnBtn(ActionEvent event) throws IOException {
 		if (ChatClient.lib ==null && ChatClient.sub1==null) {
 			FXMLLoader loader = new FXMLLoader();
@@ -194,7 +248,7 @@ public class SearchBookGUIController {
 
 			Scene scene = new Scene(root);
 			scene.getStylesheets()
-					.add(getClass().getResource("/gui/ClientGUILogin.css").toExternalForm());
+					.add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 			primaryStage.setTitle("Login");
 
 			primaryStage.setScene(scene);
@@ -208,7 +262,7 @@ public class SearchBookGUIController {
 
 			Scene scene = new Scene(root);
 			scene.getStylesheets()
-					.add(getClass().getResource("/gui/LibrarianGUIHomePageController.css").toExternalForm());
+					.add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 			primaryStage.setTitle("Librarian home page");
 
 			primaryStage.setScene(scene);
@@ -222,7 +276,7 @@ public class SearchBookGUIController {
 
 		Scene scene = new Scene(root);
 		scene.getStylesheets()
-				.add(getClass().getResource("/gui/ClientGUIHomePageController.css").toExternalForm());
+				.add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 		primaryStage.setTitle("Librarian home page");
 
 		primaryStage.setScene(scene);

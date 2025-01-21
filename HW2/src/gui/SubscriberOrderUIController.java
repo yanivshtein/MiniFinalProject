@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -20,6 +21,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+/**
+ * Controller class for the Subscriber Order UI.
+ * This class handles book orders, book selection, and interactions with the server for the subscriber.
+ */
 public class SubscriberOrderUIController {
 
     @FXML
@@ -31,9 +36,6 @@ public class SubscriberOrderUIController {
     @FXML
     private DialogPane errorMsg = null;
     
-    @FXML
-    private DialogPane errorMsg2 = null;
-
     @FXML
     private Button sendOrderBtn = null;
 
@@ -51,22 +53,34 @@ public class SubscriberOrderUIController {
     int subID = ChatClient.sub1.getSubscriber_id();
     private ObservableList<String> booksData;
 
+    /**
+     * Initializes the UI by loading the list of books and setting up autocomplete functionality.
+     */
     public void initialize() {
         loadBooks();
         setupAutoComplete();
         booksListView.setOnMouseClicked(event -> handleDoubleClick(event));
     }
     
+    /**
+     * Handles double-click events on the list of books.
+     * Sets the selected book and updates the error message dialog.
+     *
+     * @param event the mouse event triggered by clicking on the list view.
+     */
     private void handleDoubleClick(MouseEvent event) {
-    	errorMsg2.setContentText("");
         if (event.getClickCount() == 2) {
             selectedBook = booksListView.getSelectionModel().getSelectedItem();
             if (selectedBook != null) {            	
-            	errorMsg.setContentText("You have selected the Book: " + selectedBook + ", press 'Send Order' to send");
+            	errorMsg.setContentText("You have selected the Book: " + selectedBook + ", press 'Place Order' to send");
             }
         }
   }
     
+    /**
+     * Loads the list of books from the server and populates the ListView.
+     * If no books are available, a placeholder message is displayed.
+     */
     private void loadBooks() {    	
         // Request the books from the server
     	ClientGUIConnectionController.chat.acceptAllTheBooks(18);
@@ -81,6 +95,10 @@ public class SubscriberOrderUIController {
         booksListView.setItems(booksData);
     }
 
+    /**
+     * Sets up autocomplete functionality for the book name text field.
+     * Filters the ListView based on the text entered by the user.
+     */
     private void setupAutoComplete() {
         bookName.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null || newValue.isEmpty()) {
@@ -98,45 +116,70 @@ public class SubscriberOrderUIController {
         });
     }
     
+    /**
+     * Handles the action for placing a book order.
+     * Validates the selected book, checks the subscriber's status, and sends the order request to the server.
+     *
+     * @param event the action event triggered by clicking the "Place Order" button.
+     * @throws IOException if an error occurs during communication with the server.
+     */
     public void getSendBtn(ActionEvent event) throws IOException {
-    	errorMsg2.setContentText(""); 
-    	if (!bookName.getText().isEmpty())
+    	Alert alert = new Alert(Alert.AlertType.WARNING);
+    	if (selectedBook!=null) {
+    		bookNameGot=selectedBook;
+    	}
+    	else
     		bookNameGot = bookName.getText();
-        else
-        	bookNameGot = selectedBook;     
+
         if (bookNameGot==null || bookNameGot.isEmpty()) {
-            errorMsg.setContentText("Oops! 😞 You must enter a book name.");
-            return;
+        	alert.setTitle("Missing Field");
+            alert.setContentText("Oops! 😞 You must enter a book name.");
+            alert.showAndWait();
+            return;	 
         }
         
         // check if subscriber's status is frozen
         ClientGUIConnectionController.chat.acceptFromController(5, subID, "");
         if (ChatClient.isFrozen == true) {
-            errorMsg.setContentText("Uh-oh! 😬 Your account is FROZEN!");
-            return;
+        	alert.setTitle("Frozen Account");
+            alert.setContentText("Uh-oh! 😬 Your account is FROZEN!");
+            alert.showAndWait();
+            return;	 
         }
         
         ClientGUIConnectionController.chat.acceptFromController(6, 0, bookNameGot);
         if (ChatClient.isExist== false) {
-        	errorMsg.setContentText("Sorry! 📚 we dont have this book in our Library");
-        	return;
+        	alert.setTitle("Not exists book");
+            alert.setContentText("Sorry! 📚 we dont have this book in our Library");
+            alert.showAndWait();
+            return;	
         }
         if (ChatClient.isAvailable == true) { // which means there is an available copy of the book -> cant order
-            errorMsg.setContentText("Yey! 📚 An available copy of this book already exists in the library.");
-            errorMsg2.setContentText("Go borrow it!");
-            return;
+        	alert.setTitle("Available copy exists");
+            alert.setContentText("Go borrow it! 📚 An available copy of this book already exists in the library.");
+            alert.showAndWait();
+            return;	
         }
         
         // add column in the Orders table in the DB and in the activityhistory
         ClientGUIConnectionController.chat.acceptFromController(7, subID, bookNameGot);
         // check if the number of copies of the book already been ordered
         if (ChatClient.isCan == false) {
-            errorMsg.setContentText("Whoops! 😅 The number of orders and copies are equal, so you can't place another order.");
-            return;
+        	alert.setTitle("Number of orders equals copys");
+            alert.setContentText("Whoops! 😅 The number of orders and copies are equal, so you can't place another order.");
+            alert.showAndWait();
+            return;	
         }
         errorMsg.setContentText("Awesome! 🎉 You're all set! Your order has been successfully placed!");
     }
 
+    /**
+     * Handles the action for the "Return" button.
+     * Navigates back to the Client Home Page.
+     *
+     * @param event the action event triggered by clicking the "Return" button.
+     * @throws IOException if an error occurs while loading the home page FXML.
+     */
     public void getReturnBtn(ActionEvent event) throws IOException {
 	    // Close the current window
 	    ((Node) event.getSource()).getScene().getWindow().hide();
@@ -146,7 +189,7 @@ public class SubscriberOrderUIController {
 	    Parent root = loader.load();
 	    
 	    Scene scene = new Scene(root);
-	    scene.getStylesheets().add(getClass().getResource("/gui/ClientGUIHomePageController.css").toExternalForm());
+	    scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 	    
 	    Stage primaryStage = new Stage();
 	    primaryStage.setTitle("Client Home Page");
@@ -154,6 +197,13 @@ public class SubscriberOrderUIController {
 	    primaryStage.show();
 	}
     
+    /**
+     * Handles the action for the "Exit" button.
+     * Closes the application.
+     *
+     * @param event the action event triggered by clicking the "Exit" button.
+     * @throws IOException if an error occurs during the exit process.
+     */
     public void getExitBtn(ActionEvent event) throws IOException {
         System.exit(0);
     }

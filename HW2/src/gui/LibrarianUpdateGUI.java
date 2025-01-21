@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.ListView;
@@ -25,8 +26,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
 
-
-
+/**
+ * Controller class for the Librarian Update GUI.
+ * Enables librarians to manage subscriber book returns and extensions.
+ */
 public class LibrarianUpdateGUI {
 	@FXML
 	private Pane pane;
@@ -48,35 +51,52 @@ public class LibrarianUpdateGUI {
 
 	@FXML
 	private DialogPane ChangesSavedPop;
-
+	Alert alert = new Alert(Alert.AlertType.WARNING);
 	private String TempStatus, selectedBook;
 	private Boolean statusCheck = null;
 	private ArrayList<String> borrowHistory;
-
+	
+	/**
+     * Initializes the GUI components and event listeners.
+     */
 	@FXML
 	private void initialize() {
 	    RelevantBooks.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 	    });
 	}
 
-	public void ViewRelevantBooksclick(ActionEvent event) throws IOException {
+	/**
+     * Handles the action for viewing relevant books that are near their deadline.
+     * 
+     * @param event The triggered action event.
+     * @throws IOException If an error occurs during server communication.
+     */
+	public void ViewRelevantBooksclick(ActionEvent event) throws IOException {		
+		if(subID1.getText().isEmpty()) {
+			alert.setTitle("No ID Was Entered");
+            alert.setContentText("You must enter an ID!");
+            alert.showAndWait();
+	        return;			
+		}
 	    // Check if the frozen status has already been evaluated
-	    if (statusCheck == null) { 
+	    if (statusCheck == null || statusCheck == true) { 
 	        // Evaluate the frozen status only once
 	        ClientGUIConnectionController.chat.accept("check if frozen", subID1.getText(), "", "");
 	        statusCheck = ChatClient.isFrozen;
 	    }
 
 	    if(statusCheck == null) {
-	    	ChangesSavedPop.setContentText("Subscriber not found.");
+	    	alert.setTitle("Not found");
+            alert.setContentText("Subscriber not found.");
+            alert.showAndWait();
 	        return;
-	    	
 	    }
 	    else if (statusCheck) {
-	        ChangesSavedPop.setContentText("The account is frozen. It is not possible to extend the borrow.");
+	    	alert.setTitle("Frozen account");
+            alert.setContentText("The account is frozen. It is not possible to extend the borrow.");
+            alert.showAndWait();
 	        return;
 	    }
-	    
 
 	    ArrayList<String> bookNames = new ArrayList<>();
 	    ArrayList<String> deadlines = new ArrayList<>();
@@ -86,11 +106,13 @@ public class LibrarianUpdateGUI {
 	    ArrayList<String> booksNearDeadline = ChatClient.booksNearDeadline;
 
 	    if (booksNearDeadline == null || booksNearDeadline.isEmpty()) {
-	        System.out.println("No relevant books found.");
+	    	alert.setTitle("No relevant books found.");
+            alert.setContentText("No relevant books found.");
+            alert.showAndWait();
+	        RelevantBooks.getItems().clear();  // Clear the ListView if no relevant books are found
+
 	        return;
 	    }
-
-	    System.out.println(booksNearDeadline.toString());
 
 	    // Populate bookNames and deadlines
 	    for (int i = 0; i < booksNearDeadline.size(); i += 2) {
@@ -117,15 +139,19 @@ public class LibrarianUpdateGUI {
 	    });
 	}
 
-		
-
- 
-    
+	 /**
+     * Validates the entered dates and saves changes for book extension.
+     * 
+     * @param event The triggered action event.
+     * @throws IOException If an error occurs during server communication.
+     */
     public void SaveChangBtt(ActionEvent event) throws IOException {
     	if(statusCheck)
 			return;
         if (!DateValidation(OldRetDate.getText(), NewRetDate.getText())) {
-            ChangesSavedPop.setContentText("Invalid New Date! - Must be both after the old date and within 2 weeks!");
+        	alert.setTitle("Invalid date");
+            alert.setContentText("Invalid New Date! - Must be both after the old date and within 2 weeks!");
+            alert.showAndWait();
             return;
         }
             
@@ -134,13 +160,24 @@ public class LibrarianUpdateGUI {
         if (ChatClient.bool) {
             ChangesSavedPop.setContentText("Updated successfully");
         } else {
-            ChangesSavedPop.setContentText("Update failed - Book already extended or reserved by another user");
+        	alert.setTitle("Update failed");
+            alert.setContentText("Update failed - Book already extended or reserved by another user");
+            alert.showAndWait();
         }
     }
 
+    /**
+     * Validates the entered dates for book extension.
+     * 
+     * @param oldDateStr The old return date.
+     * @param newDateStr The new return date.
+     * @return True if the new date is valid; otherwise, false.
+     */
     private boolean DateValidation(String oldDateStr, String newDateStr) {
         if (oldDateStr == null || newDateStr == null || oldDateStr.isEmpty() || newDateStr.isEmpty()) {
-            ChangesSavedPop.setContentText("Error: One or both date strings are null or empty.");
+        	alert.setTitle("Empty string");
+            alert.setContentText("Error: One or both date strings are null or empty.");
+            alert.showAndWait();
             return false;
         }
 
@@ -155,12 +192,19 @@ public class LibrarianUpdateGUI {
             // Check if new date is after old date AND within 14 days
             return diffInDays < 14 && newDate.after(oldDate);
         } catch (ParseException e) {
-            ChangesSavedPop.setContentText("Error parsing dates: " + e.getMessage());
+        	alert.setTitle("Parsing date");
+            alert.setContentText("Error parsing dates: \" + e.getMessage()");
+            alert.showAndWait();
             return false;
         }
     }
    
-    
+    /**
+     * Handles the action for returning to the home page.
+     * 
+     * @param event The triggered action event.
+     * @throws IOException If an error occurs during navigation.
+     */
     public void ReturnButton(ActionEvent event) throws IOException {
         // Get the current stage from the event source
         Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -170,7 +214,7 @@ public class LibrarianUpdateGUI {
 
         // Create a new scene and apply the stylesheet
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/gui/LibrarianGUIHomePageController.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 
         // Create a new stage for the new page
         Stage newStage = new Stage();
@@ -184,9 +228,12 @@ public class LibrarianUpdateGUI {
         newStage.show();
     }
 
-
-
-	
+    /**
+     * Handles the action for opening the return book GUI.
+     * 
+     * @param event The triggered action event.
+     * @throws IOException If an error occurs during navigation.
+     */
 	public void returnBookBtt(ActionEvent event) throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 
@@ -195,7 +242,7 @@ public class LibrarianUpdateGUI {
 		Pane root = loader.load(getClass().getResource("/gui/LibrarianReturnGUI.fxml").openStream());
 
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(getClass().getResource("/gui/LibrarianReturnGUI.css").toExternalForm());
+		scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
 		primaryStage.setTitle("Librarian Return GUI");
 
 		primaryStage.setScene(scene);
@@ -203,9 +250,13 @@ public class LibrarianUpdateGUI {
 		
 	}
 	
+	/**
+     * Exits the application.
+     * 
+     * @param event The triggered action event.
+     */
 	 public void getExitBtn(ActionEvent event) throws IOException {
 			System.exit(0);
-		}
-	 
+		}	 
 }
 	

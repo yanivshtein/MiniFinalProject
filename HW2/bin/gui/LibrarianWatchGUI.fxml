@@ -7,11 +7,11 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="706.0" prefWidth="678.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LibrarianWatchGUI">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="706.0" prefWidth="678.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LibrarianWatchGUI">
    <children>
       <Label layoutX="29.0" layoutY="22.0" prefHeight="17.0" prefWidth="207.0" />
-      <Button fx:id="ViewClick" layoutX="29.0" layoutY="27.0" mnemonicParsing="false" onAction="#ViewDetBtt" prefHeight="25.0" prefWidth="223.0" text="reader card details:" />
-      <TextField fx:id="subID" alignment="CENTER" layoutX="269.0" layoutY="27.0" prefHeight="25.0" prefWidth="168.0" promptText="enter subscriber ID:" />
+      <Button fx:id="ViewClick" layoutX="29.0" layoutY="27.0" mnemonicParsing="false" onAction="#ViewDetBtt" prefHeight="25.0" prefWidth="223.0" text="Enter Subscriber ID:" />
+      <TextField fx:id="subID" alignment="CENTER" layoutX="269.0" layoutY="27.0" prefHeight="25.0" prefWidth="168.0" />
       <Text fx:id="namelabel" layoutX="38.0" layoutY="102.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name:" />
       <Text fx:id="phonelabel" layoutX="37.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone Number:" />
       <Text fx:id="emaillabel" layoutX="40.0" layoutY="202.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:" />
