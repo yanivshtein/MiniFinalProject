@@ -58,7 +58,7 @@ public class mysqlConnection {
         }
 
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "Sheli123");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "yaniv1234");
             System.out.println("SQL connection succeed");
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
@@ -958,21 +958,22 @@ public class mysqlConnection {
 	 * @throws SQLException if an error occurs while querying the database.
 	 */
 	public String BringBarCodeBookName(int bookId) throws SQLException {
-		String bookName = "";
-		String query = "SELECT bookName FROM books WHERE BookID = ?";
-		try (PreparedStatement ps = conn.prepareStatement(query)) {
-			ps.setInt(1, bookId);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				String name = rs.getString("bookName");
-				bookName = name;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+        String bookName = "";
+        String query = "SELECT bookName FROM books WHERE BookID = ?";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, bookId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String name = rs.getString("bookName");
+                bookName = name;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-		return bookName;
-	}
+        return bookName;
+
+    }
 
 	/**
 	 * Retrieves the borrow and return deadline for a specific book and subscriber.
@@ -982,23 +983,32 @@ public class mysqlConnection {
 	 * @return an ArrayList containing the borrow date and return deadline, or null if not found.
 	 * @throws SQLException if an error occurs while querying the database.
 	 */
-	public ArrayList<Object> getBorrowDateAndReturnDate(String borrowerId, String bookName) throws SQLException {
-		ArrayList<Object> borrowAndReturnDate = new ArrayList<>();
-		PreparedStatement ps = conn.prepareStatement(
-				"SELECT ActionDate,deadline FROM activityhistory where SubscriberID=? AND BookName=? AND ActionType='Borrow'");
+	public ArrayList<String> getBorrowDateAndReturnDate(String borrowerId, String bookName) throws SQLException {
+        ArrayList<String> borrowAndReturnDate = new ArrayList<>();
+        PreparedStatement ps = conn.prepareStatement(
+                "SELECT ActionDate, deadline " +
+                        "FROM activityhistory " +
+                        "WHERE SubscriberID = ? " +
+                        "  AND BookName = ? " +
+                        "  AND ActionType = 'Borrow' " +
+                        "  AND hasReturned = 0 " +
+                        "ORDER BY ActionDate ASC " +
+                        "LIMIT 1"
+        );
 
-		ps.setString(1, borrowerId);
-		ps.setString(2, bookName);
+        ps.setString(1, borrowerId);
+        ps.setString(2, bookName);
 
-		ResultSet resultSet = ps.executeQuery();
-		if (resultSet.last()) {
-			borrowAndReturnDate.add(resultSet.getString(1));
-			borrowAndReturnDate.add(resultSet.getString(2));
-			return borrowAndReturnDate;
-		}
-		return null;
+        ResultSet resultSet = ps.executeQuery();
+        if (resultSet.next()) {  // Fetch the first result (LIMIT ensures only one row is returned)
+            borrowAndReturnDate.add(resultSet.getString("ActionDate"));
+            borrowAndReturnDate.add(resultSet.getString("deadline"));
+        } else {
+            return null;  // No matching record found
+        }
 
-	}
+        return borrowAndReturnDate;
+    }
 
 	/**
 	 * Checks if a specific subscriber has borrowed a specific book.
@@ -1010,16 +1020,16 @@ public class mysqlConnection {
 	 */
 	public Boolean checkIfBorrowerFound(String borrowerId, String bookName) throws SQLException {
 
-		PreparedStatement ps = conn.prepareStatement(
-				"SELECT EXISTS(SELECT * FROM activityhistory where SubscriberID=? AND BookName=? AND ActionType='Borrow')");
-		ps.setString(1, borrowerId);
-		ps.setString(2, bookName);
-		ResultSet rs = ps.executeQuery();
-		if (rs.next()) {
-			return rs.getBoolean(1); // Retrieve the result from the first column
-		}
-		return false;
-	}
+        PreparedStatement ps = conn.prepareStatement(
+                "SELECT EXISTS(SELECT * FROM activityhistory where SubscriberID=? AND BookName=? AND ActionType='Borrow' AND hasReturned=0)");
+        ps.setString(1, borrowerId);
+        ps.setString(2, bookName);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getBoolean(1); // Retrieve the result from the first column
+        }
+        return false;
+    }
 
 	/**
 	 * Checks if a specific book has already been returned by a subscriber.
@@ -1068,18 +1078,56 @@ public class mysqlConnection {
 
 		int borrowerIdAsInt = Integer.parseInt(borrowerId);
 		int rowsAffected = 0;
+		ResultSet resultSet;
 		LocalDate actionDate = LocalDate.now();
 		String insertQuary = "INSERT INTO activityhistory (SubScriberID, BookName, ActionType, ActionDate,"
 				+ "additionalInfo) VALUES (?,?,?,?,?)";
 		PreparedStatement ps = conn.prepareStatement(insertQuary);
-
+		
 		ps.setInt(1, borrowerIdAsInt);
 		ps.setString(2, bookName);
 		ps.setString(3, "Return");
 		ps.setDate(4, Date.valueOf(actionDate));
 		ps.setString(5, dateDifference);
-
+		//ps.setInt(6, 1);
 		rowsAffected = ps.executeUpdate();
+		
+		if(rowsAffected==0) {
+			return false;
+		}
+		String selectQuery="SELECT ActionID "
+				+ "FROM activityhistory "
+				+ "WHERE SubscriberID = ? "
+				+ "  AND BookName = ? AND ActionType = 'Borrow' AND hasReturned = 0 ORDER BY ActionID ASC";
+		
+		PreparedStatement select = conn.prepareStatement(selectQuery);
+		
+		select.setInt(1, borrowerIdAsInt);
+		select.setString(2, bookName);
+		
+		resultSet = select.executeQuery();
+		// resultSet is in row 1
+		System.out.println("Result Set row is:"+resultSet.getRow());
+		//System.out.println("Result Set string is:"+resultSet.getString("ActionID"));
+
+		if (!resultSet.next()) {
+			System.out.println("No ActionID found");
+	        return false; // Empty list
+		}
+		String updateQuery = "UPDATE activityhistory "
+				+ "SET hasReturned = 1 "
+				+ "WHERE SubscriberID = ? "
+				+ "  AND BookName = ? "
+				+ "  AND ActionID = ?";
+		
+		PreparedStatement update=conn.prepareStatement(updateQuery);
+		
+		update.setInt(1, borrowerIdAsInt);
+		update.setString(2, bookName);
+		update.setInt(3, resultSet.getInt("ActionID"));
+		
+		
+		rowsAffected = update.executeUpdate();
 
 		return rowsAffected > 0;
 	}
@@ -1092,14 +1140,57 @@ public class mysqlConnection {
 	 * @return {@code true} if the update was successful, {@code false} otherwise.
 	 * @throws SQLException if an error occurs while updating the status.
 	 */
-	public Boolean updateSubscriberStatusToFrozen(String subscriberId, String IsFrozen) throws SQLException {
-		String insertQuary = "UPDATE subscriber SET subscription_status=? WHERE subscriber_id = ?";
-		PreparedStatement ps = conn.prepareStatement(insertQuary);
-		ps.setString(1, IsFrozen);
-		ps.setString(2, subscriberId);
-		if (ps.executeUpdate() == 1)
-			return true;
-		return false;
+	public Boolean updateSubscriberStatusToFrozen(String subscriberId, String IsFrozen) throws SQLException  {
+
+		String updateQuary = "UPDATE subscriber SET subscription_status=? WHERE subscriber_id = ?";
+		
+		String insertFrozenTable = "INSERT INTO frozen_subs (subscriber_id, start_date, finish_date)"
+				+ " VALUES (?,?,?)";
+
+		
+		
+		Integer subIdInt = null;
+		LocalDate  localDate = LocalDate.now();
+		
+		Date currentDate = Date.valueOf(localDate);
+		localDate = localDate.plusMonths(1);
+		Date unfreezeDate = Date.valueOf(localDate);
+		
+		try{
+		subIdInt = Integer.parseInt(subscriberId);
+		}
+		
+		catch(NumberFormatException e){
+			e.printStackTrace();
+			
+		}
+		
+		if(checkIsFrozen(subIdInt).equals("frozen")) {
+			return false;
+		}
+		try(PreparedStatement updatePs = conn.prepareStatement(updateQuary)){
+			PreparedStatement insertPs= conn.prepareStatement(insertFrozenTable);
+		
+			updatePs.setString(1, IsFrozen);
+			updatePs.setString(2, subscriberId);
+
+			int updateResult = updatePs.executeUpdate();
+			
+			if (updateResult == 1) {
+			
+				insertPs.setInt(1, subIdInt);
+				insertPs.setDate(2, currentDate);
+				insertPs.setDate(3, unfreezeDate);
+				int insertResult = insertPs.executeUpdate();
+				
+				return insertResult == 1;
+			}
+			return false;
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 	/**
@@ -1400,61 +1491,55 @@ public class mysqlConnection {
 	 * status is updated to 'Active'.
 	 */
 
-	public void unfreezeAfterMonthStatus()  {		
-		ArrayList<String> frozenSubscribers = new ArrayList<String>();		
-		String getSubscribersID = "SELECT subscriber_id FROM subscriber WHERE subscription_status = 'frozen'";		
-		String getReturnDates = "SELECT MAX(ActionDate) AS LastActionDate FROM activityhistory WHERE SubscriberID = ? "
-				+ "AND ActionType = 'Return'";		
-		String updateSubscribersStatus = "UPDATE subscriber SET subscription_status = 'active' WHERE subscriber_id=?";		
-		PreparedStatement updateStatus = null;
-		ResultSet returnDates = null;
-		ResultSet subscribersID = null;
-		PreparedStatement selectReturnDates = null;		
-		PreparedStatement selectSubscribersID = null;
-		try {
-		selectSubscribersID = conn.prepareStatement(getSubscribersID);		
-		subscribersID = selectSubscribersID.executeQuery();		
-		while(subscribersID.next()) {
-			frozenSubscribers.add(subscribersID.getString("subscriber_id"));
-		}		
-		selectReturnDates = conn.prepareStatement(getReturnDates);
-		updateStatus = conn.prepareStatement(updateSubscribersStatus);		
-		for(String subID : frozenSubscribers) {			
-			selectReturnDates.setString(1, subID);
-			returnDates= selectReturnDates.executeQuery();		
-			if ( returnDates.next()) {
-				String lastActionDateStr = returnDates.getString("LastActionDate");				
-				if(lastActionDateStr != null) {
-					LocalDate lastActionDate = LocalDate.parse(lastActionDateStr);
-					LocalDate  currentDate = LocalDate.now();				
-					if(lastActionDate.isBefore(currentDate.minusMonths(1))) {
-						updateStatus.setString(1, subID);
-						updateStatus.executeUpdate();
-					}
-				}
-					
-			}
-		}
-		
-		}
-		
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		finally {
-			try {	
-				// Close resources to avoid memory leaks
-				if (returnDates != null) returnDates.close();
-		        if (subscribersID != null) subscribersID.close();
-		        if (selectSubscribersID != null) selectSubscribersID.close();
-		        if (selectReturnDates != null) selectReturnDates.close();
-		        if (updateStatus != null) updateStatus.close();
-			} catch (SQLException e2) {
-				e2.printStackTrace();
-			}
-			
-		}
-	}
+	public void unfreezeAfterMonthStatus()  {
+        ArrayList<Integer> frozenSubscribers = new ArrayList<Integer>();
+
+        String getsubscriberID = "SELECT subscriber_id FROM frozen_subs WHERE finish_date<?";
+
+        String updateSubscribersStatus = "UPDATE subscriber SET subscription_status = 'active' WHERE subscriber_id=?";
+
+        String deleteFrozeSubFromTable = "DELETE FROM frozen_subs WHERE subscriber_id = ? ";
+
+        PreparedStatement deleteStatus = null;
+        PreparedStatement updateStatus = null;
+        PreparedStatement selectSubscribersID = null;
+        ResultSet subscribersID = null;
+
+        int rowsUpdated;
+        int rowsDeleted;
+        try {
+            selectSubscribersID = conn.prepareStatement(getsubscriberID);
+
+            selectSubscribersID.setDate(1, Date.valueOf(LocalDate.now()));
+            subscribersID = selectSubscribersID.executeQuery();
+            while(subscribersID.next()) {
+                frozenSubscribers.add(subscribersID.getInt("subscriber_id"));
+            }
+
+            updateStatus = conn.prepareStatement(updateSubscribersStatus);
+            deleteStatus =  conn.prepareStatement(deleteFrozeSubFromTable);
+
+            for(Integer id : frozenSubscribers) {
+
+
+                updateStatus.setInt(1, id);
+                rowsUpdated = updateStatus.executeUpdate();
+
+                if(rowsUpdated >0) {
+                    deleteStatus.setInt(1, id);
+                    rowsDeleted = deleteStatus.executeUpdate();
+
+                    System.out.println(rowsDeleted + " frozen subscriptions deleted for Subscriber ID: " + id);
+
+                }
+            }
+
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+    }
 
 	/**
 	 * Counts the number of new subscribers who joined in a given month and year.
@@ -1500,6 +1585,35 @@ public class mysqlConnection {
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
+	}
+	
+public  ArrayList<String> selectCurrentBorrowedBooksById(Integer subscriberId) throws SQLException {
+		
+		ArrayList<String> subCurrentBorrowedBooks = new ArrayList<String>();
+		ResultSet resultSet = null;
+		String query= "SELECT BookName"
+				+ " FROM activityhistory "
+				+ " WHERE SubscriberID = ?"
+				+ "  AND ActionType = 'Borrow'"
+				+"   AND hasReturned = 0";
+
+	
+				
+		PreparedStatement ps = conn.prepareStatement(query);
+		
+		ps.setInt(1,subscriberId);
+		
+		resultSet = ps.executeQuery();
+		//resultSet.next();
+		if (!resultSet.isBeforeFirst()) { 
+	        System.out.println("No current borrowed books found for Subscriber ID: " + subscriberId);
+	        return subCurrentBorrowedBooks; // Empty list
+	    }
+			
+		while(resultSet.next()) {
+			subCurrentBorrowedBooks.add(resultSet.getString("BookName"));
+		}
+		return subCurrentBorrowedBooks;
 	}
 
 }

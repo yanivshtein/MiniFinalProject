@@ -35,7 +35,7 @@ public class ChatClient extends AbstractClient {
 	public static ArrayList<String> FullBorrowRep, FullStatusRep;
 	public static Boolean bool, isFrozen, isAvailable, isCan, isExist, isSeven, orderExists;
 	public static boolean awaitResponse = false;
-	public static ArrayList<String> ActionDateAndDeadline;
+	public static ArrayList<String> ActionDateAndDeadline = new ArrayList<>();
 	public static Integer bookAvailability = 0, subID;
 	public static String deadlineDate = "";
 	public static String statusSub = "";
@@ -47,6 +47,7 @@ public class ChatClient extends AbstractClient {
 	public static ArrayList<String> subMessages = new ArrayList<>();
 	public static ArrayList<String> libMessages = new ArrayList<>();
 	public static ArrayList<String> booksNearDeadline = new ArrayList<>();
+	public static ArrayList<String> subCurrentBorrowedBooks = new ArrayList<>();
 	public static String bookName;
 	public static Subscriber1 sub1;
 	public static Librarian lib;
@@ -288,7 +289,12 @@ public class ChatClient extends AbstractClient {
 	            // Assign subscriber count
 	            SubCnt = (int) arr.get(1);
 	            break;
+	        case 33:
+	            subCurrentBorrowedBooks= (ArrayList<String>) arr.get(1);
+	            break;
+	        	
 	    }
+	    
 	}
 	
 
