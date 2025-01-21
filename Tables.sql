@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.40, for macos14 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.40, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: hw2-shitot
 -- ------------------------------------------------------
@@ -31,7 +31,7 @@ CREATE TABLE `activityhistory` (
   `deadline` date DEFAULT NULL,
   `ActionID` int NOT NULL AUTO_INCREMENT,
   `reminderSent` tinyint(1) DEFAULT '0',
-  `hasReturned` int DEFAULT NULL,
+  `hasReturned` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`ActionID`),
   KEY `SubscriberID` (`SubscriberID`),
   CONSTRAINT `activityhistory_ibfk_1` FOREIGN KEY (`SubscriberID`) REFERENCES `subscriber` (`subscriber_id`),
@@ -269,7 +269,7 @@ CREATE TABLE `subscriber` (
   `password` varchar(70) DEFAULT NULL,
   `join_date` date DEFAULT NULL,
   PRIMARY KEY (`subscriber_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=48831 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=89832 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -278,7 +278,7 @@ CREATE TABLE `subscriber` (
 
 LOCK TABLES `subscriber` WRITE;
 /*!40000 ALTER TABLE `subscriber` DISABLE KEYS */;
-INSERT INTO `subscriber` VALUES (1,'dor','1','1','Active','1','2024-08-16'),(2,'John Doe','123-456-7890','john.doe@example.com','Frozen','123','2024-01-11'),(3,'Jane Smith','987-654-3210','jane.smith@example.com','active',NULL,NULL),(4,'Alice Johnson','555-666-7777','alice.johnson@example.com','active',NULL,NULL),(5,'1','1','2','active','3',NULL),(14069,'beri','','','active','1',NULL),(48830,'1231','123456','@','active','123',NULL);
+INSERT INTO `subscriber` VALUES (1,'dor','1','1','Active','1','2024-08-16'),(2,'John Doe','123-456-7890','john.doe@example.com','Frozen','123','2024-01-11'),(3,'Jane Smith','987-654-3210','jane.smith@example.com','active',NULL,NULL),(4,'Alice Johnson','555-666-7777','alice.johnson@example.com','active',NULL,NULL),(5,'1','1','2','active','3',NULL),(14069,'beri','','','active','1',NULL),(32792,'Harry potter','0501234566','harry.potter@gmail.com','active','123','2025-01-21'),(48830,'1231','123456','@','active','123',NULL),(89831,'1','1234567893','@','active','1','2025-01-21');
 /*!40000 ALTER TABLE `subscriber` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -291,4 +291,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-20 23:31:45
+-- Dump completed on 2025-01-21 14:06:16
