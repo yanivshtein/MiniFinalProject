@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import logic.ClientInfo;
@@ -25,22 +26,17 @@ import server.ServerUI;
 public class ServerGUI {
 
     @FXML
-    private Button show = null;
+    private Button runServer = null;
     
     @FXML
     private Button exit = null;
 
-    @FXML
-    private TextField ip = null;
-
-    @FXML
-    private TextField hostName = null;
-
-    @FXML
-    private TextField connStatus = null;
     
     @FXML
     private Label serverRun = null;
+    
+    @FXML
+    private ListView<String> clientListView = null;
 
     /**
      * Starts the Server GUI by loading the FXML layout and displaying it in a new window.
@@ -68,22 +64,22 @@ public class ServerGUI {
         serverRun.setText("Server is listening...");
         EchoServer sv = ServerUI.runServer(port);
         
-        // Add listener for connection events
+     // Add listener for connection events
         sv.addConnectionListener(new EchoServer.ConnectionListener() {
             @Override
             public void onClientConnected(ClientInfo clientInfo) {
-                ip.setText(clientInfo.getIpAddress());
-                hostName.setText(clientInfo.getHostName());
-                connStatus.setText("Connected");
-                System.out.println("Connection established: IP = " + clientInfo.getIpAddress() + ", Host = " + clientInfo.getHostName());                
+                javafx.application.Platform.runLater(() -> {
+                    clientListView.getItems().add(clientInfo.getHostName() + " (" + clientInfo.getIpAddress() + ")");
+                    System.out.println("Connection established: IP = " + clientInfo.getIpAddress() + ", Host = " + clientInfo.getHostName());
+                });
             }
 
             @Override
             public void onClientDisconnected(ClientInfo clientInfo) {
-                ip.setText("");
-                hostName.setText("");
-                connStatus.setText("Disconnected");
-                System.out.println("Connection lost: IP = " + clientInfo.getIpAddress() + ", Host = " + clientInfo.getHostName());
+                javafx.application.Platform.runLater(() -> {
+                    clientListView.getItems().remove(clientInfo.getHostName() + " (" + clientInfo.getIpAddress() + ")");
+                    System.out.println("Connection lost: IP = " + clientInfo.getIpAddress() + ", Host = " + clientInfo.getHostName());
+                });
             }
         });
         sv.time(); // call the method time in sv (Echo Server) to check all the actions that use time
