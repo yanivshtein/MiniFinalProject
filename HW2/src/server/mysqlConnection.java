@@ -868,32 +868,6 @@ public class mysqlConnection {
 		return false;
 	}
 
-	public Boolean checkBookAlreadyReturned(String borrowerId, String bookName) throws SQLException {
-
-		String query = " SELECT " + "COUNT(CASE WHEN ActionType ='Borrow' THEN 1 END) AS borrow_count,"
-				+ "COUNT(CASE WHEN ActionType = 'Return' THEN 1 END) AS return_count "
-				+ "FROM activityhistory WHERE SubscriberID=? AND BookName=? ";
-
-		int countBorrowed = 0;
-		int countReturned = 0;
-
-		try (PreparedStatement ps = conn.prepareStatement(query)) {
-			ps.setString(1, borrowerId);
-			ps.setString(2, bookName);
-
-			try (ResultSet rs = ps.executeQuery()) {
-
-				if (rs.next()) {
-					countBorrowed = rs.getInt("borrow_count");
-					countReturned = rs.getInt("return_count");
-				}
-
-				// Return true if the book has been returned (when borrowed and returned count
-				// are the same)
-				return countBorrowed == countReturned;
-			}
-		}
-	}
 
 	public Boolean insertReturnBookRowInActivityHistory(String borrowerId, String bookName, String dateDifference,
 			Boolean isLate) throws SQLException {

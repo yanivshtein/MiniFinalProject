@@ -516,24 +516,7 @@ public class EchoServer extends AbstractServer
                         e.printStackTrace();
                     }
                     break;
-                case 26:	// check if already returned the book
-	            	 this.subscriberID = (String)arr.get(1);
-	            	 this.bookName = (String)arr.get(2); 
-	            	 arrToSend.add(26);
-				try {
-					/*
-					 * the return Boolean of the method call in the database represents:
-					 * True: if the book was already returned by subscriber
-					 * False: the book  still didn't return.
-					 */
-					ret = SQLinstance.checkBookAlreadyReturned(this.subscriberID, this.bookName);
-					arrToSend.add(ret);
-					client.sendToClient(arrToSend);
-				} catch (SQLException | IOException e) {
-					
-					e.printStackTrace();
-				}
-	            	break;
+
                 case 27: //return ArrayList of ordered books of a subscriber
                 	ArrayList<String> orders = SQLinstance.getOrdersOfSubscriber((int)arr.get(1));
                 	arrToSend.add(27);

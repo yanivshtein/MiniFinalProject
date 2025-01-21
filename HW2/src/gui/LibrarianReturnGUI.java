@@ -79,8 +79,6 @@ public class LibrarianReturnGUI {
 
 	private String BookName;
 	
-	//private boolean isChecked = false;
-	
 	private ArrayList<String> borrowersBorrowedBooks;
 	
 	private ObservableList<String> BooksNames;
@@ -89,7 +87,6 @@ public class LibrarianReturnGUI {
 		showAllBooks();
 		
 		
-	
 	}
 	
 	
@@ -121,19 +118,7 @@ public class LibrarianReturnGUI {
 			break;
 		}
 		
-//		if (!isChecked) {
-//	        alertMessege.setContentText("You must check if the borrow exists before returning the book.");
-//	        alertMessege.setAlertType(AlertType.ERROR);
-//	        alertMessege.show();
-//	        return;
-//	    }
-//		
-//		if(bookArriveDate ==null || deadline == null) {
-//			alertMessege.setContentText("Error need to check if exist borrow first");	
-//		 	alertMessege.setAlertType(AlertType.ERROR);
-//		 	alertMessege.show();
-//			return;
-//		}
+
 		if(sendMsg!=null) {
 			sendMsg.setText("");;
 		}
@@ -141,25 +126,12 @@ public class LibrarianReturnGUI {
 		String BorrowerId=subscriberId.getText();
 		
 		
-		// check if the book has already returned by the subscriber
-//		ClientGUIConnectionController.chat.returnBook_accept("CHECK_BOOK_RETURNED", BorrowerId, BookName, null, null, null);
-//		
-//		// if the book already returned then show message 
-//		if (ChatClient.bool==true) {
-//			
-//			alertMessege.setContentText("Book has already returned!");	
-//		 	alertMessege.setAlertType(AlertType.ERROR);
-//		 	alertMessege.show();
-//			return;
-//		}
-		
-		
 		BookName = ChatClient.bookName;
 		System.out.println("book name is: "+BookName);
 		// get current time in a format of yyyy-MM-dd
 		LocalDate currentDate=LocalDate.now();
 		DateTimeFormatter dateFormatter= DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//		String formattedCurrentDate = localDate.format(dateFormatter);
+
 		String deadlineString= deadline.getText();
 		
 		if (deadlineString == null || deadlineString.isEmpty()) {
@@ -173,9 +145,6 @@ public class LibrarianReturnGUI {
 			deadlineDate = LocalDate.parse(deadlineString, dateFormatter);
 		} catch (DateTimeParseException e) {
 			e.printStackTrace();
-//		    alertMessege.setContentText("Deadline date format is invalid. Please use yyyy-MM-dd.");
-//		    alertMessege.setAlertType(AlertType.ERROR);
-//		    alertMessege.show();
 		    return;
 		}		Period difference = Period.between( deadlineDate,currentDate);
 		
@@ -204,13 +173,7 @@ public class LibrarianReturnGUI {
 
 			
 			}
-//		if (ChatClient.bool==false) {
-//			alertMessege.setContentText("Error need to check if exist borrow first");	
-//		 	alertMessege.setAlertType(AlertType.ERROR);
-//		 	alertMessege.show();
-//			return;
-//			
-//		}
+
 		
 			if(ChatClient.isFrozen) {	
 				showLabelTextForDuration(sendMsg, "Return operation successfully finished!", 3000); // Show text for 3 seconds
@@ -224,13 +187,11 @@ public class LibrarianReturnGUI {
 			}
 
 		}catch (DateTimeParseException e) {
-//			alertMessege.setContentText("Error need to check if exist borrow first");	
-//		 	alertMessege.setAlertType(AlertType.ERROR);
+
 			e.getStackTrace();
 		}
 		
-//		isChecked = false;
-		//checkButton.setDisable(true);
+
 	}
 	
 	public void showLabelTextForDuration(Label label, String text , int durationInMillis) {
@@ -263,7 +224,7 @@ public class LibrarianReturnGUI {
 		// check in the database if exist a borrow with the same borrower ID and book name
 		ClientGUIConnectionController.chat.returnBook_accept("EXIST", BorrowerId, BookID,false,false,null);
 		
-		// if there isn't any row that match, then show in label.
+		// if there isn't any row that match, then return.
 		if (ChatClient.bool==false) {
 			
 			bookArriveDate.setText("");		// set labels to show them in GUI
@@ -273,19 +234,12 @@ public class LibrarianReturnGUI {
 			return "Borrow does not exist";
 		}
 		
-		// because we added the column hasRetruned in the activity history 
-		// so the error Book "has already returned book" won't happen because we update
-		// the borrow in the column hasReturned field to 1 so he won't appear in the exist
-		// query
+
 		BookName = ChatClient.bookName;
 		// if there is a match then select the borrow date and deadline.
 		ClientGUIConnectionController.chat.returnBook_accept("SELECT DATE",BorrowerId,BookName,false,false,null);
 		
-		// The action date and deadline returning null
-//		if(ChatClient.ActionDateAndDeadline==null) {
-//			System.err.println("ERROR:After selecting, Action Date And deadline is NULL");
-//			return "Action Date And deadline is NULL";
-//		}
+
 		
 		for (String date : ChatClient.ActionDateAndDeadline) {	// get action date and deadline
 			if(index ==0)

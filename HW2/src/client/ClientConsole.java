@@ -297,11 +297,6 @@ public class ClientConsole implements ChatIF
             arr1.add(totalDaysLate);
             break;
             
-        case "CHECK_BOOK_RETURNED":	
-            arr1.add(26);
-            arr1.add(borrowerID);
-            arr1.add(bookName);
-            break;
            
         case "SELECT_CURRENT_BORROWED_BOOKS_BY_ID":
         	arr1.add(32);

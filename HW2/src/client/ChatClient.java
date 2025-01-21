@@ -246,9 +246,9 @@ public class ChatClient extends AbstractClient {
 		        e.printStackTrace();
 		    }
 		    break;
-		case 26:
-			 bool=(Boolean) arr.get(1);
-			break;
+//		case 26:
+//			 bool=(Boolean) arr.get(1);
+//			break;
 		case 27:
 			orders = (ArrayList<String>) arr.get(1);
 			break;
