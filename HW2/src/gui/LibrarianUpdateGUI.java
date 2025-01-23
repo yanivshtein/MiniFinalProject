@@ -150,7 +150,7 @@ public class LibrarianUpdateGUI {
 			return;
         if (!DateValidation(OldRetDate.getText(), NewRetDate.getText())) {
         	alert.setTitle("Invalid date");
-            alert.setContentText("Invalid New Date! - Must be both after the old date and within 2 weeks!");
+            alert.setContentText("Error:Must be both after the old date and within 2 weeks!");
             alert.showAndWait();
             return;
         }
@@ -161,7 +161,7 @@ public class LibrarianUpdateGUI {
             ChangesSavedPop.setContentText("Updated successfully");
         } else {
         	alert.setTitle("Update failed");
-            alert.setContentText("Update failed - Book already extended or reserved by another user");
+            alert.setContentText("Error:Book already extended or reserved by another user");
             alert.showAndWait();
         }
     }

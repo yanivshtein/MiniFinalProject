@@ -224,6 +224,7 @@ public class ChatClient extends AbstractClient {
 	        case 19:
 	            // Assign full status report
 	            FullStatusRep = (ArrayList<String>) arr.get(1);
+
 	            break;
 	        case 20:
 	            // Handle book name and related flag
