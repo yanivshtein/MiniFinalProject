@@ -372,32 +372,36 @@ public class EchoServer extends AbstractServer {
 					e.printStackTrace();
 				}
 				break;
-			case 19: // Retrieves a status report of subscribers for a given month and year.
-				ArrayList<String> statusRepDet = null;
-                try {
-                    statusRepDet = SQLinstance.bringStatusRepInfo((String) arr.get(1), (String) arr.get(2));
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    statusRepDet = new ArrayList<>();
-                    statusRepDet.add("Error fetching data: " + e.getMessage());
-                }
-                arrToSend.add(19);
-                if (statusRepDet != null && !statusRepDet.isEmpty()) {
-                    try {
-                        arrToSend.add(statusRepDet);
-                        client.sendToClient(arrToSend);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    try {
-                        arrToSend.add("No data available or an error occurred.");
-                        client.sendToClient(arrToSend);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
+			case 19:
+			    ArrayList<String> statusRepDet = null;
+			    try {
+			        statusRepDet = SQLinstance.bringStatusRepInfo((String) arr.get(1), (String) arr.get(2));
+			    } catch (SQLException e) {
+			        e.printStackTrace();
+			        // Return an array list with the error message
+			        statusRepDet = new ArrayList<>();
+			        statusRepDet.add("Error fetching data: " + e.getMessage());
+			    }
+
+			    // Prepare what to send:
+			    arrToSend.add(19);  // The code
+
+			    if (statusRepDet != null && !statusRepDet.isEmpty()) {
+			        arrToSend.add(statusRepDet); 
+			    } else {
+			        // Instead of a single string, return an ArrayList so the shape is consistent
+			        ArrayList<String> emptyMsg = new ArrayList<>();
+			        emptyMsg.add("No data available or an error occurred.");
+			        arrToSend.add(emptyMsg);
+			    }
+
+			    try {
+			        client.sendToClient(arrToSend);
+			    } catch (IOException e) {
+			        e.printStackTrace();
+			    }
+			    break;
+
 			case 20: // search if exist borrower in the DB
 				String borrowerid = (String) arr.get(1); // subscriber ID is in the second position of the array
 				String bookID = (String) arr.get(2);

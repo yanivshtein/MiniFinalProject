@@ -870,7 +870,6 @@ public class mysqlConnection {
 	        }
 	    }
 	    
-	    System.out.println(statusReport.toString());
 	    return statusReport;
 	}
 
@@ -1489,6 +1488,7 @@ public class mysqlConnection {
 	            }
 	        }
 	    }
+	    
 	    return count;
 	}
 	
