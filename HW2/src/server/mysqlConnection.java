@@ -58,7 +58,7 @@ public class mysqlConnection {
         }
 
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "yaniv1234");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "!vex123S");
             System.out.println("SQL connection succeed");
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
@@ -1018,50 +1018,20 @@ public class mysqlConnection {
 	 * @return {@code true} if the subscriber has borrowed the book, {@code false} otherwise.
 	 * @throws SQLException if an error occurs while querying the database.
 	 */
-	public Boolean checkIfBorrowerFound(String borrowerId, String bookName) throws SQLException {
+	public String checkIfBorrowerFound(String borrowerId, String bookName) throws SQLException {
 
         PreparedStatement ps = conn.prepareStatement(
-                "SELECT EXISTS(SELECT * FROM activityhistory where SubscriberID=? AND BookName=? AND ActionType='Borrow' AND hasReturned=0)");
+                "SELECT bookName FROM activityhistory where SubscriberID=? AND LOWER(bookName)=LOWER(?) AND ActionType='Borrow' AND hasReturned=0");
         ps.setString(1, borrowerId);
         ps.setString(2, bookName);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
-            return rs.getBoolean(1); // Retrieve the result from the first column
+            return rs.getString("BookName"); // Retrieve the result from the first column
         }
-        return false;
+        return "";
     }
 
-	/**
-	 * Checks if a specific book has already been returned by a subscriber.
-	 *
-	 * @param borrowerId the ID of the borrower.
-	 * @param bookName   the name of the book.
-	 * @return {@code true} if the book has been returned, {@code false} otherwise.
-	 * @throws SQLException if an error occurs while querying the database.
-	 */
-	public Boolean checkBookAlreadyReturned(String borrowerId, String bookName) throws SQLException {
-		String query = " SELECT " + "COUNT(CASE WHEN ActionType ='Borrow' THEN 1 END) AS borrow_count,"
-				+ "COUNT(CASE WHEN ActionType = 'Return' THEN 1 END) AS return_count "
-				+ "FROM activityhistory WHERE SubscriberID=? AND BookName=? ";
-		int countBorrowed = 0;
-		int countReturned = 0;
-		try (PreparedStatement ps = conn.prepareStatement(query)) {
-			ps.setString(1, borrowerId);
-			ps.setString(2, bookName);
 
-			try (ResultSet rs = ps.executeQuery()) {
-
-				if (rs.next()) {
-					countBorrowed = rs.getInt("borrow_count");
-					countReturned = rs.getInt("return_count");
-				}
-
-				// Return true if the book has been returned (when borrowed and returned count
-				// are the same)
-				return countBorrowed == countReturned;
-			}
-		}
-	}
 
 	/**
 	 * Inserts a return record into the activity history for a specific subscriber and book.
@@ -1089,7 +1059,7 @@ public class mysqlConnection {
 		ps.setString(3, "Return");
 		ps.setDate(4, Date.valueOf(actionDate));
 		ps.setString(5, dateDifference);
-		//ps.setInt(6, 1);
+		
 		rowsAffected = ps.executeUpdate();
 		
 		if(rowsAffected==0) {
@@ -1108,7 +1078,6 @@ public class mysqlConnection {
 		resultSet = select.executeQuery();
 		// resultSet is in row 1
 		System.out.println("Result Set row is:"+resultSet.getRow());
-		//System.out.println("Result Set string is:"+resultSet.getString("ActionID"));
 
 		if (!resultSet.next()) {
 			System.out.println("No ActionID found");
@@ -1164,7 +1133,7 @@ public class mysqlConnection {
 			e.printStackTrace();
 			
 		}
-		
+		System.out.println("");
 		if(checkIsFrozen(subIdInt).equals("frozen")) {
 			return false;
 		}
@@ -1483,12 +1452,12 @@ public class mysqlConnection {
 
 
 	/**
-	 * Updates the status of subscribers from 'Frozen' to 'Active' if their last return action
+	 * Updates the status of subscribers from 'frozen' to 'active' if their return action
 	 * was over a month ago.
 	 * 
-	 * This method retrieves all subscribers with the 'Frozen' status and checks their last return date
-	 * from the activity history. If the last return date is more than a month ago, the subscriber's
-	 * status is updated to 'Active'.
+	 * This method retrieves all subscribers with the 'frozen' status and checks their freeze date
+	 * from the activity history. If the current time is more than the finish date of the freeze, the subscriber's
+	 * status is updated to 'Active' and the data of the freeze from frozen_subs table is deleted.
 	 */
 
 	public void unfreezeAfterMonthStatus()  {
@@ -1587,33 +1556,4 @@ public class mysqlConnection {
 	    }
 	}
 	
-public  ArrayList<String> selectCurrentBorrowedBooksById(Integer subscriberId) throws SQLException {
-		
-		ArrayList<String> subCurrentBorrowedBooks = new ArrayList<String>();
-		ResultSet resultSet = null;
-		String query= "SELECT BookName"
-				+ " FROM activityhistory "
-				+ " WHERE SubscriberID = ?"
-				+ "  AND ActionType = 'Borrow'"
-				+"   AND hasReturned = 0";
-
-	
-				
-		PreparedStatement ps = conn.prepareStatement(query);
-		
-		ps.setInt(1,subscriberId);
-		
-		resultSet = ps.executeQuery();
-		//resultSet.next();
-		if (!resultSet.isBeforeFirst()) { 
-	        System.out.println("No current borrowed books found for Subscriber ID: " + subscriberId);
-	        return subCurrentBorrowedBooks; // Empty list
-	    }
-			
-		while(resultSet.next()) {
-			subCurrentBorrowedBooks.add(resultSet.getString("BookName"));
-		}
-		return subCurrentBorrowedBooks;
-	}
-
 }
