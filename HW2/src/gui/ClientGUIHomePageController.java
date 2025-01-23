@@ -94,7 +94,7 @@ public class ClientGUIHomePageController {
 
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
-        primaryStage.setTitle("Client Second GUI");
+        primaryStage.setTitle("Update Subscriber");
 
         primaryStage.setScene(scene);
         primaryStage.show();
