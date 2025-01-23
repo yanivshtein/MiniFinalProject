@@ -13,21 +13,17 @@
          <font>
             <Font size="36.0" />
          </font></Label>
-      <Label layoutX="53.0" layoutY="122.0" prefHeight="17.0" prefWidth="105.0" text="Subscriber id:">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="53.0" layoutY="183.0" text="Name of the book:" />
+      <Label layoutX="53.0" layoutY="122.0" prefHeight="20.0" prefWidth="229.0" text="Subscriber ID:" />
+      <Label layoutX="53.0" layoutY="183.0" prefHeight="17.0" prefWidth="229.0" text="Name of the book:" />
       <Text layoutX="165.0" layoutY="137.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-      <TextField fx:id="id" layoutX="213.0" layoutY="120.0" />
-      <TextField fx:id="bookName" layoutX="213.0" layoutY="179.0" />
-      <Button fx:id="borrow" layoutX="62.0" layoutY="311.0" mnemonicParsing="false" onAction="#borrowBtn" text="Borrow" />
-      <Button fx:id="return1" layoutX="24.0" layoutY="384.0" mnemonicParsing="false" onAction="#getReturnBtn" prefHeight="53.0" prefWidth="183.0" text="Return to Home Page" />
-      <Button fx:id="exit" layoutX="526.0" layoutY="384.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="53.0" prefWidth="99.0" text="Exit" />
+      <TextField fx:id="id" layoutX="290.0" layoutY="120.0" />
+      <TextField fx:id="bookName" layoutX="290.0" layoutY="179.0" />
+      <Button fx:id="borrow" layoutX="270.0" layoutY="333.0" mnemonicParsing="false" onAction="#borrowBtn" text="Borrow" />
+      <Button fx:id="exit" layoutX="538.0" layoutY="416.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="34.0" prefWidth="75.0" text="Exit" />
       <Label layoutX="53.0" layoutY="237.0" text="Barcode:" />
-      <TextField fx:id="barCode" layoutX="213.0" layoutY="233.0" />
-      <Button fx:id="barcode" layoutX="399.0" layoutY="233.0" mnemonicParsing="false" onAction="#BarCodeBtn" text="Scan barcode" />
-      <Label fx:id="msg" layoutX="235.0" layoutY="277.0" prefHeight="34.0" prefWidth="231.0" text="" />
+      <TextField fx:id="barCode" layoutX="290.0" layoutY="233.0" />
+      <Button fx:id="barcode" layoutX="476.0" layoutY="233.0" mnemonicParsing="false" onAction="#BarCodeBtn" text="Scan barcode" />
+      <Label fx:id="msg" layoutX="19.0" layoutY="277.0" prefHeight="34.0" prefWidth="656.0" text="" />
+      <Button fx:id="return11" layoutX="23.0" layoutY="416.0" mnemonicParsing="false" onAction="#getReturnBtn" prefHeight="34.0" prefWidth="203.0" text="Return to Home Page" />
    </children>
 </Pane>

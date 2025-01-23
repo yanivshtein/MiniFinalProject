@@ -99,7 +99,7 @@ public class ClientGUIUpdateDetailsController {
         Parent root = FXMLLoader.load(getClass().getResource("/gui/ClientGUIHomePage.fxml"));
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
-        primaryStage.setTitle("Client GUI");
+        primaryStage.setTitle("Update subscriber");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

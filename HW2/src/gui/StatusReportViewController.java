@@ -35,6 +35,7 @@ public class StatusReportViewController {
             ClientGUIConnectionController.chat.reports_accept("create status report", month, year);
             // 2. Also retrieve the count of how many joined
             ClientGUIConnectionController.chat.reports_accept("how many joined", month, year);
+            
 
             if (ChatClient.FullStatusRep == null || ChatClient.FullStatusRep.isEmpty()) {
                 showAlert("No information to display.");

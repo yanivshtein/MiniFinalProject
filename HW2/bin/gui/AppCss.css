@@ -1,0 +1,87 @@
+/* General body styles for clean, minimalistic design */
+.root {
+    -fx-background-image: url('/resources/SmartLibrary.jpg'); /* Your background image */
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-position: center;
+    -fx-padding: 20px;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-font-size: 14px; /* Base font size */
+}
+
+/* Form and button styling */
+.text-field {
+    -fx-background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+    -fx-border-color: #dcdcdc; /* Light border for minimal effect */
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+    -fx-font-size: 14px;
+    -fx-padding: 5px;
+    -fx-text-fill: #333; /* Dark text for contrast */
+}
+
+/* Label Styling without a frame or background */
+.label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #333; /* Dark text for readability */
+    -fx-font-size: 16px;
+    -fx-background-color: transparent; /* No background for label */
+    -fx-border-color: transparent; /* No border for label */
+}
+
+/* Button Styling */
+.button {
+    -fx-background-color: linear-gradient(to bottom, #a4907c, #c8b6a6);  /* Subtle gradient */
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 8px 16px; /* Slightly larger button for better accessibility */
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 4, 0, 0, 2);
+}
+/* Completely transparent DialogPane */
+.dialog-pane {
+    -fx-background-color: transparent; /* Fully transparent background */
+    -fx-border-color: transparent; /* No border for a seamless look */
+    -fx-padding: 10px;
+    -fx-text-fill: #333; /* Dark text for contrast */
+}
+
+
+.button:hover {
+    -fx-background-color: linear-gradient(to bottom, #c8b6a6, #8d7b68); /* Darker gradient on hover */
+}
+
+/* Close button with red background */
+.button.close {
+    -fx-background-color: #f44336; /* Red color for close button */
+    -fx-text-fill: white;
+}
+
+.button.close:hover {
+    -fx-background-color: #d32f2f; /* Darker red on hover */
+}
+
+/* Transparent form area with minimal effect */
+.pane {
+    -fx-background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent white */
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5px;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 0);
+}
+
+.dialog-pane {
+    -fx-background-color: transparent; /* Fully transparent background */
+    -fx-border-color: transparent; /* No border for a seamless look */
+    -fx-padding: 10px;
+    -fx-text-fill: #333; /* Dark text for contrast */
+}
+
+#title {
+    -fx-font-size: 30px; 
+    -fx-font-weight: bold; 
+    -fx-text-fill: #555; 
+}

@@ -11,17 +11,17 @@
    <children>
       <Pane fx:id="phoneNumber" prefHeight="462.0" prefWidth="497.0">
          <children>
-            <Button fx:id="update" layoutX="59.0" layoutY="322.0" mnemonicParsing="false" onAction="#getUpdatedBtn" text="Update Subscriber" />
+            <Button fx:id="update" layoutX="182.0" layoutY="322.0" mnemonicParsing="false" onAction="#getUpdatedBtn" text="Update Subscriber" />
             <Label layoutX="64.0" layoutY="141.0" text="ID:" />
             <Label layoutX="61.0" layoutY="190.0" text="Name:" />
             <Label layoutX="60.0" layoutY="235.0" text="Phone:" />
             <Label layoutX="63.0" layoutY="277.0" text="Email:" />
             <TextField fx:id="Phone" layoutX="134.0" layoutY="231.0" />
             <TextField fx:id="Email" layoutX="134.0" layoutY="273.0" />
-            <Button fx:id="exitBtn" layoutX="365.0" layoutY="396.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="40.0" prefWidth="80.0" text="EXIT" />
+            <Button fx:id="exitBtn" layoutX="389.0" layoutY="388.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="33.0" prefWidth="81.0" text="EXIT" />
             <Label fx:id="IdName" layoutX="144.0" layoutY="141.0" text="Label" />
             <Label fx:id="subName" layoutX="144.0" layoutY="190.0" text="Label" />
-            <Button fx:id="Return" layoutX="38.0" layoutY="396.0" mnemonicParsing="false" onAction="#getReturnBtn" prefHeight="40.0" prefWidth="177.0" text="Return to Home Page" />
+            <Button fx:id="Return" layoutX="23.0" layoutY="388.0" mnemonicParsing="false" onAction="#getReturnBtn" prefHeight="33.0" prefWidth="186.0" text="Return to Home Page" />
             <Label fx:id="afterUpdate" layoutX="405.0" layoutY="305.0" />
             <Label fx:id="title" layoutX="38.0" layoutY="51.0" text="Update subscriber">
                <font>

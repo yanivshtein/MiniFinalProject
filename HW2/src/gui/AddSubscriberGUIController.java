@@ -61,7 +61,7 @@ public class AddSubscriberGUIController {
         Parent root = FXMLLoader.load(getClass().getResource("/gui/AddSubscriberGUIController.fxml"));
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/gui/AppCss.css").toExternalForm());
-        primaryStage.setTitle("Librarian watch and update GUI");
+        primaryStage.setTitle("Add subscriber");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
