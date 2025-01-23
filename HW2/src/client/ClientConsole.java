@@ -407,6 +407,14 @@ public class ClientConsole implements ChatIF
       client.handleMessageFromClientUI(arr1);
   }
 
+  public void lostBook_accept(String subID, String bookName) {
+	  ArrayList<Object> arr1 = new ArrayList<>();
+	  arr1.add(33);
+	  arr1.add(subID);
+	  arr1.add(bookName);
+	  client.handleMessageFromClientUI(arr1);
+  }
+  
 @Override
 public void display(String message) {	
 }

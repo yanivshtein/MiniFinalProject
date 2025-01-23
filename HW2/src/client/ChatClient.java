@@ -52,7 +52,7 @@ public class ChatClient extends AbstractClient {
 	public static Subscriber1 sub1;
 	public static Librarian lib;
 	public static int SubCnt;
-
+	public static String lostBook = "";
 	// Constructors ****************************************************
 
 	/**
@@ -287,7 +287,9 @@ public class ChatClient extends AbstractClient {
 	            // Assign subscriber count
 	            SubCnt = (int) arr.get(1);
 	            break;
-
+	        case 33:
+	        	lostBook = (String) arr.get(1);
+	        	break;
 	        	
 	    }
 	    

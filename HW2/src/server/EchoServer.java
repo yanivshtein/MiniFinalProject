@@ -636,7 +636,18 @@ public class EchoServer extends AbstractServer {
 					e.printStackTrace(); // Log the error details
 				}
 				break;
-
+			case 33:
+				//lost book, freeze subscriber account and minus one the inventory of book
+				String retS = SQLinstance.lostBook((String)arr.get(1), (String)arr.get(2));
+				arrToSend.add(33);
+				arrToSend.add(retS);
+				try {
+					client.sendToClient(arrToSend);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
 			default:
 				System.out.println("The server - Received message is not of the expected type.");
 				break;

@@ -17,7 +17,7 @@
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <Button fx:id="sendButton" layoutX="211.0" layoutY="372.0" mnemonicParsing="false" onAction="#sendButton" text="Send" />
+            <Button fx:id="sendButton" layoutX="147.0" layoutY="373.0" mnemonicParsing="false" onAction="#sendButton" text="Return Book" />
             <Label layoutX="28.0" layoutY="320.0" text=" Book Name: ">
                <font>
                   <Font size="14.0" />
@@ -41,7 +41,7 @@
             <Label fx:id="bookArriveDate" layoutX="147.0" layoutY="429.0" prefHeight="17.0" prefWidth="91.0" />
             <Label fx:id="deadline" layoutX="147.0" layoutY="482.0" prefHeight="17.0" prefWidth="91.0" />
             <Label fx:id="sendMsg" layoutX="110.0" layoutY="505.0" prefHeight="26.0" prefWidth="281.0" />
-            <Button layoutX="92.0" layoutY="537.0" mnemonicParsing="false" onAction="#retButton" text="Return to Home Page" />
+            <Button layoutX="92.0" layoutY="544.0" mnemonicParsing="false" onAction="#retButton" text="Return to Home Page" />
             <Button fx:id="scanButton" layoutX="433.0" layoutY="256.0" mnemonicParsing="false" onAction="#barcodeButton" text="Scan" />
             <TextField fx:id="bookID" layoutX="134.0" layoutY="253.0" prefHeight="31.0" prefWidth="245.0" />
             <Label layoutX="28.0" layoutY="260.0" text="Barcode:">
@@ -53,12 +53,13 @@
                   <Font size="36.0" />
                </font>
             </Label>
-            <Button fx:id="exitButton" layoutX="305.0" layoutY="537.0" mnemonicParsing="false" onAction="#getExitBtn" text="EXIT" />
+            <Button fx:id="exitButton" layoutX="306.0" layoutY="544.0" mnemonicParsing="false" onAction="#getExitBtn" text="EXIT" />
             <Label layoutX="38.0" layoutY="126.0" text="enter subscriber id and scan book or enter book name, then click send button">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
+            <Button fx:id="lostBook" layoutX="278.0" layoutY="374.0" mnemonicParsing="false" onAction="#lostBookBtn" text="Lost Book" />
          </children>
       </Pane>
    </children>

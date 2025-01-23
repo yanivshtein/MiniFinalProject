@@ -58,7 +58,7 @@ public class mysqlConnection {
         }
 
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "Aa123456");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "yaniv1234");
             System.out.println("SQL connection succeed");
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
@@ -1480,4 +1480,24 @@ public class mysqlConnection {
 	    }
 	}
 	
+	public String lostBook(String subID, String bookName) {
+		String bookExists = isAvailable(bookName);
+		if(bookExists.equals("notExist")) { //checks if book exists
+			return "bookNotExists";
+		}
+		if(!isSubscriberExist(Integer.parseInt(subID))) { // checks if subID doesnt exist
+			return "subID";
+		}
+		String query = "UPDATE books SET totalCopys = totalCopys - 1 WHERE bookName = ?";
+		try (PreparedStatement stmt = conn.prepareStatement(query)) {
+	        // Loop through the values of the map (book names)
+	            stmt.setString(1, bookName);
+	            stmt.executeUpdate();
+	            updateSubscriberStatusToFrozen(subID,"frozen");
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+		return "";
+	}
+
 }
