@@ -404,20 +404,23 @@ public class EchoServer extends AbstractServer {
 
 			case 20: // search if exist borrower in the DB
 				String borrowerid = (String) arr.get(1); // subscriber ID is in the second position of the array
-				String bookID = (String) arr.get(2);
+				String BookName = (String) arr.get(2);
 
 				try {
-					String BookName = SQLinstance.BringBarCodeBookName(Integer.parseInt(bookID)); // get the book name
-																									// from the book
-																									// database
-
-					Boolean isExist = SQLinstance.checkIfBorrowerFound(borrowerid, BookName); // check if there is a
+		
+					String bookNameFromTable = SQLinstance.checkIfBorrowerFound(borrowerid,BookName ); // check if there is a
 																								// borrow in the
 																								// database
 					arrToSend.add(20);
 
-					arrToSend.add(isExist);
-					arrToSend.add(BookName);
+					
+					if(bookNameFromTable.equals("")) 
+						arrToSend.add(false);
+						
+					else 
+						arrToSend.add(true);
+							
+					arrToSend.add(bookNameFromTable);
 					client.sendToClient(arrToSend);
 
 				} catch (SQLException | IOException e) {
@@ -469,7 +472,8 @@ public class EchoServer extends AbstractServer {
 				Boolean bookIncrement = true; //
 				Boolean freezeSuccess = true; // Initialized freezeSuccess to true because of the AND action at
 												// sendToClient so if it won't happen then it will still pass.
-				Boolean insertRowToActivity = false; //
+				Boolean insertRowToActivity = false; 
+				Boolean freezeFlag = false;
 				arrToSend.add(22);
 				try {
 					if (returnLate == false && freeze == false) {
@@ -484,19 +488,9 @@ public class EchoServer extends AbstractServer {
 					}
 					if (freeze == true) {
 						freezeSuccess = SQLinstance.updateSubscriberStatusToFrozen(this.subscriberID, "frozen");
-
-						if (freezeSuccess)
-							arrToSend.add("FROZEN");
-
-						else {
-							System.err.println("Freezing subscriber status didn't work");
-
-						}
+						freezeFlag = true;
 
 					}
-
-					if (freeze == false)
-						arrToSend.add("Active");
 
 					if (orderExists == false) { // which means no one has ordered this book then we can add the copy to
 												// the inventory
@@ -504,13 +498,20 @@ public class EchoServer extends AbstractServer {
 
 					}
 					arrToSend.add(bookIncrement && freezeSuccess && insertRowToActivity);
-
+					
+					if (freezeSuccess && freezeFlag)
+						arrToSend.add("FROZEN");
+					
+					else if (freeze == false)
+						arrToSend.add("Active");
+					
+					else
+						arrToSend.add("Already Frozen");
 					client.sendToClient(arrToSend);
 
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				break;
@@ -561,19 +562,7 @@ public class EchoServer extends AbstractServer {
 					e.printStackTrace();
 				}
 				break;
-			case 26: // check if already returned the book
-				this.subscriberID = (String) arr.get(1);
-				this.bookName = (String) arr.get(2);
-				arrToSend.add(26);
-				try {
-					ret = SQLinstance.checkBookAlreadyReturned(this.subscriberID, this.bookName);
-					arrToSend.add(ret);
-					client.sendToClient(arrToSend);
-				} catch (SQLException | IOException e) {
 
-					e.printStackTrace();
-				}
-				break;
 			case 27: // return ArrayList of ordered books of a subscriber
 				ArrayList<String> orders = SQLinstance.getOrdersOfSubscriber((int) arr.get(1));
 				arrToSend.add(27);
@@ -647,20 +636,7 @@ public class EchoServer extends AbstractServer {
 					e.printStackTrace(); // Log the error details
 				}
 				break;
-			case 33:
-				ArrayList<String> currentBorrowedBooks;
 
-				try {
-					Integer SubID = Integer.parseInt((String) arr.get(1));
-					arrToSend.add(33);
-					currentBorrowedBooks = SQLinstance.selectCurrentBorrowedBooksById(SubID);
-					arrToSend.add(currentBorrowedBooks);
-					client.sendToClient(arrToSend);
-				} catch (SQLException | IOException | NumberFormatException e) {
-
-					e.printStackTrace();
-				}
-				break;
 			default:
 				System.out.println("The server - Received message is not of the expected type.");
 				break;

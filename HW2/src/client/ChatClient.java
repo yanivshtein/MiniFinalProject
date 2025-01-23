@@ -237,8 +237,8 @@ public class ChatClient extends AbstractClient {
 	            break;
 	        case 22:
 	            // Handle frozen account based on additional info
-	            bool = (Boolean) arr.get(2);
-	            isFrozen = ((String) arr.get(1)).equals("FROZEN");
+	            bool = (Boolean) arr.get(1);
+	            isFrozen = ((String) arr.get(2)).equals("FROZEN");
 	            break;
 	        case 23:
 	            // Assign book name
@@ -263,10 +263,7 @@ public class ChatClient extends AbstractClient {
 	                e.printStackTrace();
 	            }
 	            break;
-	        case 26:
-	            // Generic boolean flag handling
-	            bool = (Boolean) arr.get(1);
-	            break;
+
 	        case 27:
 	            // Assign list of orders
 	            orders = (ArrayList<String>) arr.get(1);
@@ -290,9 +287,7 @@ public class ChatClient extends AbstractClient {
 	            // Assign subscriber count
 	            SubCnt = (int) arr.get(1);
 	            break;
-	        case 33:
-	            subCurrentBorrowedBooks= (ArrayList<String>) arr.get(1);
-	            break;
+
 	        	
 	    }
 	    
