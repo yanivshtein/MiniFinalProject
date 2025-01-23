@@ -553,7 +553,7 @@ public class mysqlConnection {
 	        ps.setInt(1, subscriberID);
 	        try (ResultSet rs = ps.executeQuery()) {
 	            while (rs.next()) {
-	                borrowHistory.add(String.format("%s,%s,Return Date: __-__-____,%s,Not returned yet",
+	                borrowHistory.add(String.format("%s,%s, __-__-____,%s,Not returned yet",
 	                    rs.getString("BookName"), rs.getString("BorrowDate"),
 	                    rs.getString("deadline")));
 	            }
