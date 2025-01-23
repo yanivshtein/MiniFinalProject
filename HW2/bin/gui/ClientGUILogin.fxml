@@ -10,10 +10,10 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ClientGUILoginController">
    <children>
-      <Pane layoutY="1.0" prefHeight="486.0" prefWidth="436.0">
+      <Pane layoutY="1.0" prefHeight="486.0" prefWidth="507.0">
          <children>
             <Button fx:id="enter" layoutX="176.0" layoutY="337.0" mnemonicParsing="false" onAction="#getEnterBtn" prefHeight="39.0" prefWidth="84.0" text="Enter" />
-            <Button fx:id="exit" layoutX="364.0" layoutY="446.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="31.0" prefWidth="66.0" text="EXIT" />
+            <Button fx:id="exit" layoutX="434.0" layoutY="446.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="31.0" prefWidth="66.0" text="EXIT" />
             <Label layoutX="44.0" layoutY="148.0" text="Email:" />
             <TextField fx:id="userName" layoutX="119.0" layoutY="141.0" prefHeight="31.0" prefWidth="207.0" />
             <Label layoutX="44.0" layoutY="186.0" text="Password:" />
@@ -24,7 +24,7 @@
             <ImageView fx:id="picL" fitHeight="70.0" fitWidth="101.0" layoutX="288.0" layoutY="251.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="picS" fitHeight="79.0" fitWidth="110.0" layoutX="64.0" layoutY="249.0" pickOnBounds="true" preserveRatio="true" />
             <Label layoutX="46.0" layoutY="108.0" text="Enter Email and Password:" />
-            <Label fx:id="title" layoutX="188.0" layoutY="25.0" prefHeight="70.0" prefWidth="110.0" text="Login" />
+            <Label fx:id="title" layoutX="205.0" layoutY="26.0" prefHeight="70.0" prefWidth="110.0" text="Login" />
 
          </children>
       </Pane>
