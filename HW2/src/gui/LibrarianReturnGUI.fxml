@@ -38,8 +38,8 @@
                   <Font size="14.0" />
                </font></Label>
             <Label layoutX="158.0" layoutY="127.0" />
-            <Label fx:id="bookArriveDate" layoutX="211.0" layoutY="429.0" prefHeight="17.0" prefWidth="91.0" />
-            <Label fx:id="deadline" layoutX="211.0" layoutY="482.0" prefHeight="17.0" prefWidth="91.0" />
+            <Label fx:id="bookArriveDate" layoutX="211.0" layoutY="429.0" prefHeight="17.0" prefWidth="112.0" />
+            <Label fx:id="deadline" layoutX="211.0" layoutY="482.0" prefHeight="17.0" prefWidth="112.0" />
             <Label fx:id="sendMsg" layoutX="110.0" layoutY="505.0" prefHeight="26.0" prefWidth="465.0">
                <font>
                   <Font size="10.0" />
