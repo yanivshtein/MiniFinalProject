@@ -1256,19 +1256,18 @@ public class mysqlConnection {
 	public void timeDidntTakeOrder() {
 		Map<Integer, String> ordersToDelete = new HashMap<>();
 		String query = "SELECT subID, bookName FROM orders WHERE arrivalTime IS NOT NULL AND arrivalTime < CURDATE() - INTERVAL 2 DAY;";
-		String updateMessage = "UPDATE sub_messages SET note = ? WHERE subID = ?;";
+		String insertMessage = "INSERT INTO sub_messages (subID, note) VALUES (?, ?);";
 		try {
 			PreparedStatement checkOrderStmt = conn.prepareStatement(query);
-			PreparedStatement updateMessageStmt = conn.prepareStatement(updateMessage);
+			PreparedStatement insertMessageStmt = conn.prepareStatement(insertMessage);
 			ResultSet resultSet = checkOrderStmt.executeQuery();
 			while (resultSet.next()) {
 				int subID = resultSet.getInt("subID");
 				String bookName = resultSet.getString("bookName");
-				// Update the notes column in the messages table
-				updateMessageStmt.setString(1, "Your order of the book: " + bookName + " is canceled!");
-				updateMessageStmt.setInt(2, subID);
-				updateMessageStmt.executeUpdate();
-
+				// Insert into messages table
+				insertMessageStmt.setInt(1, subID);
+				insertMessageStmt.setString(2, "Your order of the book: " + bookName + " is canceled!");
+				insertMessageStmt.executeUpdate();
 				ordersToDelete.put(subID, bookName); // add the order to the HashMap
 			}
 		} catch (SQLException e) {
