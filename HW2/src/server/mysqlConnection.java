@@ -58,7 +58,7 @@ public class mysqlConnection {
         }
 
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "Sheli123");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "!vex123S");
             System.out.println("SQL connection succeed");
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
@@ -717,7 +717,7 @@ public class mysqlConnection {
 	public ArrayList<String> getBorrowedBooks(int id) {
 		System.out.println(id);
 		ArrayList<String> borrowedBooks = new ArrayList<>();
-		String query = "SELECT BookName FROM activityhistory WHERE SubscriberID = ? AND ActionType = 'Borrow'";
+		String query = "SELECT BookName FROM activityhistory WHERE SubscriberID = ? AND ActionType = 'Borrow' AND hasReturned = 0";
 
 		try (PreparedStatement ps = conn.prepareStatement(query)) {
 			ps.setInt(1, id);
