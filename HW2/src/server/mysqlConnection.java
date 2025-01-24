@@ -452,17 +452,16 @@ public class mysqlConnection {
 	 * @param status   The subscription status of the subscriber.
 	 * @param password The subscriber's password.
 	 */
-	public void addSubscriber(int subId, String subName, String phone, String email, String status, String password) {
-	    String insertQuery = "INSERT INTO subscriber (subscriber_id, subscriber_name, subscriber_phone_number, subscriber_email, subscription_status, password, join_date) VALUES (?, ?, ?, ?, ?, ?,?);";
+	public void addSubscriber(String subName, String phone, String email, String status, String password) {
+	    String insertQuery = "INSERT INTO subscriber (subscriber_name, subscriber_phone_number, subscriber_email, subscription_status, password, join_date) VALUES (?, ?, ?, ?, ?,?);";
 	    try (PreparedStatement ps = conn.prepareStatement(insertQuery)) {
-	        ps.setInt(1, subId);
-	        ps.setString(2, subName);
-	        ps.setString(3, phone);
-	        ps.setString(4, email);
-	        ps.setString(5, status);
-	        ps.setString(6, password);
+	        ps.setString(1, subName);
+	        ps.setString(2, phone);
+	        ps.setString(3, email);
+	        ps.setString(4, status);
+	        ps.setString(5, password);
 			LocalDate currentDate = LocalDate.now();
-			ps.setDate(7, Date.valueOf(currentDate));
+			ps.setDate(6, Date.valueOf(currentDate));
 	        ps.executeUpdate();
 	    } catch (SQLException e) {
 	        e.printStackTrace();
@@ -941,17 +940,17 @@ public class mysqlConnection {
 	 * @return {@code true} if the subscriber has borrowed the book, {@code false} otherwise.
 	 * @throws SQLException if an error occurs while querying the database.
 	 */
-	public Boolean checkIfBorrowerFound(String borrowerId, String bookName) throws SQLException {
+	public String checkIfBorrowerFound(String borrowerId, String bookName) throws SQLException {
 
         PreparedStatement ps = conn.prepareStatement(
-                "SELECT EXISTS(SELECT * FROM activityhistory where SubscriberID=? AND BookName=? AND ActionType='Borrow' AND hasReturned=0)");
+                "SELECT bookName FROM activityhistory where SubscriberID=? AND LOWER(bookName)=LOWER(?) AND ActionType='Borrow' AND hasReturned=0");
         ps.setString(1, borrowerId);
         ps.setString(2, bookName);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
-            return rs.getBoolean(1); // Retrieve the result from the first column
+            return rs.getString("BookName"); // Retrieve the result from the first column
         }
-        return false;
+        return "";
     }
 
 	/**
@@ -1540,4 +1539,25 @@ public  ArrayList<String> selectCurrentBorrowedBooksById(Integer subscriberId) t
 		return subCurrentBorrowedBooks;
 	}
 
+public String lostBook(String subID, String bookName) {
+	String bookExists = isAvailable(bookName);
+	if(bookExists.equals("notExist")) { //checks if book exists
+		return "bookNotExists";
+	}
+	if(!isSubscriberExist(Integer.parseInt(subID))) { // checks if subID doesnt exist
+		return "subID";
+	}
+	String query = "UPDATE books SET totalCopys = totalCopys - 1 WHERE bookName = ?";
+	try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        // Loop through the values of the map (book names)
+            stmt.setString(1, bookName);
+            stmt.executeUpdate();
+            updateSubscriberStatusToFrozen(subID,"frozen");
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+	return "";
 }
+
+}
+

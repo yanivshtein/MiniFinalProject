@@ -116,6 +116,7 @@ public class ClientGUIUpdateDetailsController {
         String email = Email.getText();
         String phone = Phone.getText();
         Alert alert = new Alert(Alert.AlertType.WARNING);
+        StringBuilder missingFields = new StringBuilder();
         
         if (email.isEmpty() || phone.isEmpty()) {
             alert.setTitle("Missing Fields");
@@ -126,20 +127,21 @@ public class ClientGUIUpdateDetailsController {
         }
         
         if (email.indexOf("@") == -1) {
-            alert.setTitle("Error");
-            alert.setContentText("Please enter a valid email");
-            alert.showAndWait();
-            return;
+        	 missingFields.append("Email, ");
         }
         
         String cleanedText = phone.replaceAll("[^\\d]", "");
         if (cleanedText.length() != 10 || !cleanedText.matches("\\d+")) {
+        	 missingFields.append("Phone Number, ");
+        }
+        if (missingFields.length() > 0) {
+            // Remove the trailing comma and space
+            missingFields.setLength(missingFields.length() - 2);
             alert.setTitle("Error");
-            alert.setContentText("Please enter a valid phone number");
+            alert.setContentText("Please enter a valid: " + missingFields.toString());
             alert.showAndWait();
             return;
         }
-        
         ClientGUIConnectionController.chat.accept("update", subId, Phone.getText(), Email.getText());
         afterUpdate.setText("Updated");
     }

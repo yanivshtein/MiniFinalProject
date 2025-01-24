@@ -295,10 +295,9 @@ public class ClientConsole implements ChatIF
    * @param status The subscription status (e.g., Active, Inactive).
    * @param password The password of the subscriber.
    */
-  public void acceptAddSubscriber(int id, String name, String phoneNumber, String email, String status, String password) {
+  public void acceptAddSubscriber( String name, String phoneNumber, String email, String status, String password) {
       ArrayList<Object> arr = new ArrayList<>();
       arr.add(13);
-      arr.add(id);
       arr.add(name);
       arr.add(phoneNumber);
       arr.add(email);

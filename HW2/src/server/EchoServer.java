@@ -28,6 +28,7 @@ public class EchoServer extends AbstractServer {
 	private String subEmail;
 	private String subscriberID;
 	private String bookName;
+	private int Sub_id;
 
 	/**
 	 * Interface for listening to client connection and disconnection events.
@@ -295,13 +296,12 @@ public class EchoServer extends AbstractServer {
 				}
 				break;
 			case 13: // Adds a new subscriber to the database.
-				int Sub_id = (int) arr.get(1);
-				String subName = (String) arr.get(2);
-				String subPhone = (String) arr.get(3);
-				String subEmail = (String) arr.get(4);
-				String subStatus = (String) arr.get(5);
-				String subPassword = (String) arr.get(6);
-				SQLinstance.addSubscriber(Sub_id, subName, subPhone, subEmail, subStatus, subPassword);
+				String subName = (String) arr.get(1);
+				String subPhone = (String) arr.get(2);
+				String subEmail = (String) arr.get(3);
+				String subStatus = (String) arr.get(4);
+				String subPassword = (String) arr.get(5);
+				SQLinstance.addSubscriber( subName, subPhone, subEmail, subStatus, subPassword);
 				arrToSend.add(13);
 				arrToSend.add(new Boolean(true));
 				try {

@@ -116,8 +116,7 @@ public class AddSubscriberGUIController {
         	}
             // If all fields are filled, proceed with the action
             String status = "active";
-            int randomId = ThreadLocalRandom.current().nextInt(1, 100000);
-            ClientGUIConnectionController.chat.acceptAddSubscriber(randomId, name.getText(), phoneNumber.getText(), email.getText(), status, password.getText());
+            ClientGUIConnectionController.chat.acceptAddSubscriber( name.getText(), phoneNumber.getText(), email.getText(), status, password.getText());
             afterUpdate.setText("Added");
         }
     }
