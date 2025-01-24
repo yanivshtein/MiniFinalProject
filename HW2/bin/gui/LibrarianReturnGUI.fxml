@@ -38,9 +38,12 @@
                   <Font size="14.0" />
                </font></Label>
             <Label layoutX="158.0" layoutY="127.0" />
-            <Label fx:id="bookArriveDate" layoutX="147.0" layoutY="429.0" prefHeight="17.0" prefWidth="91.0" />
-            <Label fx:id="deadline" layoutX="147.0" layoutY="482.0" prefHeight="17.0" prefWidth="91.0" />
-            <Label fx:id="sendMsg" layoutX="110.0" layoutY="505.0" prefHeight="26.0" prefWidth="281.0" />
+            <Label fx:id="bookArriveDate" layoutX="211.0" layoutY="429.0" prefHeight="17.0" prefWidth="91.0" />
+            <Label fx:id="deadline" layoutX="211.0" layoutY="482.0" prefHeight="17.0" prefWidth="91.0" />
+            <Label fx:id="sendMsg" layoutX="110.0" layoutY="505.0" prefHeight="26.0" prefWidth="465.0">
+               <font>
+                  <Font size="10.0" />
+               </font></Label>
             <Button layoutX="92.0" layoutY="544.0" mnemonicParsing="false" onAction="#retButton" text="Return to Home Page" />
             <Button fx:id="scanButton" layoutX="433.0" layoutY="256.0" mnemonicParsing="false" onAction="#barcodeButton" text="Scan" />
             <TextField fx:id="bookID" layoutX="134.0" layoutY="253.0" prefHeight="31.0" prefWidth="245.0" />
