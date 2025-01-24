@@ -38,6 +38,7 @@ public class ServerGUI {
     @FXML
     private ListView<String> clientListView = null;
 
+    private EchoServer sv;
     /**
      * Starts the Server GUI by loading the FXML layout and displaying it in a new window.
      *
@@ -62,7 +63,7 @@ public class ServerGUI {
     public void runServer(ActionEvent event) {
         String port = "5555"; // Default port
         serverRun.setText("Server is listening...");
-        EchoServer sv = ServerUI.runServer(port);
+        sv = ServerUI.runServer(port);
         
      // Add listener for connection events
         sv.addConnectionListener(new EchoServer.ConnectionListener() {
@@ -82,8 +83,31 @@ public class ServerGUI {
                 });
             }
         });
-        sv.time(); // call the method time in sv (Echo Server) to check all the actions that use time
+        startTimeThread(); // call the method time in sv (Echo Server) to check all the actions that use time
         
+    }
+    
+ // Define a method to create and start the thread
+    public void startTimeThread() {
+        Thread timeThread = new Thread(() -> {
+            while (true) { // Keep running the task periodically
+                try {
+                    sv.time();
+                    // Wait for a specific time period before repeating (24 hours)
+                    Thread.sleep(24 * 60 * 60 * 1000); // Sleep for 24 hours
+                } catch (InterruptedException e) {
+                    // Handle thread interruption
+                    System.err.println("Thread was interrupted: " + e.getMessage());
+                    Thread.currentThread().interrupt();
+                    break; // Exit the loop if interrupted
+                } catch (Exception e) {
+                    // Handle any exceptions from the methods
+                    System.err.println("An error occurred: " + e.getMessage());
+                }
+            }
+        });
+        timeThread.setDaemon(true); // Set as a daemon thread
+        timeThread.start();
     }
     
     /**

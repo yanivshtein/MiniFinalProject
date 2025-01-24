@@ -2,28 +2,112 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="514.0" prefWidth="515.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LibrarianGUIHomePageController">
-   <children>
-      <Label fx:id="title" layoutX="32.0" layoutY="44.0" prefHeight="35.0" prefWidth="189.0">
-         <font>
-            <Font size="24.0" />
-         </font></Label>
-      <Button fx:id="addSub" layoutX="41.0" layoutY="140.0" mnemonicParsing="false" onAction="#getAddSubBtn" prefHeight="25.0" prefWidth="151.0" text="Add Subscriber" />
-      <Button fx:id="borrowBook" layoutX="41.0" layoutY="215.0" mnemonicParsing="false" onAction="#BorrowingBookBtn" prefHeight="25.0" prefWidth="151.0" text="Borrowing a Book" />
-      <Button fx:id="returnBook" layoutX="300.0" layoutY="215.0" mnemonicParsing="false" onAction="#returnBookbttn" prefHeight="25.0" prefWidth="151.0" text="Return a Book" />
-      <Button fx:id="searchBook" layoutX="300.0" layoutY="140.0" mnemonicParsing="false" onAction="#SearchBookBtn" prefHeight="25.0" prefWidth="151.0" text="Search a Book" />
-      <Button fx:id="LogOut" layoutX="32.0" layoutY="458.0" mnemonicParsing="false" onAction="#getLogOutBtn" text="Log out" />
-      <Button fx:id="exit" layoutX="401.0" layoutY="458.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="26.0" prefWidth="73.0" text="EXIT" />
-      <Button fx:id="GetReports" layoutX="300.0" layoutY="289.0" mnemonicParsing="false" onAction="#getReportsGUIBtn" prefHeight="25.0" prefWidth="151.0" text="View Reports" />
-      <Button layoutX="300.0" layoutY="364.0" mnemonicParsing="false" onAction="#getOrders" text="Waiting Orders" />
-      <Button fx:id="messagesBtn" layoutX="219.0" layoutY="425.0" mnemonicParsing="false" onAction="#getMessages" text="Messages" />
-      <Button layoutX="42.0" layoutY="289.0" mnemonicParsing="false" onAction="#getLibrarianWatch" prefHeight="26.0" prefWidth="160.0" text="Watch Reader Card" />
-      <Button layoutX="41.0" layoutY="364.0" mnemonicParsing="false" onAction="#getLibrarianUpdate" prefHeight="25.0" prefWidth="151.0" text="Manual Extension" />
-      <ImageView fx:id="picSunOrMoon" fitHeight="83.0" fitWidth="108.0" layoutX="212.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="514.0" prefWidth="515.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LibrarianGUIHomePageController">
 
-   </children>
+    <children>
+        <!-- כותרת -->
+        <Label fx:id="title" layoutX="32.0" layoutY="44.0" prefHeight="35.0" prefWidth="189.0">
+            <font>
+                <Font size="24.0" />
+            </font>
+        </Label>
+
+        <!-- כפתור Add Subscriber -->
+        <Button fx:id="addSub" layoutX="41.0" layoutY="140.0" mnemonicParsing="false" onAction="#getAddSubBtn" prefHeight="28.0" prefWidth="189.0" text="Add Subscriber" />
+
+        <!-- כפתור Borrowing a Book -->
+        <Button fx:id="borrowBook" layoutX="41.0" layoutY="215.0" mnemonicParsing="false" onAction="#BorrowingBookBtn" prefHeight="28.0" prefWidth="189.0" text="Borrowing a Book" />
+
+        <!-- כפתור Return a Book -->
+        <Button fx:id="returnBook" layoutX="300.0" layoutY="215.0" mnemonicParsing="false" onAction="#returnBookbttn" prefHeight="28.0" prefWidth="189.0" text="Return a Book" />
+
+        <!-- כפתור Search a Book -->
+        <Button fx:id="searchBook" layoutX="300.0" layoutY="140.0" mnemonicParsing="false" onAction="#SearchBookBtn" prefHeight="28.0" prefWidth="189.0" text="Search a Book" />
+
+        <!-- כפתור Log out -->
+        <Button fx:id="LogOut" layoutX="32.0" layoutY="458.0" mnemonicParsing="false" onAction="#getLogOutBtn" prefHeight="28.0" prefWidth="108.0" text="Log out" />
+
+        <!-- כפתור EXIT -->
+        <Button fx:id="exit" layoutX="385.0" layoutY="458.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="28.0" prefWidth="108.0" text="EXIT" />
+
+        <!-- כפתור View Reports -->
+        <Button fx:id="GetReports" layoutX="300.0" layoutY="289.0" mnemonicParsing="false" onAction="#getReportsGUIBtn" prefHeight="28.0" prefWidth="189.0" text="View Reports" />
+
+        <!-- כפתור Waiting Orders -->
+        <Button layoutX="300.0" layoutY="363.0" mnemonicParsing="false" onAction="#getOrders" prefHeight="28.0" prefWidth="189.0" text="Waiting Orders" />
+
+        <!-- כפתור Messages -->
+        <Button fx:id="messagesBtn" layoutX="204.0" layoutY="421.0" mnemonicParsing="false" onAction="#getMessages" prefHeight="28.0" prefWidth="143.0" text="Messages" />
+
+        <!-- כפתור Watch Reader Card -->
+        <Button layoutX="42.0" layoutY="289.0" mnemonicParsing="false" onAction="#getLibrarianWatch" prefHeight="28.0" prefWidth="189.0" text="Watch Reader Card" />
+
+        <!-- כפתור Manual Extension -->
+        <Button layoutX="41.0" layoutY="364.0" mnemonicParsing="false" onAction="#getLibrarianUpdate" prefHeight="28.0" prefWidth="189.0" text="Manual Extension" />
+
+        <!-- ImageView באמצע המסך (השמש/ירח) -->
+        <ImageView fx:id="picSunOrMoon" fitHeight="83.0" fitWidth="108.0" layoutX="330.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
+          <ImageView fitHeight="20" fitWidth="20" layoutX="204.0" layoutY="144.0">
+              <image>
+                  <!-- החלף את הנתיב בתמונה המתאימה לך -->
+                  <Image url="@/resources/add.png" />
+              </image>
+          </ImageView>
+          <ImageView fitHeight="20" fitWidth="20" layoutX="204.0" layoutY="219.0">
+              <image>
+                  <!-- החלף בנתיב התמונה הרצוי -->
+                  <Image url="@/resources/book.png" />
+              </image>
+          </ImageView>
+          <ImageView fitHeight="20" fitWidth="20" layoutX="204.0" layoutY="293.0">
+              <image>
+                  <Image url="@/resources/id-card.png" />
+              </image>
+          </ImageView>
+          <ImageView fitHeight="20" fitWidth="20" layoutX="204.0" layoutY="368.0">
+              <image>
+                  <Image url="@/resources/extension.png" />
+              </image>
+          </ImageView>
+          <ImageView fitHeight="20" fitWidth="20" layoutX="459.0" layoutY="144.0">
+              <image>
+                  <Image url="@/resources/magnifying-glass.png" />
+              </image>
+          </ImageView>
+          <ImageView fitHeight="20" fitWidth="20" layoutX="459.0" layoutY="219.0">
+              <image>
+                  <Image url="@/resources/back-arrow.png" />
+              </image>
+          </ImageView>
+          <ImageView fitHeight="20" fitWidth="20" layoutX="459.0" layoutY="293.0">
+              <image>
+                  <Image url="@/resources/eye.png" />
+              </image>
+          </ImageView>
+          <ImageView fitHeight="20" fitWidth="20" layoutX="459.0" layoutY="368.0">
+              <image>
+                  <Image url="@/resources/time.png" />
+              </image>
+          </ImageView>
+          <ImageView fitHeight="20" fitWidth="20" layoutX="320.0" layoutY="425.0">
+              <image>
+                  <Image url="@/resources/email.png" />
+                  </image>
+          </ImageView>
+          <ImageView fitHeight="20" fitWidth="20" layoutX="117.0" layoutY="462.0">
+              <image>
+                  <Image url="@/resources/log-out-removebg-preview.png" />
+              </image>
+          </ImageView>
+          <ImageView fitHeight="20" fitWidth="20" layoutX="469.0" layoutY="462.0">
+              <image>
+                  <Image url="@/resources/exit.png" />
+              </image>
+          </ImageView>
+    </children>
 </Pane>
