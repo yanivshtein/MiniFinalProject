@@ -157,7 +157,7 @@ public class LibrarianReturnGUI {
 			}
 
 			if (ChatClient.isFrozen) {
-				showLabelTextForDuration(sendMsg, "Return operation successfully finished!", 3000); // Show text for 3
+				showLabelTextForDuration(sendMsg, "Return operation successfully finished!", 5000); // Show text for 5
 																									// seconds
 				alertMessege.setContentText("The subscriber’s status card has been frozen");
 				alertMessege.setAlertType(AlertType.INFORMATION);
@@ -165,7 +165,7 @@ public class LibrarianReturnGUI {
 			}
 
 			else {
-				showLabelTextForDuration(sendMsg, "Return operation successfully finished!", 3000); // Show text for 3
+				showLabelTextForDuration(sendMsg, "Return operation successfully finished!", 5000); // Show text for 5
 																									// seconds
 			}
 
@@ -311,6 +311,18 @@ public class LibrarianReturnGUI {
 		if (result.isPresent() && result.get() == ButtonType.OK) {
 			// If the user clicks OK, proceed with the action
 			ClientGUIConnectionController.chat.lostBook_accept(subID, book);
+			if(ChatClient.lostBook.equals("bookAndIDNotExists")){
+				alertMessege.setContentText("Subscriber ID and book name are invalid");
+				alertMessege.setAlertType(AlertType.ERROR);
+				alertMessege.show();
+				return; // Stop further execution if book name is missing
+			}
+			if(ChatClient.lostBook.equals("BorrowNotExist")){
+				alertMessege.setContentText("Can't lose book you didn't borrow!");
+				alertMessege.setAlertType(AlertType.ERROR);
+				alertMessege.show();
+				return; // Stop further execution if book name is missing
+			}
 			if(ChatClient.lostBook.equals("subID")) {
 				alertMessege.setContentText("Please enter a valid subscriber ID");
 				alertMessege.setAlertType(AlertType.ERROR);
@@ -323,7 +335,11 @@ public class LibrarianReturnGUI {
 				alertMessege.show();
 				return; // Stop further execution if book name is missing
 			}
-			showLabelTextForDuration(sendMsg, "Book lost! subscriber account frozen for 30 days!", 3000); // Show text for 3
+			if(ChatClient.lostBook.equals("SubAlreadyFrozen")) {
+				showLabelTextForDuration(sendMsg, "Book lost! subscriber account freeze extended for 30 more days!", 5000); // Show text for 5 sec
+			}else {
+				showLabelTextForDuration(sendMsg, "Book lost! subscriber account frozen for 30 days!", 5000); // Show text for 5 sec
+			}
 		}
 	}
 
