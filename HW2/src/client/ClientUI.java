@@ -3,11 +3,7 @@ import javafx.application.Application;
 
 import javafx.stage.Stage;
 
-
-import java.util.Vector;
-
 import gui.ClientGUIConnectionController;
-import gui.ClientGUILoginController;
 
 /**
  * The ClientUI class is responsible for launching the client-side graphical user interface (GUI) application

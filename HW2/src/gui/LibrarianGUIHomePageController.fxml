@@ -11,7 +11,7 @@
 
     <children>
         <!-- כותרת -->
-        <Label fx:id="title" layoutX="32.0" layoutY="44.0" prefHeight="35.0" prefWidth="189.0">
+        <Label fx:id="title" layoutX="32.0" layoutY="44.0" prefHeight="35.0" prefWidth="288.0">
             <font>
                 <Font size="24.0" />
             </font>

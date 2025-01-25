@@ -1,13 +1,9 @@
 package client;
 
 import java.io.*;
-import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.time.Period;
 import java.util.ArrayList;
-import java.util.Scanner;
 
-import client.*;
 import common.*;
 
 /**

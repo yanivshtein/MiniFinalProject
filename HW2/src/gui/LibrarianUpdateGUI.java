@@ -8,9 +8,6 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import client.ChatClient;
-import client.ClientConsole;
-import client.ClientUI;
-import common.Subscriber1;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -52,9 +49,8 @@ public class LibrarianUpdateGUI {
 	@FXML
 	private DialogPane ChangesSavedPop;
 	Alert alert = new Alert(Alert.AlertType.WARNING);
-	private String TempStatus, selectedBook;
+	private String selectedBook;
 	private Boolean statusCheck = null;
-	private ArrayList<String> borrowHistory;
 	
 	/**
      * Initializes the GUI components and event listeners.

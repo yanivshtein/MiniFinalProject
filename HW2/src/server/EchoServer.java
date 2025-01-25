@@ -1,7 +1,6 @@
 package server;
 
 import java.io.*;
-import java.net.ServerSocket;
 import java.sql.SQLException;
 import java.time.Period;
 import java.util.ArrayList;
@@ -11,8 +10,6 @@ import java.util.Map;
 
 import common.Librarian;
 import common.Subscriber1;
-import gui.ServerGUI;
-import javafx.stage.Stage;
 import logic.ClientInfo;
 import ocsf.server.*;
 
@@ -96,7 +93,6 @@ public class EchoServer extends AbstractServer {
 	@SuppressWarnings("unchecked")
 	protected void handleMessageFromClient(Object msg, ConnectionToClient client) {
 		Subscriber1 sub = null;
-		Boolean ret;
 		Librarian lib;
 
 		if (msg instanceof ArrayList<?>) {

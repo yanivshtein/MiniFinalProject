@@ -6,8 +6,6 @@ package client;
 
 import ocsf.client.*;
 import common.*;
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
 
 import java.io.*;
 import java.util.ArrayList;
