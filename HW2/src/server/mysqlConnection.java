@@ -475,7 +475,6 @@ public class mysqlConnection {
 	 * @return An {@code ArrayList} containing the subscriber's activity history in formatted strings.
 	 */
 	public ArrayList getActivityHistory(String subscriberEmail) {
-	    System.out.println(subscriberEmail);
 	    ArrayList<Object> activityHistory = new ArrayList<>();
 	    String subscriberQuery = "SELECT subscriber_id FROM subscriber WHERE subscriber_email = ?";
 
@@ -500,9 +499,8 @@ public class mysqlConnection {
 	                        }
 	                    }
 	                }
-	            } else {
-	                System.out.println("No subscriber found with email: " + subscriberEmail);
-	            }
+	            } else {}
+	            
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
@@ -715,7 +713,6 @@ public class mysqlConnection {
 	 * @return an ArrayList containing the names of books borrowed by the subscriber.
 	 */
 	public ArrayList<String> getBorrowedBooks(int id) {
-		System.out.println(id);
 		ArrayList<String> borrowedBooks = new ArrayList<>();
 		String query = "SELECT BookName FROM activityhistory WHERE SubscriberID = ? AND ActionType = 'Borrow' AND hasReturned = 0";
 
@@ -729,7 +726,6 @@ public class mysqlConnection {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		System.out.println(borrowedBooks);
 		return borrowedBooks;
 	}
 
@@ -1030,10 +1026,8 @@ public class mysqlConnection {
 		resultSet = select.executeQuery();
 		// resultSet is in row 1
 		System.out.println("Result Set row is:"+resultSet.getRow());
-		//System.out.println("Result Set string is:"+resultSet.getString("ActionID"));
 
 		if (!resultSet.next()) {
-			System.out.println("No ActionID found");
 	        return false; // Empty list
 		}
 		String updateQuery = "UPDATE activityhistory "
@@ -1460,10 +1454,7 @@ public class mysqlConnection {
 
                 if(rowsUpdated >0) {
                     deleteStatus.setInt(1, id);
-                    rowsDeleted = deleteStatus.executeUpdate();
-
-                    System.out.println(rowsDeleted + " frozen subscriptions deleted for Subscriber ID: " + id);
-
+                    rowsDeleted = deleteStatus.executeUpdate();                   
                 }
             }
 
@@ -1540,7 +1531,6 @@ public  ArrayList<String> selectCurrentBorrowedBooksById(Integer subscriberId) t
 		resultSet = ps.executeQuery();
 		//resultSet.next();
 		if (!resultSet.isBeforeFirst()) { 
-	        System.out.println("No current borrowed books found for Subscriber ID: " + subscriberId);
 	        return subCurrentBorrowedBooks; // Empty list
 	    }
 			

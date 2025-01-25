@@ -100,7 +100,6 @@ public class LibrarianReturnGUI {
 		String BorrowerId = subscriberId.getText();
 
 		BookName = ChatClient.bookName;
-		System.out.println("book name is: " + BookName);
 		// get current time in a format of yyyy-MM-dd
 		LocalDate currentDate = LocalDate.now();
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -121,9 +120,6 @@ public class LibrarianReturnGUI {
 			return;
 		}
 		Period difference = Period.between(deadlineDate, currentDate);
-
-		System.out.println("formatted and replace local date is:" + currentDate);
-		System.out.println("formatted and replace deadline is:" + deadlineString);
 
 		try {
 

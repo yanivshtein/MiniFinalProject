@@ -121,7 +121,6 @@ public class ClientGUILoginController {
                     alert.setContentText("The email or password do not match!");
                     alert.showAndWait();
                 }else {
-                	System.out.println("Subscriber ID Found");
                     ((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
                     Stage primaryStage = new Stage();
                     Pane root = loader.load(getClass().getResource("/gui/ClientGUIHomePageController.fxml").openStream());
@@ -141,7 +140,6 @@ public class ClientGUILoginController {
                     alert.setContentText("The email or password do not match!");
                     alert.showAndWait();
                 }else {
-                	System.out.println("Librarian ID Found");
                     ((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
                     Stage primaryStage = new Stage();
                     Pane root = loader.load(getClass().getResource("/gui/LibrarianGUIHomePageController.fxml").openStream());

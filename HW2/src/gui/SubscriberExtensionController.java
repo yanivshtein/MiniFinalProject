@@ -39,7 +39,6 @@ public class SubscriberExtensionController {
 		 ClientGUIConnectionController.chat.acceptFromController(12, ChatClient.sub1.getSubscriber_id(), "");
         // Simulate fetching book titles from the database
         ArrayList<String> books = ChatClient.borrowedBooks;
-        System.out.println(books);
         // Populate the ListView
         booksListView.getItems().addAll(books);
 

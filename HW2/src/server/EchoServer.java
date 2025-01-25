@@ -542,7 +542,6 @@ public class EchoServer extends AbstractServer {
 					String message = (String) arr.get(1);
 					String[] parts = message.split(" ", 3);
 					if (parts.length < 3) {
-						System.out.println("Invalid search criteria message from client.");
 						break;
 					}
 					String criteria = parts[1];

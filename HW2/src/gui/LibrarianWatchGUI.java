@@ -89,7 +89,6 @@ public class LibrarianWatchGUI {
 			Bview.setText("No borrow history found.");
 			return;
 		}
-        System.out.println(borrowHistory.toString());
 
 		// Print the table header
 		Bview.setText(String.format("%-40s %-20s %-20s %-20s %-20s", "Book Name", "Borrow Date", "Return Date" , "Deadline" ,"Addition Information"));
