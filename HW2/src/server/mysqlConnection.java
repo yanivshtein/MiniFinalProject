@@ -1540,20 +1540,83 @@ public  ArrayList<String> selectCurrentBorrowedBooksById(Integer subscriberId) t
 
 public String lostBook(String subID, String bookName) {
 	String bookExists = isAvailable(bookName);
+	int intSubID = Integer.parseInt(subID);
+	boolean bookExist = bookExists.equals("notExist"); //check if the book exists
+	boolean ID = !isSubscriberExist(intSubID); // check if the subscriber exists
+	ResultSet resultSet = null;
+	Boolean frozen = true;
+	if(bookExist && ID) { //if the sub and book dont exist
+		return "bookAndIDNotExists";
+	}
 	if(bookExists.equals("notExist")) { //checks if book exists
 		return "bookNotExists";
 	}
-	if(!isSubscriberExist(Integer.parseInt(subID))) { // checks if subID doesnt exist
+	if(ID) { // checks if subID doesnt exist
 		return "subID";
 	}
+	//check if this borrow even exists
+	String checkBorrow = "SELECT * FROM activityhistory WHERE SubscriberID = ? AND BookName = ? AND ActionType = ? AND hasReturned = ?";
+	try (PreparedStatement stmt = conn.prepareStatement(checkBorrow)) {
+        // Loop through the values of the map (book names)
+            stmt.setInt(1, intSubID);
+            stmt.setString(2,bookName);
+            stmt.setString(3,"Borrow");
+            stmt.setBoolean(4, false);
+            resultSet = stmt.executeQuery();
+            if(!resultSet.next()) {
+        		return "BorrowNotExist";
+        	}
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+	//update the inventory of the book to -1
 	String query = "UPDATE books SET totalCopys = totalCopys - 1 WHERE bookName = ?";
 	try (PreparedStatement stmt = conn.prepareStatement(query)) {
         // Loop through the values of the map (book names)
             stmt.setString(1, bookName);
             stmt.executeUpdate();
-            updateSubscriberStatusToFrozen(subID,"frozen");
+            frozen = updateSubscriberStatusToFrozen(subID,"frozen");
     } catch (SQLException e) {
         e.printStackTrace();
+    }
+	//update the hasReturned to be 1 if the book is lost, so that cannot click lost multiple times
+	String hasRet = "UPDATE activityhistory SET hasReturned = ? WHERE SubscriberID = ? AND BookName = ? AND ActionType = ? AND hasReturned = ?";
+	try (PreparedStatement stmt = conn.prepareStatement(hasRet)) {
+        // Loop through the values of the map (book names)
+			stmt.setBoolean(1, true);
+            stmt.setInt(2, intSubID);
+            stmt.setString(3,bookName);
+            stmt.setString(4,"Borrow");
+            stmt.setBoolean(5, false);
+            stmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+	//add action type lost to the activity history
+	String addQuery = "INSERT INTO activityhistory (SubscriberID, BookName, ActionType, ActionDate) VALUES (?, ?, ?, ?);";
+    try {
+        PreparedStatement stmt = conn.prepareStatement(addQuery);
+        stmt.setInt(1, intSubID);
+        stmt.setString(2, bookName);
+        stmt.setString(3, "Lost");
+        stmt.setString(4, LocalDateTime.now().toString());
+        stmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    //if account was already frozen
+    if(!frozen) {
+    	String refreeze = "UPDATE frozen_subs SET start_date = ?, finish_date = ? WHERE subscriber_id = ?";
+    	try (PreparedStatement stmt = conn.prepareStatement(refreeze)) {
+            // Loop through the values of the map (book names)
+                stmt.setInt(3, intSubID);
+                stmt.setDate(1,Date.valueOf(LocalDate.now()));
+                stmt.setDate(2,Date.valueOf(LocalDate.now().plusMonths(1)));
+                stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    	return "SubAlreadyFrozen";
     }
 	return "";
 }
