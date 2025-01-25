@@ -1068,9 +1068,7 @@ public class mysqlConnection {
 		
 		String insertFrozenTable = "INSERT INTO frozen_subs (subscriber_id, start_date, finish_date)"
 				+ " VALUES (?,?,?)";
-
-		
-		
+				
 		Integer subIdInt = null;
 		LocalDate  localDate = LocalDate.now();
 		
@@ -1086,33 +1084,47 @@ public class mysqlConnection {
 			e.printStackTrace();
 			
 		}
-		
-		if(checkIsFrozen(subIdInt).equals("frozen")) {
-			return false;
-		}
-		try(PreparedStatement updatePs = conn.prepareStatement(updateQuary)){
-			PreparedStatement insertPs= conn.prepareStatement(insertFrozenTable);
-		
-			updatePs.setString(1, IsFrozen);
-			updatePs.setString(2, subscriberId);
-
-			int updateResult = updatePs.executeUpdate();
-			
-			if (updateResult == 1) {
-			
-				insertPs.setInt(1, subIdInt);
-				insertPs.setDate(2, currentDate);
-				insertPs.setDate(3, unfreezeDate);
-				int insertResult = insertPs.executeUpdate();
-				
-				return insertResult == 1;
+		Boolean bool = checkIsFrozen(subIdInt).equals("frozen");
+		if(bool) {
+			insertFrozenTable = "UPDATE frozen_subs SET start_date=?, finish_date=? WHERE subscriber_id = ?";
+			try(PreparedStatement insertPs= conn.prepareStatement(insertFrozenTable)){				
+					insertPs.setDate(1, currentDate);
+					insertPs.setDate(2, unfreezeDate);
+					insertPs.setInt(3, subIdInt);
+					insertPs.executeUpdate();				
+				return true;
 			}
-			return false;
+			catch(SQLException e){
+				e.printStackTrace();
+				throw e;
+			}
 		}
-		catch(SQLException e){
-			e.printStackTrace();
-			throw e;
+		else {
+			try(PreparedStatement updatePs = conn.prepareStatement(updateQuary)){
+				PreparedStatement insertPs= conn.prepareStatement(insertFrozenTable);
+			
+				updatePs.setString(1, IsFrozen);
+				updatePs.setString(2, subscriberId);
+
+				int updateResult = updatePs.executeUpdate();
+				
+				if (updateResult == 1) {
+				
+					insertPs.setInt(1, subIdInt);
+					insertPs.setDate(2, currentDate);
+					insertPs.setDate(3, unfreezeDate);
+					int insertResult = insertPs.executeUpdate();
+					
+					return insertResult == 1;
+				}
+				return false;
+			}
+			catch(SQLException e){
+				e.printStackTrace();
+				throw e;
+			}
 		}
+		
 	}
 
 	/**
