@@ -10,7 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
@@ -21,7 +21,7 @@ import javafx.stage.Stage;
 public class LibrarianMessagesController {
 	
 	@FXML
-	 private DialogPane msg;
+	 private Label title;
 	
 	@FXML
 	 private ListView<String> messages;
@@ -34,7 +34,7 @@ public class LibrarianMessagesController {
      */
 	 @FXML
 	  public void initialize() {
-		msg.setContentText(LibName + "'s Messages:");
+		title.setText(LibName + "'s Messages:");
 		ClientGUIConnectionController.chat.acceptMessagesForLibrarian();;
 		ArrayList<String> subMessages = ChatClient.libMessages;
         // Populate the List

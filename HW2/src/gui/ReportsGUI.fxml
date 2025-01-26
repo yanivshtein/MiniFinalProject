@@ -9,7 +9,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="571.0" prefWidth="710.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ReportsGUI">
    <children>
-      <Label layoutX="17.0" layoutY="54.0" prefHeight="50.0" prefWidth="335.0" style="-fx-font-size: 28px; -fx-font-weight: bold;" text="Library Reports" />
+      <Label fx:id="title" layoutX="17.0" layoutY="54.0" prefHeight="50.0" prefWidth="335.0" style="-fx-font-size: 28px; -fx-font-weight: bold;" text="Library Reports" />
       
       <Text layoutX="17.0" layoutY="213.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select report type:" />
       <RadioButton fx:id="borrowRep" layoutX="96.0" layoutY="226.0" mnemonicParsing="false" onAction="#BorrowTimeRepClick" text="Borrow time report" />
