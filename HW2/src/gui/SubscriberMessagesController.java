@@ -20,9 +20,7 @@ import javafx.stage.Stage;
  */
 public class SubscriberMessagesController {
 	
-	@FXML
-	 private DialogPane msg;
-	
+
 	@FXML
 	 private ListView<String> messages;
 	 
@@ -34,7 +32,6 @@ public class SubscriberMessagesController {
      */
 	 @FXML
 	  public void initialize() {
-		msg.setContentText(subName + "'s Messages:");
 		ClientGUIConnectionController.chat.acceptFromController(29, ChatClient.sub1.getSubscriber_id(), "");
 		ArrayList<String> subMessages = ChatClient.subMessages;
         // Populate the List
