@@ -16,6 +16,7 @@
             <Button layoutX="38.0" layoutY="456.0" mnemonicParsing="false" onAction="#getReturnBtn" text="Return to HomePage" />
             <Button layoutX="440.0" layoutY="456.0" mnemonicParsing="false" onAction="#getExitBtn" text="EXIT" />
             <Label fx:id="msg" layoutX="28.0" layoutY="337.0" prefHeight="21.0" prefWidth="479.0" />
+            <Label fx:id="title" layoutX="100.0" layoutY="45.0" text="Ask for Extension" />
          </children>
       </Pane>
    </children>

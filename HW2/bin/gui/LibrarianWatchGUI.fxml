@@ -7,23 +7,23 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="706.0" prefWidth="762.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LibrarianWatchGUI">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="789.0" prefWidth="762.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LibrarianWatchGUI">
    <children>
-      <Label layoutX="29.0" layoutY="22.0" prefHeight="17.0" prefWidth="207.0" />
-      <Button fx:id="ViewClick" layoutX="29.0" layoutY="27.0" mnemonicParsing="false" onAction="#ViewDetBtt" prefHeight="25.0" prefWidth="223.0" text="Enter Subscriber ID:" />
-      <TextField fx:id="subID" alignment="CENTER" layoutX="269.0" layoutY="27.0" prefHeight="25.0" prefWidth="168.0" />
-      <Text fx:id="namelabel" layoutX="38.0" layoutY="102.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name:" />
-      <Text fx:id="phonelabel" layoutX="37.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone Number:" />
-      <Text fx:id="emaillabel" layoutX="40.0" layoutY="202.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:" />
-      <Text fx:id="borrowhislabel" layoutX="38.0" layoutY="307.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Borrow History:" />
-      <TextArea fx:id="Bview" layoutX="37.0" layoutY="327.0" prefHeight="250.0" prefWidth="683.0" />
-      <TextField fx:id="name" layoutX="141.0" layoutY="85.0" />
-      <TextField fx:id="phone_number" layoutX="141.0" layoutY="136.0" />
-      <TextField fx:id="email" layoutX="141.0" layoutY="185.0" />
-      <Text fx:id="statuslabel" layoutX="37.0" layoutY="253.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Subscription status:" />
-      <TextField fx:id="SubStatus" layoutX="167.0" layoutY="236.0" prefHeight="25.0" prefWidth="139.0" />
-      <Button fx:id="RetButton" layoutX="37.0" layoutY="660.0" mnemonicParsing="false" onAction="#ReturnButton" prefHeight="25.0" prefWidth="223.0" text="Return To Home Page" />
-      <Button fx:id="exitbtn" layoutX="643.0" layoutY="660.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="25.0" prefWidth="70.0" text="EXIT" />
-      <Text layoutX="41.0" layoutY="608.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Label fx:id="title" layoutX="223.0" layoutY="39.0" prefHeight="21.0" prefWidth="239.0" text="Reader Card" />
+      <Button fx:id="ViewClick" layoutX="28.0" layoutY="101.0" mnemonicParsing="false" onAction="#ViewDetBtt" prefHeight="25.0" prefWidth="223.0" text="Enter Subscriber ID:" />
+      <TextField fx:id="subID" alignment="CENTER" layoutX="268.0" layoutY="101.0" prefHeight="25.0" prefWidth="168.0" />
+      <Text fx:id="namelabel" layoutX="37.0" layoutY="176.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name:" />
+      <Text fx:id="phonelabel" layoutX="36.0" layoutY="227.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone Number:" />
+      <Text fx:id="emaillabel" layoutX="39.0" layoutY="276.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:" />
+      <Text fx:id="borrowhislabel" layoutX="37.0" layoutY="381.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Borrow History:" />
+      <TextArea fx:id="Bview" layoutX="36.0" layoutY="401.0" prefHeight="250.0" prefWidth="683.0" />
+      <TextField fx:id="name" layoutX="140.0" layoutY="159.0" />
+      <TextField fx:id="phone_number" layoutX="140.0" layoutY="210.0" />
+      <TextField fx:id="email" layoutX="140.0" layoutY="259.0" />
+      <Text fx:id="statuslabel" layoutX="36.0" layoutY="327.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Subscription status:" />
+      <TextField fx:id="SubStatus" layoutX="166.0" layoutY="310.0" prefHeight="25.0" prefWidth="139.0" />
+      <Button fx:id="RetButton" layoutX="36.0" layoutY="734.0" mnemonicParsing="false" onAction="#ReturnButton" prefHeight="25.0" prefWidth="223.0" text="Return To Home Page" />
+      <Button fx:id="exitbtn" layoutX="642.0" layoutY="734.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="25.0" prefWidth="70.0" text="EXIT" />
+      <Text layoutX="40.0" layoutY="682.0" strokeType="OUTSIDE" strokeWidth="0.0" />
    </children>
 </Pane>
