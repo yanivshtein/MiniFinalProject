@@ -25,6 +25,12 @@ import javafx.util.Duration;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 
+/**
+ * The LibrarianReturnGUI class handles the GUI logic for the librarian return
+ * book functionality.
+ * It includes methods for processing returns, handling user inputs, and
+ * interacting with the database.
+ */
 public class LibrarianReturnGUI {
 
 	@FXML
@@ -67,6 +73,11 @@ public class LibrarianReturnGUI {
 
 	private String BookName;
 
+	/**
+     * Handles the "Send" button action to process the book return.
+     *
+     * @param event The ActionEvent triggered by clicking the button.
+     */
 	public void sendButton(ActionEvent event) { // method that sends information to the controller to return the book to
 												// the library
 		LocalDate deadlineDate;
@@ -161,6 +172,13 @@ public class LibrarianReturnGUI {
 
 	}
 
+	/**
+     * Displays a message on a label for a specified duration.
+     *
+     * @param label           The label to display the message on.
+     * @param text            The message to display.
+     * @param durationInMillis The duration in milliseconds for the message to appear.
+     */
 	public void showLabelTextForDuration(Label label, String text, int durationInMillis) {
 
 		label.setText(text);
@@ -170,6 +188,11 @@ public class LibrarianReturnGUI {
 		timeline.play();
 	}
 
+	/**
+     * Checks the inputs and validates the data for returning a book.
+     *
+     * @return A string representing the validation status.
+     */
 	public String checkBttn() { // method that get information from the data the controller to return the book
 								// to the library
 
@@ -227,7 +250,12 @@ public class LibrarianReturnGUI {
 		return "Check Successfully Finished";
 	}
 
-	// return to home page button method
+	/**
+     * Handles the "Return to Home" button action to navigate back to the home page.
+     *
+     * @param event The ActionEvent triggered by clicking the button.
+     * @throws IOException If the FXML file cannot be loaded.
+     */
 	public void retButton(ActionEvent event) throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 		((Node) event.getSource()).getScene().getWindow().hide(); // hiding primary window
@@ -242,8 +270,11 @@ public class LibrarianReturnGUI {
 		primaryStage.show();
 	}
 
-	// barcode button method
-
+	/**
+     * Handles the "Barcode" button action to process a scanned book's barcode.
+     *
+     * @param event The ActionEvent triggered by clicking the button.
+     */
 	public void barcodeButton(ActionEvent event) {
 		int bookId = 0;
 		try {
@@ -267,6 +298,11 @@ public class LibrarianReturnGUI {
 		}
 	}
 
+	/**
+     * Handles the "Lost Book" button action to mark a book as lost.
+     *
+     * @param event The ActionEvent triggered by clicking the button.
+     */
 	public void lostBookBtn(ActionEvent event) {
 		String subID = subscriberId.getText();
 		String book = bookName.getText();
@@ -328,6 +364,12 @@ public class LibrarianReturnGUI {
 		}
 	}
 
+	/**
+     * Handles the "Exit" button action to close the application.
+     *
+     * @param event The ActionEvent triggered by clicking the button.
+     * @throws IOException If an I/O error occurs.
+     */
 	public void getExitBtn(ActionEvent event) throws IOException {
 		System.exit(0);
 	}

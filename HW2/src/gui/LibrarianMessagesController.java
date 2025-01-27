@@ -21,7 +21,7 @@ import javafx.stage.Stage;
 public class LibrarianMessagesController {
 	
 	@FXML
-	 private Label title;
+	 private Label title = null;
 	
 	@FXML
 	 private ListView<String> messages;
