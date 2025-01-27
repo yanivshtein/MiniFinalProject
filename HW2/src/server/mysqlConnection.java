@@ -58,7 +58,7 @@ public class mysqlConnection {
         }
 
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "yaniv1234");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "!vex123S");
             System.out.println("SQL connection succeed");
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
@@ -1193,7 +1193,7 @@ public class mysqlConnection {
 	 *                       representing the orders to delete.
 	 */
 	public void deleteOrders(Map<Integer, String> ordersToDelete) {
-		String deleteQuery = "DELETE FROM orders WHERE subID = ? AND bookName = ?;";
+		String deleteQuery = "DELETE FROM orders WHERE subID = ? AND bookName = ? AND arrivalTime IS NOT NULL;";
 		try (PreparedStatement deleteStmt = conn.prepareStatement(deleteQuery)) {
 			// Loop through the map and delete the relevant orders
 			for (Map.Entry<Integer, String> entry : ordersToDelete.entrySet()) {

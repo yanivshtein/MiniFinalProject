@@ -48,8 +48,9 @@ public class StatusReportViewController {
             int reportYear = Integer.parseInt(year);
 
             // Start (1st day of the given month) and end (last day of the same month)
-            YearMonth ym = YearMonth.of(reportYear, reportMonth);                       
-            LocalDate reportEnd = ym.atEndOfMonth();                    
+            YearMonth ym = YearMonth.of(reportYear, reportMonth);
+            LocalDate reportStart = ym.atDay(1);                        // e.g. 2025-01-01
+            LocalDate reportEnd = ym.atEndOfMonth();                    // e.g. 2025-01-31
 
             // Prepare maps to hold the daily counts
             Map<Integer, Integer> activeCountByDay = new HashMap<>();
@@ -152,6 +153,7 @@ public class StatusReportViewController {
         }
 
         statusReportChart.getData().clear();
+        statusReportChart.getData().addAll(activeSeries, frozenSeries);
     }
 
     /**

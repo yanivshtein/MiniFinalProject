@@ -274,7 +274,7 @@ public class SearchBookGUIController {
 		Scene scene = new Scene(root);
 		scene.getStylesheets()
 				.add(getClass().getResource("/gui/AppCss.css").toExternalForm());
-		primaryStage.setTitle("Librarian home page");
+		primaryStage.setTitle("Subscriber home page");
 
 		primaryStage.setScene(scene);
 		primaryStage.show();

@@ -359,7 +359,6 @@ public class EchoServer extends AbstractServer {
 			        statusRepDet = new ArrayList<>();
 			        statusRepDet.add("Error fetching data: " + e.getMessage());
 			    }
-
 			    // Prepare what to send:
 			    arrToSend.add(19);  // The code
 
