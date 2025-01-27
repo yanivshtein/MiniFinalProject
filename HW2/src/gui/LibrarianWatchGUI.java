@@ -67,7 +67,7 @@ public class LibrarianWatchGUI {
 		Alert alert = new Alert(Alert.AlertType.WARNING);
 		if (sub.getSubscriber_id() == 0) {
 			alert.setTitle("Not found");
-            alert.setContentText("Oops! 😞 Subscriber not found");
+            alert.setContentText("Oops! Subscriber not found");
             alert.showAndWait();
 			name.clear();
 			phone_number.clear();
@@ -91,10 +91,9 @@ public class LibrarianWatchGUI {
 		}
 
 		// Print the table header
-		Bview.setText(String.format("%-40s %-20s %-20s %-20s %-20s", "Book Name", "Borrow Date", "Return Date" , "Deadline" ,"Addition Information"));
+		Bview.setText(String.format("%-40s %-20s %-20s %-20s", "Book Name", "Borrow Date", "Deadline" ,"Addition Information"));
 		Bview.appendText("\n-----------------------------------------------------------------------------------------------------------------------");
 
-		// Print each row of activity history
 		for (String record : borrowHistory) {
 			// Split the string into components
 			String[] parts = record.split(",");
@@ -106,7 +105,7 @@ public class LibrarianWatchGUI {
 				String ExIssues = parts[4].trim();
 
 				// Print the row in table format
-				Bview.appendText(String.format("\n%-40s %-20s %-20s %-20s %-20s", bookName, BorrowDate, ReturnDate , deadline ,ExIssues ));
+				Bview.appendText(String.format("\n%-40s %-20s %-20s %-20s", bookName, BorrowDate , deadline ,ExIssues ));
 			}
 		}
 		

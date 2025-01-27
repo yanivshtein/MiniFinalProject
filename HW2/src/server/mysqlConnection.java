@@ -58,7 +58,7 @@ public class mysqlConnection {
         }
 
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "yaniv1234");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "!vex123S");
             System.out.println("SQL connection succeed");
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
@@ -494,8 +494,9 @@ public class mysqlConnection {
 	                            String bookName = rsActivity.getString("BookName");
 	                            String actionType = rsActivity.getString("ActionType");
 	                            String actionDate = rsActivity.getString("ActionDate");
+	                            String additionalInfo = rsActivity.getString("additionalInfo");
 	                            activityHistory.add(
-	                                    "Book Name: " + bookName + ", Action: " + actionType + ", Date: " + actionDate);
+	                                    "Book Name: " + bookName + ", Action: " + actionType + ", Date: " + actionDate + ", Info: " + additionalInfo);
 	                        }
 	                    }
 	                }
