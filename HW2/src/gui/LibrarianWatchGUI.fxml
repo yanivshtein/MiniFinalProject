@@ -7,23 +7,24 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="789.0" prefWidth="762.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LibrarianWatchGUI">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="789.0" prefWidth="794.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LibrarianWatchGUI">
    <children>
       <Label fx:id="title" layoutX="223.0" layoutY="39.0" prefHeight="21.0" prefWidth="239.0" text="Reader Card" />
-      <Button fx:id="ViewClick" layoutX="28.0" layoutY="101.0" mnemonicParsing="false" onAction="#ViewDetBtt" prefHeight="25.0" prefWidth="223.0" text="Enter Subscriber ID:" />
-      <TextField fx:id="subID" alignment="CENTER" layoutX="268.0" layoutY="101.0" prefHeight="25.0" prefWidth="168.0" />
-      <Text fx:id="namelabel" layoutX="37.0" layoutY="176.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name:" />
-      <Text fx:id="phonelabel" layoutX="36.0" layoutY="227.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone Number:" />
-      <Text fx:id="emaillabel" layoutX="39.0" layoutY="276.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:" />
-      <Text fx:id="borrowhislabel" layoutX="37.0" layoutY="381.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Borrow History:" />
+      <TextField fx:id="subID" alignment="CENTER" layoutX="210.0" layoutY="115.0" prefHeight="25.0" prefWidth="168.0" />
+      <Text layoutX="37.0" layoutY="176.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name:" />
+      <Text layoutX="36.0" layoutY="228.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone Number:" />
+      <Text layoutX="38.0" layoutY="277.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:" />
+      <Text layoutX="37.0" layoutY="381.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Borrow History:" />
       <TextArea fx:id="Bview" layoutX="36.0" layoutY="401.0" prefHeight="250.0" prefWidth="683.0" />
-      <TextField fx:id="name" layoutX="140.0" layoutY="159.0" />
-      <TextField fx:id="phone_number" layoutX="140.0" layoutY="210.0" />
-      <TextField fx:id="email" layoutX="140.0" layoutY="259.0" />
-      <Text fx:id="statuslabel" layoutX="36.0" layoutY="327.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Subscription status:" />
-      <TextField fx:id="SubStatus" layoutX="166.0" layoutY="310.0" prefHeight="25.0" prefWidth="139.0" />
+      <Text layoutX="36.0" layoutY="327.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Subscription status:" />
       <Button fx:id="RetButton" layoutX="36.0" layoutY="734.0" mnemonicParsing="false" onAction="#ReturnButton" prefHeight="25.0" prefWidth="223.0" text="Return To Home Page" />
       <Button fx:id="exitbtn" layoutX="642.0" layoutY="734.0" mnemonicParsing="false" onAction="#getExitBtn" prefHeight="25.0" prefWidth="70.0" text="EXIT" />
       <Text layoutX="40.0" layoutY="682.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Button fx:id="ViewClick" layoutX="404.0" layoutY="115.0" mnemonicParsing="false" onAction="#ViewDetBtt" text="View" />
+      <Label layoutX="34.0" layoutY="119.0" text="Enter  Subscriber ID:" />
+      <Label fx:id="name" layoutX="210.0" layoutY="163.0" prefHeight="17.0" prefWidth="168.0" />
+      <Label fx:id="phone_number" layoutX="210.0" layoutY="215.0" prefHeight="17.0" prefWidth="159.0" />
+      <Label fx:id="email" layoutX="210.0" layoutY="264.0" prefHeight="17.0" prefWidth="168.0" />
+      <Label fx:id="SubStatus" layoutX="210.0" layoutY="314.0" prefHeight="17.0" prefWidth="159.0" />
    </children>
 </Pane>

@@ -112,11 +112,6 @@ public class ClientConsole implements ChatIF
     	  arr1.add(31);
     	  arr1.add(id);
       }
-      
-      else if(str.equals("watch borrow history")){
-          arr1.add(8);
-          arr1.add(id);  
-      }
       else if (str.equals("watch activity history")) {
           arr1.add(9);
           arr1.add("");  

@@ -29,7 +29,6 @@ public class ChatClient extends AbstractClient {
 	ChatIF clientUI;
 	public static Subscriber1 s1 = new Subscriber1(0, "", "", "", "", "");
 	public static ArrayList<String> activityHistory;
-	public static ArrayList<String> borrowHistory;
 	public static ArrayList<String> FullBorrowRep, FullStatusRep;
 	public static Boolean bool, isFrozen, isAvailable, isCan, isExist, isSeven, orderExists;
 	public static boolean awaitResponse = false;
@@ -166,10 +165,6 @@ public class ChatClient extends AbstractClient {
 	        case 7:
 	            // Handle borrowing permission
 	            isCan = arr.get(1).equals("can");
-	            break;
-	        case 8:
-	            // Assign borrow history
-	            borrowHistory = (ArrayList<String>) arr.get(1);
 	            break;
 	        case 9:
 	            // Assign activity history

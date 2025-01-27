@@ -58,7 +58,7 @@ public class mysqlConnection {
         }
 
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "!vex123S");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/hw2-shitot?serverTimezone=Asia/Jerusalem", "root", "yaniv1234");
             System.out.println("SQL connection succeed");
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
@@ -510,57 +510,7 @@ public class mysqlConnection {
 	    return activityHistory;
 	}
 
-	/**
-	 * Retrieves the borrow history of a subscriber, including both returned and unreturned books.
-	 *
-	 * @param subscriberID The ID of the subscriber.
-	 * @return A list of borrow history records, each containing book name, borrow date, return date, deadline, and status.
-	 * @throws SQLException If a database access error occurs.
-	 */
-	public ArrayList<String> getBorrowHistory(int subscriberID) throws SQLException {
-	    ArrayList<String> borrowHistory = new ArrayList<>();
-
-	    // Query for books that are borrowed and returned
-	    String query1 = "SELECT br1.BookName, MIN(br1.ActionDate) AS BorrowDate, MIN(br2.ActionDate) AS ReturnDate, br1.deadline, br2.additionalInfo "
-	                  + "FROM activityhistory br1 JOIN activityhistory br2 "
-	                  + "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName "
-	                  + "AND br1.ActionType = 'Borrow' AND br2.ActionType = 'Return' AND br1.ActionDate < br2.ActionDate "
-	                  + "WHERE br1.SubscriberID = ? "
-	                  + "GROUP BY br1.BookName, br1.deadline, br2.additionalInfo";
-
-	    try (PreparedStatement ps = conn.prepareStatement(query1)) {
-	        ps.setInt(1, subscriberID);
-	        try (ResultSet rs = ps.executeQuery()) {
-	            while (rs.next()) {
-	                borrowHistory.add(String.format("%s,%s,%s,%s,%s",
-	                    rs.getString("BookName"), rs.getString("BorrowDate"),
-	                    rs.getString("ReturnDate"), rs.getString("deadline"),
-	                    rs.getString("additionalInfo")));
-	            }
-	        }
-	    }
-
-	    // Query for books that are borrowed but not returned
-	    String query2 = "SELECT br1.BookName, MIN(br1.ActionDate) AS BorrowDate, br1.deadline "
-	                  + "FROM activityhistory br1 LEFT JOIN activityhistory br2 "
-	                  + "ON br1.SubscriberID = br2.SubscriberID AND br1.BookName = br2.BookName AND br2.ActionType = 'Return' "
-	                  + "WHERE br1.ActionType = 'Borrow' AND br2.ActionType IS NULL AND br1.SubscriberID = ? "
-	                  + "GROUP BY br1.BookName, br1.deadline";
-
-	    try (PreparedStatement ps = conn.prepareStatement(query2)) {
-	        ps.setInt(1, subscriberID);
-	        try (ResultSet rs = ps.executeQuery()) {
-	            while (rs.next()) {
-	                borrowHistory.add(String.format("%s,%s, __-__-____,%s,Not returned yet",
-	                    rs.getString("BookName"), rs.getString("BorrowDate"),
-	                    rs.getString("deadline")));
-	            }
-	        }
-	    }
-
-	    return borrowHistory;
-	}
-
+	
 	/**
 	 * Changes the return date of a borrowed book for a subscriber if no conflicts exist.
 	 *

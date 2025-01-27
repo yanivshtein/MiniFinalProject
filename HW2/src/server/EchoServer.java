@@ -205,25 +205,6 @@ public class EchoServer extends AbstractServer {
 				}
 				break;
 
-			case 8: // watch activity history
-				subID = Integer.parseInt((String) arr.get(1)); // subscriber ID is in the second position of the array
-				// Retrieve the borrow history for the given subscriber ID
-				ArrayList<String> borrowHistory = null;
-				try {
-					borrowHistory = SQLinstance.getBorrowHistory(subID);
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-				arrToSend.add(8);
-				arrToSend.add(borrowHistory);
-				try {
-					// Send the borrow history to the client
-					client.sendToClient(arrToSend);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				break;
-
 			case 9: // Retrieves the activity history of a subscriber based on their email address.
 				subEmail = (String) arr.get(3);
 				ArrayList<String> activityHistory = SQLinstance.getActivityHistory(subEmail);

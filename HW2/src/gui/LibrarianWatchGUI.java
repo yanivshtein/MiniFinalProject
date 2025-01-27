@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -38,15 +39,18 @@ public class LibrarianWatchGUI {
 	private Text namelabel, emaillabel, phonelabel, statuslabel, borrowhislabel, OriginalDate, NewDate;
 
 	@FXML
-	private TextField subID, subID1, name, phone_number, email, history, OldRetDate, NewRetDate, SubStatus;
+	private TextField subID;
 
+	@FXML
+	private Label   name, phone_number, email, history, SubStatus;
+
+	
 	@FXML
 	private TextArea Bview ;
 
 	@FXML
 	private DialogPane ChangesSavedPop;
 
-	private ArrayList<String> borrowHistory;
 	
 	/**
      * Initializes the GUI by setting styles and any necessary setup logic.
@@ -56,12 +60,13 @@ public class LibrarianWatchGUI {
     }
 
 	/**
-     * Handles the "View Details" button click to fetch and display subscriber details.
+     * Handles the "View Details" button click to fetch and display subscriber details and activity history.
      *
      * @param event The action event triggered by the button click.
      * @throws IOException If an I/O error occurs.
      */
 	public void ViewDetBtt(ActionEvent event) throws IOException {
+		//fetch subscriber details to display
 		ClientGUIConnectionController.chat.accept("select", subID.getText(), "", "");
 		Subscriber1 sub = ChatClient.s1;
 		Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -69,10 +74,10 @@ public class LibrarianWatchGUI {
 			alert.setTitle("Not found");
             alert.setContentText("Oops! Subscriber not found");
             alert.showAndWait();
-			name.clear();
-			phone_number.clear();
-			email.clear();
-			SubStatus.clear();
+			name.setText("");
+			phone_number.setText("");
+			email.setText("");
+			SubStatus.setText("");
 			return;
 
 		}
@@ -81,33 +86,32 @@ public class LibrarianWatchGUI {
 		phone_number.setText(sub.getSubscriber_phone_number());
 		email.setText(sub.getSubscriber_email());
 		SubStatus.setText(sub.getSub_status());
+		//fetch subscriber activity history
+		ClientGUIConnectionController.chat.accept("watch activity history", "", "", sub.getSubscriber_email());
+		ArrayList<String> activityHistory = ChatClient.activityHistory;
+		StringBuilder historyMatrix = new StringBuilder();
 
-		ClientGUIConnectionController.chat.accept("watch borrow history", subID.getText(), "", "");
-		borrowHistory = ChatClient.borrowHistory;
+		// "Book Name: <book_name>, Action: <action>, Date: <date>, Details: <details>"
+		for (int i = 0; i < activityHistory.size(); i++) {
+			String activity = activityHistory.get(i);
 
-		if (borrowHistory == null || borrowHistory.isEmpty()) {
-			Bview.setText("No borrow history found.");
-			return;
-		}
+			String[] activityDetails = activity.split(","); // Split by commas for example
 
-		// Print the table header
-		Bview.setText(String.format("%-40s %-20s %-20s %-20s", "Book Name", "Borrow Date", "Deadline" ,"Addition Information"));
-		Bview.appendText("\n-----------------------------------------------------------------------------------------------------------------------");
-
-		for (String record : borrowHistory) {
-			// Split the string into components
-			String[] parts = record.split(",");
-			if (parts.length == 5) {
-				String bookName = parts[0].trim();
-				String BorrowDate = parts[1].trim();
-				String ReturnDate = parts[2].trim();
-				String deadline = parts[3].trim();
-				String ExIssues = parts[4].trim();
-
-				// Print the row in table format
-				Bview.appendText(String.format("\n%-40s %-20s %-20s %-20s", bookName, BorrowDate , deadline ,ExIssues ));
+			// Append each activity's details on separate lines
+			historyMatrix.append("Book Name: ").append(activityDetails[0].split(":")[1].trim()).append("\n");
+			historyMatrix.append("Action: ").append(activityDetails[1].split(":")[1].trim()).append("\n");
+			historyMatrix.append("Date: ").append(activityDetails[2].split(":")[1].trim()).append("\n");
+			if (!activityDetails[3].split(":")[1].trim().equals("null")) {
+				historyMatrix.append("Additional Info: ").append(activityDetails[3].split(":")[1].trim()).append("\n");
 			}
+			
+
+			// Add a separator between activities (optional)
+			historyMatrix.append("\n-------------------------\n\n");
 		}
+
+		// Set the formatted string into the HistoryView TextArea
+		Bview.setText(historyMatrix.toString());
 		
 		
 		
