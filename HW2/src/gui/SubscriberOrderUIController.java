@@ -133,7 +133,7 @@ public class SubscriberOrderUIController {
 
         if (bookNameGot==null || bookNameGot.isEmpty()) {
         	alert.setTitle("Missing Field");
-            alert.setContentText("Oops! 😞 You must enter a book name.");
+            alert.setContentText("Oops! You must enter a book name.");
             alert.showAndWait();
             return;	 
         }
@@ -142,7 +142,7 @@ public class SubscriberOrderUIController {
         ClientGUIConnectionController.chat.acceptFromController(5, subID, "");
         if (ChatClient.isFrozen == true) {
         	alert.setTitle("Frozen Account");
-            alert.setContentText("Uh-oh! 😬 Your account is FROZEN!");
+            alert.setContentText("Uh-oh! Your account is FROZEN!");
             alert.showAndWait();
             return;	 
         }
@@ -150,13 +150,13 @@ public class SubscriberOrderUIController {
         ClientGUIConnectionController.chat.acceptFromController(6, 0, bookNameGot);
         if (ChatClient.isExist== false) {
         	alert.setTitle("Not exists book");
-            alert.setContentText("Sorry! 📚 we dont have this book in our Library");
+            alert.setContentText("Sorry! we dont have this book in our Library");
             alert.showAndWait();
             return;	
         }
         if (ChatClient.isAvailable == true) { // which means there is an available copy of the book -> cant order
         	alert.setTitle("Available copy exists");
-            alert.setContentText("Go borrow it! 📚 An available copy of this book already exists in the library.");
+            alert.setContentText("Go borrow it! An available copy of this book already exists in the library.");
             alert.showAndWait();
             return;	
         }
@@ -166,11 +166,11 @@ public class SubscriberOrderUIController {
         // check if the number of copies of the book already been ordered
         if (ChatClient.isCan == false) {
         	alert.setTitle("Number of orders equals copys");
-            alert.setContentText("Whoops! 😅 The number of orders and copies are equal, so you can't place another order.");
+            alert.setContentText("Whoops! The number of orders and copies are equal, so you can't place another order.");
             alert.showAndWait();
             return;	
         }
-        errorMsg.setContentText("Awesome! 🎉 You're all set! Your order has been successfully placed!");
+        errorMsg.setContentText("Awesome! You're all set! Your order has been successfully placed!");
     }
 
     /**

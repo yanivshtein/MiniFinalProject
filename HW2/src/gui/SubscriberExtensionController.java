@@ -73,24 +73,24 @@ public class SubscriberExtensionController {
 		 Alert alert = new Alert(Alert.AlertType.WARNING);
 		 if (selectedBook==null) {
 			 alert.setTitle("Missing Field");
-             alert.setContentText("Oops! 😞 You must press on a book name.");
+             alert.setContentText("Oops! You must press on a book name.");
              alert.showAndWait();
              return;	            
 	     }
 		 ClientGUIConnectionController.chat.acceptFromController(24, subID, selectedBook);
 		 if (ChatClient.isSeven == false) {
 			 alert.setTitle("More than seven days");
-             alert.setContentText("Uh-oh! 😬 There are more than 7 days until the return date");
+             alert.setContentText("Uh-oh! There are more than 7 days until the return date");
              alert.showAndWait();
              return;	         
 	     }
 		 if (ChatClient.orderExists == true) {
 			 alert.setTitle("Order exists");
-             alert.setContentText("Sorry! 😬 Someone else is waiting for this book");
+             alert.setContentText("Sorry! Someone else is waiting for this book");
              alert.showAndWait();
              return;	 	        
 	     }
-		 msg.setText("Great! 🎉 You have your book for 14 more days, Have Fun!");		 
+		 msg.setText("Great! You have your book for 14 more days, Have Fun!");		 
 	 }
 	 
 	 /**

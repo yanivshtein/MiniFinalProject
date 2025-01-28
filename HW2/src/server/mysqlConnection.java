@@ -1003,73 +1003,72 @@ public class mysqlConnection {
 	 * Updates the subscription status of a subscriber to a specified status.
 	 *
 	 * @param subscriberId the ID of the subscriber.
-	 * @param IsFrozen     the new subscription status (e.g., "Frozen").
 	 * @return {@code true} if the update was successful, {@code false} otherwise.
 	 * @throws SQLException if an error occurs while updating the status.
 	 */
-	public Boolean updateSubscriberStatusToFrozen(String subscriberId, String IsFrozen) throws SQLException  {
+	public Boolean updateSubscriberStatusToFrozen(String subscriberId) throws SQLException {
+	    // Update query for the `subscriber` table
+	    String updateSubscriberQuery = "UPDATE subscriber SET subscription_status = ? WHERE subscriber_id = ?";
 
-		String updateQuary = "UPDATE subscriber SET subscription_status=? WHERE subscriber_id = ?";
-		
-		String insertFrozenTable = "INSERT INTO frozen_subs (subscriber_id, start_date, finish_date)"
-				+ " VALUES (?,?,?)";
-				
-		Integer subIdInt = null;
-		LocalDate  localDate = LocalDate.now();
-		
-		Date currentDate = Date.valueOf(localDate);
-		localDate = localDate.plusMonths(1);
-		Date unfreezeDate = Date.valueOf(localDate);
-		
-		try{
-		subIdInt = Integer.parseInt(subscriberId);
-		}
-		
-		catch(NumberFormatException e){
-			e.printStackTrace();
-			
-		}
-		Boolean bool = checkIsFrozen(subIdInt).equals("frozen");
-		if(bool) {
-			insertFrozenTable = "UPDATE frozen_subs SET start_date=?, finish_date=? WHERE subscriber_id = ?";
-			try(PreparedStatement insertPs= conn.prepareStatement(insertFrozenTable)){				
-					insertPs.setDate(1, currentDate);
-					insertPs.setDate(2, unfreezeDate);
-					insertPs.setInt(3, subIdInt);
-					insertPs.executeUpdate();				
-				return true;
-			}
-			catch(SQLException e){
-				e.printStackTrace();
-				throw e;
-			}
-		}
-		else {
-			try(PreparedStatement updatePs = conn.prepareStatement(updateQuary)){
-				PreparedStatement insertPs= conn.prepareStatement(insertFrozenTable);
-			
-				updatePs.setString(1, IsFrozen);
-				updatePs.setString(2, subscriberId);
+	    // Insert query for the `frozen_subs` table
+	    String insertFrozenTableQuery = "INSERT INTO frozen_subs (subscriber_id, start_date, finish_date) VALUES (?, ?, ?)";
 
-				int updateResult = updatePs.executeUpdate();
-				
-				if (updateResult == 1) {
-				
-					insertPs.setInt(1, subIdInt);
-					insertPs.setDate(2, currentDate);
-					insertPs.setDate(3, unfreezeDate);
-					int insertResult = insertPs.executeUpdate();
-					
-					return insertResult == 1;
-				}
-				return false;
-			}
-			catch(SQLException e){
-				e.printStackTrace();
-				throw e;
-			}
-		}
-		
+	    // Update query for the `frozen_subs` table (if already frozen)
+	    String updateFrozenTableQuery = "UPDATE frozen_subs SET start_date = ?, finish_date = ? WHERE subscriber_id = ?";
+
+	    // Parse subscriber ID
+	    Integer subIdInt;
+	    try {
+	        subIdInt = Integer.parseInt(subscriberId);
+	    } catch (NumberFormatException e) {
+	        throw new IllegalArgumentException("Invalid subscriber ID: " + subscriberId, e);
+	    }
+
+	    // Define dates for freezing logic
+	    LocalDate today = LocalDate.now();
+	    Date currentDate = Date.valueOf(today);
+	    Date unfreezeDate = Date.valueOf(today.plusMonths(1));
+
+	    // Check if the subscriber is already frozen
+	    Boolean isAlreadyFrozen = "frozen".equalsIgnoreCase(checkIsFrozen(subIdInt));
+
+	    try {
+	        // Handle frozen logic
+	        if (isAlreadyFrozen) {
+	            // Update the frozen record for an already frozen subscriber
+	            try (PreparedStatement updateFrozenPs = conn.prepareStatement(updateFrozenTableQuery)) {
+	                updateFrozenPs.setDate(1, currentDate);
+	                updateFrozenPs.setDate(2, unfreezeDate);
+	                updateFrozenPs.setInt(3, subIdInt);
+	                updateFrozenPs.executeUpdate();
+	                return true;
+	            }
+	        } else {
+	            // Update the subscription status and insert into `frozen_subs`
+	            try (
+	                PreparedStatement updateSubscriberPs = conn.prepareStatement(updateSubscriberQuery);
+	                PreparedStatement insertFrozenPs = conn.prepareStatement(insertFrozenTableQuery)
+	            ) {
+	                // Update the subscriber's status
+	                updateSubscriberPs.setString(1, "frozen");
+	                updateSubscriberPs.setInt(2, subIdInt);
+	                int updateResult = updateSubscriberPs.executeUpdate();
+
+	                if (updateResult == 1) {
+	                    // Insert a new frozen record
+	                    insertFrozenPs.setInt(1, subIdInt);
+	                    insertFrozenPs.setDate(2, currentDate);
+	                    insertFrozenPs.setDate(3, unfreezeDate);
+	                    int insertResult = insertFrozenPs.executeUpdate();
+	                    return insertResult == 1;
+	                }
+	                return false;
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        throw e;
+	    }
 	}
 
 	/**
@@ -1472,83 +1471,74 @@ public class mysqlConnection {
 	public String lostBook(String subID, String bookName) {
 		String bookExists = isAvailable(bookName);
 		int intSubID = Integer.parseInt(subID);
-		boolean bookExist = bookExists.equals("notExist"); //check if the book exists
+		boolean bookExist = bookExists.equals("notExist"); // check if the book exists
 		boolean ID = !isSubscriberExist(intSubID); // check if the subscriber exists
 		ResultSet resultSet = null;
 		Boolean frozen = true;
-		if(bookExist && ID) { //if the sub and book dont exist
+		if (bookExist && ID) { // if the sub and book dont exist
 			return "bookAndIDNotExists";
 		}
-		if(bookExists.equals("notExist")) { //checks if book exists
+		if (bookExists.equals("notExist")) { // checks if book exists
 			return "bookNotExists";
 		}
-		if(ID) { // checks if subID doesnt exist
+		if (ID) { // checks if subID doesnt exist
 			return "subID";
 		}
-		//check if this borrow even exists
+		// check if this borrow even exists
 		String checkBorrow = "SELECT * FROM activityhistory WHERE SubscriberID = ? AND BookName = ? AND ActionType = ? AND hasReturned = ?";
 		try (PreparedStatement stmt = conn.prepareStatement(checkBorrow)) {
-	        // Loop through the values of the map (book names)
-	            stmt.setInt(1, intSubID);
-	            stmt.setString(2,bookName);
-	            stmt.setString(3,"Borrow");
-	            stmt.setBoolean(4, false);
-	            resultSet = stmt.executeQuery();
-	            if(!resultSet.next()) {
-	        		return "BorrowNotExist";
-	        	}
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-		//update the inventory of the book to -1
+			// Loop through the values of the map (book names)
+			stmt.setInt(1, intSubID);
+			stmt.setString(2, bookName);
+			stmt.setString(3, "Borrow");
+			stmt.setBoolean(4, false);
+			resultSet = stmt.executeQuery();
+			if (!resultSet.next()) {
+				return "BorrowNotExist";
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		// update the inventory of the book to -1
 		String query = "UPDATE books SET totalCopys = totalCopys - 1 WHERE bookName = ?";
 		try (PreparedStatement stmt = conn.prepareStatement(query)) {
-	        // Loop through the values of the map (book names)
-	            stmt.setString(1, bookName);
-	            stmt.executeUpdate();
-	            frozen = updateSubscriberStatusToFrozen(subID,"frozen");
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-		//update the hasReturned to be 1 if the book is lost, so that cannot click lost multiple times
+			// Loop through the values of the map (book names)
+			stmt.setString(1, bookName);
+			stmt.executeUpdate();
+			frozen = updateSubscriberStatusToFrozen(subID);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		// update the hasReturned to be 1 if the book is lost, so that cannot click lost
+		// multiple times
 		String hasRet = "UPDATE activityhistory SET hasReturned = ? WHERE SubscriberID = ? AND BookName = ? AND ActionType = ? AND hasReturned = ?";
 		try (PreparedStatement stmt = conn.prepareStatement(hasRet)) {
-	        // Loop through the values of the map (book names)
-				stmt.setBoolean(1, true);
-	            stmt.setInt(2, intSubID);
-	            stmt.setString(3,bookName);
-	            stmt.setString(4,"Borrow");
-	            stmt.setBoolean(5, false);
-	            stmt.executeUpdate();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-		//add action type lost to the activity history
+			// Loop through the values of the map (book names)
+			stmt.setBoolean(1, true);
+			stmt.setInt(2, intSubID);
+			stmt.setString(3, bookName);
+			stmt.setString(4, "Borrow");
+			stmt.setBoolean(5, false);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		// add action type lost to the activity history
 		String addQuery = "INSERT INTO activityhistory (SubscriberID, BookName, ActionType, ActionDate) VALUES (?, ?, ?, ?);";
-	    try {
-	        PreparedStatement stmt = conn.prepareStatement(addQuery);
-	        stmt.setInt(1, intSubID);
-	        stmt.setString(2, bookName);
-	        stmt.setString(3, "Lost");
-	        stmt.setString(4, LocalDateTime.now().toString());
-	        stmt.executeUpdate();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	    //if account was already frozen
-	    if(!frozen) {
-	    	String refreeze = "UPDATE frozen_subs SET start_date = ?, finish_date = ? WHERE subscriber_id = ?";
-	    	try (PreparedStatement stmt = conn.prepareStatement(refreeze)) {
-	            // Loop through the values of the map (book names)
-	                stmt.setInt(3, intSubID);
-	                stmt.setDate(1,Date.valueOf(LocalDate.now()));
-	                stmt.setDate(2,Date.valueOf(LocalDate.now().plusMonths(1)));
-	                stmt.executeUpdate();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    	return "SubAlreadyFrozen";
-	    }
+		try {
+			PreparedStatement stmt = conn.prepareStatement(addQuery);
+			stmt.setInt(1, intSubID);
+			stmt.setString(2, bookName);
+			stmt.setString(3, "Lost");
+			stmt.setString(4, LocalDateTime.now().toString());
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		// if account was already frozen
+		if (!frozen) {
+			return "SubAlreadyFrozen";
+		}
 		return "";
 	}
 

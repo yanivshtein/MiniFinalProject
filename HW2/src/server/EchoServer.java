@@ -463,7 +463,7 @@ public class EchoServer extends AbstractServer {
 
 					}
 					if (freeze == true) {
-						freezeSuccess = SQLinstance.updateSubscriberStatusToFrozen(this.subscriberID, "frozen");
+						freezeSuccess = SQLinstance.updateSubscriberStatusToFrozen(this.subscriberID);
 						freezeFlag = true;
 
 					}
